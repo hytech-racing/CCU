@@ -1,3 +1,6 @@
+#ifndef __PID_H__
+#define __PID_H__
+
 class PID {
 public:
     PID(float kp = 1, float ki = 0, float kd = 0) : Kp(kp), Ki(ki), Kd(kd), prev_error(0), integral(0) {}
@@ -30,3 +33,5 @@ float min(float v1, float v2){
         return v2;
     }
 };
+
+#endif
