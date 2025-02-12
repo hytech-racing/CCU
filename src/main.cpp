@@ -12,6 +12,7 @@ qn::EthernetUDP udp; //setup of qn namespace
 
 /* Functions */
 void configure_charging();
+MainChargeSystem mainChargeLoop;
 
 void setup() {
   //Serial.begin(115200); //I dont know if this is the baudrate I also don't know if this is even needed
@@ -19,5 +20,5 @@ void setup() {
 }
 
 void loop() {
-  charge_cycle();
+  mainChargeLoop.charge_cycle();
 }
