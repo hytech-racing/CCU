@@ -1,9 +1,11 @@
-#ifndef __PID_H__
-#define __PID_H__
+#ifndef __HYTECHMATH_H__
+#define __HYTECHMATH_H__
 
+
+#include "PIDParams.h"
 class PID {
 public:
-    PID(float kp = 1, float ki = 0, float kd = 0) : Kp(kp), Ki(ki), Kd(kd), prev_error(0), integral(0) {}
+    PID(float kp = PidParams::Kp, float ki = PidParams::Ki, float kd = PidParams::Kd) : Kp(kp), Ki(ki), Kd(kd), prev_error(0), integral(0) {}
     
     float compute(double setpoint, double measured_value) {
         float error = setpoint - measured_value;
@@ -25,7 +27,7 @@ private:
     float integral;
 };
 
-namespace comparison {
+namespace calc {
     float min(float v1, float v2){
         if (v1 < v2){
             return v1;

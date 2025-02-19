@@ -1,23 +1,25 @@
 #ifndef __MAINCHARGE_H__
 #define __MAINCHARGE_H__
-  
+
+
+#include "HytechMath.h"
 #include "EthernetInterface.h"
 #include "CCUParams.h"
-#include "PIDParams.h"   
-#include "HytechPID.h"
+
 
 
 /* Object Instance Creation */ //should I be creating these instances in this headder file??
-PID pid(PidParams::Kp, PidParams::Ki, PidParams::Kd);
+
 /* TO-DO 
 Taking in the message from ACU protobuf recieving 
 */
 class MainChargeSystem {
   public:
-    MainChargeSystem();
-    float charge_cycle(CCUInputValues inputValues, CCUOutputValues outputValues); //add safe start that ramps up to max over 10 seconds
+    MainChargeSystem() : pid() {}
+    float charge_cycle(CCUInputValues inputValues, CCUOutputValues& outputValues); //add safe start that ramps up to max over 10 seconds
   private:
     float current_setpoint;
+    PID pid;
     };
 
 #endif
