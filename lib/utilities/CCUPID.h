@@ -1,5 +1,5 @@
-#ifndef __HYTECHMATH_H__
-#define __HYTECHMATH_H__
+#ifndef __CCUPID_H__
+#define __CCUPID_H__
 
 
 #include "PIDParams.h"
@@ -27,14 +27,5 @@ private:
     float integral;
 };
 
-namespace calc {
-    float min(float v1, float v2){
-        if (v1 < v2){
-            return v1;
-        }
-        else{
-            return v2;
-        }
-    };
-    };
+
 #endif

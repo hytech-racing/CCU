@@ -16,30 +16,33 @@ TEST(mainChargeTest, bothTooHigh){
     mainChargeLoop.charge_cycle(test1inputs, test1outputs);
     EXPECT_EQ(test1outputs.currentFlow,  false);
 };
-/*
+
 TEST(mainChargeTest, TempTooHigh){  
-    //EthernetInterface test1EthernetInterface;
-    ethernetInterface.maxCellTemp = 70;
-    ethernetInterface.maxCellV =  1.27;
-    mainChargeLoop.charge_cycle();
-    EXPECT_EQ(ethernetInterface.currentFlow,  false);
+    CCUInputValues test2inputs;
+    CCUOutputValues test2outputs;
+    test2inputs.maxCellTemp = 70;
+    test2inputs.maxCellV =  1.27;
+    mainChargeLoop.charge_cycle(test2inputs, test2outputs);
+    EXPECT_EQ(test2outputs.currentFlow,  false);
 };
 
 TEST(mainChargeTest, VoltsTooHigh){  
-    //EthernetInterface test1EthernetInterface;
-    ethernetInterface.maxCellTemp = 52.1;
-    ethernetInterface.maxCellV =  4;
-    mainChargeLoop.charge_cycle();
-    EXPECT_EQ(ethernetInterface.currentFlow,  false);
+    CCUInputValues test3inputs;
+    CCUOutputValues test3outputs;
+    test3inputs.maxCellTemp = 52.1;
+    test3inputs.maxCellV =  4;
+    mainChargeLoop.charge_cycle(test3inputs, test3outputs);
+    EXPECT_EQ(test3outputs.currentFlow,  false);
 };
 
 TEST(mainChargeTest, shouldBeTrue){  
-    //EthernetInterface test1EthernetInterface;
-    ethernetInterface.maxCellTemp = 30;
-    ethernetInterface.maxCellV =  2.3;
-    mainChargeLoop.charge_cycle();
-    EXPECT_EQ(ethernetInterface.currentFlow,  true);
+    CCUInputValues test4inputs;
+    CCUOutputValues test4outputs;
+    test4inputs.maxCellTemp = 30;
+    test4inputs.maxCellV =  2.3;
+    mainChargeLoop.charge_cycle(test4inputs, test4outputs);
+    EXPECT_EQ(test4outputs.currentFlow,  true);
 };
 
-*/
+
 #endif
