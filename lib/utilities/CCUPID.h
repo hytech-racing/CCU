@@ -2,8 +2,10 @@
 #define __CCUPID_H__
 
 
+
 #include "PIDParams.h"
 class PID {
+//PID calculation class
 public:
     PID(float kp = PidParams::Kp, float ki = PidParams::Ki, float kd = PidParams::Kd) : Kp(kp), Ki(ki), Kd(kd), prev_error(0), integral(0) {}
     

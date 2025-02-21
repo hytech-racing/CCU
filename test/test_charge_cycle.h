@@ -4,6 +4,7 @@
 #include "MainChargeSystem.h"
 #include "EthernetInterface.h"
 #include <gtest/gtest.h>
+#include <iostream>
 
 MainChargeSystem mainChargeLoop;
 
@@ -14,7 +15,7 @@ TEST(mainChargeTest, bothTooHigh){
     test1inputs.maxCellTemp = 70;
     test1inputs.maxCellV =  4;
     mainChargeLoop.charge_cycle(test1inputs, test1outputs);
-    EXPECT_EQ(test1outputs.currentFlow,  false);
+    EXPECT_EQ(test1outputs.currentFlow, false);
 };
 
 TEST(mainChargeTest, TempTooHigh){  
@@ -23,7 +24,7 @@ TEST(mainChargeTest, TempTooHigh){
     test2inputs.maxCellTemp = 70;
     test2inputs.maxCellV =  1.27;
     mainChargeLoop.charge_cycle(test2inputs, test2outputs);
-    EXPECT_EQ(test2outputs.currentFlow,  false);
+    EXPECT_EQ(test2outputs.currentFlow, false);
 };
 
 TEST(mainChargeTest, VoltsTooHigh){  
@@ -32,7 +33,7 @@ TEST(mainChargeTest, VoltsTooHigh){
     test3inputs.maxCellTemp = 52.1;
     test3inputs.maxCellV =  4;
     mainChargeLoop.charge_cycle(test3inputs, test3outputs);
-    EXPECT_EQ(test3outputs.currentFlow,  false);
+    EXPECT_EQ(test3outputs.currentFlow, false);
 };
 
 TEST(mainChargeTest, shouldBeTrue){  
@@ -41,7 +42,7 @@ TEST(mainChargeTest, shouldBeTrue){
     test4inputs.maxCellTemp = 30;
     test4inputs.maxCellV =  2.3;
     mainChargeLoop.charge_cycle(test4inputs, test4outputs);
-    EXPECT_EQ(test4outputs.currentFlow,  true);
+    EXPECT_EQ(test4outputs.currentFlow, true);
 };
 
 
