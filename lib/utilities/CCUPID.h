@@ -2,8 +2,6 @@
 #define __CCUPID_H__
 
 
-
-#include "PIDParams.h"
 class PID {
 //PID calculation class
 public:

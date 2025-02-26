@@ -10,7 +10,7 @@ void MainChargeSystem::charge_cycle(CCUInput_s inputValues, CCUOutput_s &outputV
       outputValues.current_setpoint = 0;
     }
     else { 
-      float temperature_scalar = (max_allowable_cell_temperature - inputValues.max_cell_temperature); //This needs to be replaces with a log function  
+      float temperature_scalar = ((max_allowable_cell_temperature - inputValues.max_cell_temperature)/10); //This needs to be replaces with a log function  
       float voltage_scalar = VoltPid.compute(target_voltage, inputValues.max_cell_voltage);
       float final_scalar = std::min(temperature_scalar, voltage_scalar);
       outputValues.current_flow = true; //needs to be replaced with the actual thing to set current flow to the correct value

@@ -4,7 +4,6 @@
 
 #include "CCUPID.h"
 #include "EthernetInterface.h"
-#include "CCUParams.h"
 
 /**
  * MainChargeSystem has its own PID object for adjusting error
