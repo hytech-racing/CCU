@@ -2,10 +2,9 @@
 
 
 //This is the start of ethernet interface function not implemented yet
-/*
-CCUInputValues EthernetInterface::UpdatingValues(){
-  //here is where the protobuf message gets parsed into the struct
-  CCUInputValues val;
-  return CCUInputValues;
+
+
+//take the values from the protobuf message and update CCUInput_s 
+void EthernetInterface::updating_values(CCUInput_s &msg_in){
+  //msg_in = msg_in.maxCellTemp;
 }
-*/

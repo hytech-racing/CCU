@@ -2,9 +2,10 @@
 #define __PIDPARAMS_H__
 
 //A centralized place to tune the PID
-namespace PidParams {
+namespace CCUPidParams {
   const float Kp = 1;
   const float Ki = 1;
   const float Kd = 1;
 };
+
 #endif

@@ -7,7 +7,7 @@
 class PID {
 //PID calculation class
 public:
-    PID(float kp = PidParams::Kp, float ki = PidParams::Ki, float kd = PidParams::Kd) : Kp(kp), Ki(ki), Kd(kd), prev_error(0), integral(0) {}
+    PID(float kp, float ki, float kd) : Kp(kp), Ki(ki), Kd(kd), prev_error(0), integral(0) {}
     
     float compute(double setpoint, double measured_value) {
         float error = setpoint - measured_value;
@@ -17,7 +17,7 @@ public:
         return (Kp * error) + (Ki * integral) + (Kd * derivative);
     }
 
-    void setTunings(double kp, double ki, double kd) {
+    void set_tunings(double kp, double ki, double kd) {
         Kp = kp;
         Ki = ki;
         Kd = kd;

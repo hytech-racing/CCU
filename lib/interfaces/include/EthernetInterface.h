@@ -6,25 +6,25 @@
 
 //1. take CCUOutputValues struct and make into protobuf message 2. send the values out to ams
 
-struct CCUInputValues //I think this is correct but i dont know if i need to account for all the values in the protobuf message struct
+struct CCUInput_s //I think this is correct but i dont know if i need to account for all the values in the protobuf message struct
 {
-    float maxCellTemp; //in degress C
-    float maxCellV; //in Volts
+    float max_cell_temperature; //in degress C
+    float max_cell_voltage; //in Volts
 };
 
-struct CCUOutputValues
+struct CCUOutput_s
 //Output values struct (what CCU is sending out)
 {
-    bool currentFlow;
+    bool current_flow;
     float current_setpoint;
 };
 
 class EthernetInterface{
 public:
     EthernetInterface();
-    CCUInputValues UpdatingValues();
+    void updating_values(CCUInput_s &msg_in);
 
 private:
-    CCUInputValues inputValues;
+    CCUInput_s inputValues;
 };
 #endif
