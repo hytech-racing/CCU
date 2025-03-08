@@ -6,7 +6,7 @@
 #include <gtest/gtest.h>
 #include <iostream>
 
-MainChargeSystem mainChargeLoop(3.1, 15, 40, 1, 1, 1);
+MainChargeSystem mainChargeLoop(3.1, 15, 40);
 CCUOutput_s testoutputs;
 
 TEST(mainChargeTest, bothTooHigh){  

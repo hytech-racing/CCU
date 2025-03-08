@@ -2,8 +2,8 @@
 #define __MAINCHARGE_H__
 
 
-#include "CCUPID.h"
 #include "EthernetInterface.h"
+
 
 /**
  * MainChargeSystem has its own PID object for adjusting error
@@ -20,7 +20,7 @@ class MainChargeSystem {
      * @param pid_ki The Ki parameter for the PID that controls charging current with respect to how close the max cell is to the target voltage
      * @param pid_kd The Kd parameter for the PID that controls charging current with respect to how close the max cell is to the target voltage
      */
-    MainChargeSystem(float target_volt, float max_charge_current, float max_cell_temp, float pid_kp, float pid_ki, float pid_kd);
+    MainChargeSystem(float target_volt, float max_charge_current, float max_cell_temp);
     /**
      * @param CCUInput_s The incoming struct from ACU
      * @param CCUOutput_s The output struct from CCU with charge current and whether to enable charging
@@ -35,7 +35,6 @@ class MainChargeSystem {
     float ccu_pid_kp;
     float ccu_pid_ki;
     float ccu_pid_kd;
-    PID VoltPid;
     };
 
 #endif
