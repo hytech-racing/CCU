@@ -25,7 +25,6 @@ struct CCUOutput_s
 
 namespace ethernetInterface{
 
-    void recieve_pb_msg_acu_all_data(hytech_msgs_ACUAllData_s &msg_in, CCUInput_s &inputValues);
-    void receive_pb_msg_acu_core_data(const hytech_msgs_ACUCoreData_s &msg_in, CCUInput_s &inputValues);
+    void recieve_pb_msg_acu_all_data(hytech_msgs_ACUAllData_s &msg_in, CCUInput_s &inputValues); 
 };
 #endif
