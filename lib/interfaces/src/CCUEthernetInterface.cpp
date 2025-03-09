@@ -1,4 +1,4 @@
-#include "EthernetInterface.h"
+#include "CCUEthernetInterface.h"
 #include <algorithm>
 #include <cstddef>
 
