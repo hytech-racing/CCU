@@ -7,7 +7,6 @@ struct CCUParams
   float target_voltage = 3.1; //per cell
   float max_allowable_cell_voltage; //need data for this
   float max_allowable_cell_temperature; //need data for this
-  float max_allowable_current; //need data for this
 };
 #endif
 
