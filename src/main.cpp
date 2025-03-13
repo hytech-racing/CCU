@@ -1,8 +1,13 @@
 /* Libraries */
+
+#ifdef ARDUINO
 #include <Arduino.h>
+
+#endif
+
 #include <QNEthernet.h>
 #include "MainChargeSystem.h"
-#include "shared_firmware_types.h"
+#include "SharedFirmwareTypes.h"
 #include "CCUParams.h"
 #include "ht_sched.hpp"
 
@@ -24,5 +29,5 @@ void setup() {
 }
 
 void loop() {
-  scheduler.execute();
+  scheduler.run();
 }

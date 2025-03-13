@@ -6,6 +6,7 @@
 
 
 
+
 class MainChargeSystem {
   public:
     /**
@@ -18,7 +19,7 @@ class MainChargeSystem {
      * @param CCUInput_s The incoming struct from ACU
      * @param CCUOutput_s The output struct from CCU with charge current and whether to enable charging
      */
-    void calculate_charge_current(CCUInput_s inputValues, CCUOutput_s& outputValues); 
+    float calculate_charge_current(ACUAllData_s inputValues, CCUOutput_s& outputValues); 
 
   private:
 

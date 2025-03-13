@@ -4,10 +4,10 @@
 struct CCUParams
 {
   bool balancing_enabled = false; //tells ACU whether balancing is allowed or not
-  const float target_voltage = 3.1; //per cell
-  const float max_voltage = ; //need data for this
-  const float max_cell_temp = ; //need data for this
-  const float max_current = ; //need data for this
+  float target_voltage = 3.1; //per cell
+  float max_allowable_cell_voltage; //need data for this
+  float max_allowable_cell_temp; //need data for this
+  float max_allowable_current; //need data for this
 };
 #endif
 
