@@ -3,7 +3,7 @@
 
 
 #include "CCUEthernetInterface.h"
-
+#include "CCUParams.h"
 
 
 
@@ -19,13 +19,9 @@ class MainChargeSystem {
      * @param CCUInput_s The incoming struct from ACU
      * @param CCUOutput_s The output struct from CCU with charge current and whether to enable charging
      */
-    float calculate_charge_current(ACUAllData_s inputValues, CCUOutput_s& outputValues); 
+    float calculate_charge_current(ACUAllData_s inputValues, CCUParams& chargeParams); 
 
   private:
-
-    float target_voltage;
-    float max_ac_charging_current;
-    float max_allowable_cell_temperature;
     };
 
 #endif
