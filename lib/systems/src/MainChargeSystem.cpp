@@ -5,7 +5,7 @@
 
 MainChargeSystem::MainChargeSystem(float target_volt, float max_charge_current, float max_cell_temp) : target_voltage(target_volt), max_ac_charging_current(max_charge_current), max_allowable_cell_temperature(max_cell_temp){}
 
-void MainChargeSystem::charge_cycle(CCUInput_s inputValues, CCUOutput_s &outputValues){
+void MainChargeSystem::calculate_charge_current(CCUInput_s inputValues, CCUOutput_s &outputValues){
     if (inputValues.max_cell_voltage >= target_voltage || inputValues.max_cell_temperature > max_allowable_cell_temperature) { //checks whether or not any of the cells are charged yet
       outputValues.current_flow = false; //this will be function that actually turns on/off current flow 
       outputValues.current_setpoint = 0;

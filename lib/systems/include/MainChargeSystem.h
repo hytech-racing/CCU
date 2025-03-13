@@ -5,6 +5,7 @@
 #include "CCUEthernetInterface.h"
 
 
+
 class MainChargeSystem {
   public:
     /**
@@ -17,7 +18,7 @@ class MainChargeSystem {
      * @param CCUInput_s The incoming struct from ACU
      * @param CCUOutput_s The output struct from CCU with charge current and whether to enable charging
      */
-    void charge_cycle(CCUInput_s inputValues, CCUOutput_s& outputValues); //need to add safe start that ramps up to max over 10 seconds
+    void calculate_charge_current(CCUInput_s inputValues, CCUOutput_s& outputValues); 
 
   private:
 
