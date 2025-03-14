@@ -3,7 +3,7 @@
 
 enum ChargeStates {
     INITIAL, //not charging
-    NO_BALANCING, //charging but no balancing
+    CHARGING_NO_BALANCING, //charging but no balancing
     BALANCING //charging with balancing
 };
 #endif

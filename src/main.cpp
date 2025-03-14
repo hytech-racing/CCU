@@ -24,5 +24,5 @@ void setup() {
 }
 
 void loop() {
-  scheduler.execute();
+  scheduler.run();
 }
