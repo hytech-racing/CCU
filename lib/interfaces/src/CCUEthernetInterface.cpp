@@ -9,7 +9,7 @@
 
 //take the values from the protobuf message and update CCUInput_s 
 
-void ethernetInterface::recieve_pb_msg_acu_all_data(const hytech_msgs_ACUAllData_s &msg_in, ACUAllData_s &acu_all_data){
+void CCUEthernetInterface::recieve_pb_msg_acu_all_data(const hytech_msgs_ACUAllData_s &msg_in, ACUAllData_s &acu_all_data){
 
     for (uint32_t i = 0; i < msg_in.voltages_count; ++i){
         acu_all_data.voltages[i] = msg_in.voltages[i];
