@@ -3,27 +3,20 @@
 
 
 #include "CCUEthernetInterface.h"
+#include "CCUParams.h"
+
 
 
 class MainChargeSystem {
   public:
     /**
-     * @param target_volt The wanted final voltage for an individual cell
-     * @param max_charge_current The maximum charge current that should be given to ACU
-     * @param max_cell_temp The maximum allowable cell temperature while charging
-     */
-    MainChargeSystem(float target_volt, float max_charge_current, float max_cell_temp);
-    /**
-     * @param CCUInput_s The incoming struct from ACU
+     * @param ACUAllData_s All raw data from the ACU
+     * @param CCUParams User set params for the charge controller
      * @param CCUOutput_s The output struct from CCU with charge current and whether to enable charging
      */
-    void charge_cycle(CCUInput_s inputValues, CCUOutput_s& outputValues); //need to add safe start that ramps up to max over 10 seconds
+    void calculate_charge_current(ACUAllData_s inputValues, CCUParams& chargeParams, CCUOutput_s &chargeOutputs); 
 
   private:
-
-    float target_voltage;
-    float max_ac_charging_current;
-    float max_allowable_cell_temperature;
     };
 
 #endif
