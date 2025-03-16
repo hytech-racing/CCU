@@ -5,16 +5,32 @@
 #include "shared_firmware_types.h"
 #include "CCUParams.h"
 #include "ht_sched.hpp"
+#include "ht_task.hpp"
+#include "ChargeStates.h"
 
 /* Parameters */
 ACUAllData_s acu_all_data;
 CCUParams ccu_params; 
 
+/* Initialization of the charging state */
+ChargeStates current_state = ChargeStates::INITIAL;
+
 /* Systems */
 namespace qn = qindesign::network; //setup of qn namespace
 qn::EthernetUDP udp; //setup of qn namespace
 
-HT_SCHED::Scheduler& scheduler = HT_SCHED::Scheduler::getInstance(); //initializing HTScheduler
+
+/* Scheduler Setup */
+HT_SCHED::Scheduler& scheduler = HT_SCHED::Scheduler::getInstance(); 
+
+/* Task Declarations */
+HT_TASK::Task change_charging_state();
+HT_TASK::Task update_display();
+HT_TASK::Task read_dial();
+HT_TASK::Task CAN_send();
+HT_TASK::Task eth_send();
+HT_TASK::Task CAN_recieve();
+HT_TASK::Task eth_receive();
 
 /* Functions */
 void setup() {
