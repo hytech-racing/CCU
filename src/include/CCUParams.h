@@ -8,6 +8,7 @@ struct CCUParams
   const float max_voltage = ; //need data for this
   const float max_cell_temp = ; //need data for this
   const float max_current = ; //need data for this
+  bool start_button_pressed = false; //when pressed, tells CCU to start charging
 };
 #endif
 
