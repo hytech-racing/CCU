@@ -12,8 +12,8 @@
 ACUAllData_s acu_all_data;
 CCUParams ccu_params; 
 
-/* Initialization of the charging state */
-ChargeStates current_state = ChargeStates::INITIAL;
+/* Initialization of the charging state machine */
+ChargerStateMachine _current_state = ChargerState_e::INITIAL;
 
 /* Systems */
 namespace qn = qindesign::network; //setup of qn namespace
