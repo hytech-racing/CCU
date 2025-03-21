@@ -6,11 +6,7 @@
 #include "SharedFirmwareTypes.h"
 #include <vector>
 
-//WHAT ETHERERNET INTERFACE NEEDS TO DO
-//1. get the protobuf message 2. map the values to a struct 3. send out those values to main charge sys
-
-//1. take CCUOutputValues struct and make into protobuf message or CAN 2. send the values out to ams (I think this can be done through shared firmware interfaces include)
-struct CCUOutput_s
+struct CCUOutput_s 
 //Output values struct (what CCU is sending out)
 {
     bool current_flow;

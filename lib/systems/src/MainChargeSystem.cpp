@@ -3,26 +3,44 @@
 #include <algorithm>
 #include <cmath>
 
-/**
- * @brief void returning function that sets current_setpoint in the output struct to a calculated current value based on current cell voltage and temp 
- * @param ACUAllData_s struct populated with raw data from ACU
- * @param CCUParams struct with params that control the charge control unit
- */
+constexpr int NUM_CELLS = 126; 
+constexpr int NUM_TEMP_SENSORS = 48;
+constexpr int MAXIMUM_NEVER_EXCEED_CURRENT = 25; //25 is a tentative amp value based on 6kw at 240 volts, may need to be adjusted depending on voltage
+
 float MainChargeSystem::calculate_charge_current(ACUAllData_s inputValues, CCUParams &chargeParams)
- {
+{ 
+  float max_cell_voltage = 0;
+  float max_cell_temperature = 0;  
 
-    double max_cell_voltage = *std::max_element(inputValues.voltages, inputValues.voltages + (sizeof(inputValues.voltages) / sizeof(inputValues.voltages[0]))); //sizeof is needed because max value takes in a start and end memory location of the array
-    double max_cell_temperature = *std::max_element(inputValues.cell_temperatures, inputValues.cell_temperatures + (sizeof(inputValues.cell_temperatures) / sizeof(inputValues.cell_temperatures[0])));
+  for (int i = 0; i < NUM_CELLS; i++)
+  {
+    if (inputValues.voltages[i] > max_cell_voltage) 
+    {
+      max_cell_voltage = inputValues.voltages[i];
+    }
+  }
 
-    if (max_cell_voltage >= chargeParams.target_voltage || max_cell_temperature > chargeParams.max_allowable_cell_temperature) { //checks whether or not any of the cells are charged yet
-      return 0;
+  for (int i = 0; i < NUM_TEMP_SENSORS; i++)
+  {
+    if (inputValues.cell_temperatures[i] > max_cell_temperature) 
+    {
+      max_cell_temperature = inputValues.cell_temperatures[i];
     }
-    else { 
-      float temperature_scalar = ((chargeParams.max_allowable_cell_temperature - max_cell_temperature)/10); //divide by 10 to ensuse that scalar is within 0-1. 
-      float distance_from_ideal_voltage = chargeParams.max_allowable_cell_voltage - max_cell_voltage;
-      float voltage_scalar = ((log(distance_from_ideal_voltage+.5))/log(11))+.3;
-      float final_scalar = std::min(temperature_scalar, voltage_scalar);  
-      float calculated_current = 25 * final_scalar; //25 is a tentative amp value based on 6kw at 240 volts, may need to be asjusted depending on voltage
-      return calculated_current;
-    }
+  }
+  
+
+  if (max_cell_voltage <= chargeParams.target_voltage && max_cell_temperature < chargeParams.max_allowable_cell_temperature) //checks exit conditions
+  {
+    float temperature_scalar = ((chargeParams.max_allowable_cell_temperature - max_cell_temperature)/10);
+    float distance_from_ideal_voltage = chargeParams.max_allowable_cell_voltage - max_cell_voltage;
+    float voltage_scalar = ((log(distance_from_ideal_voltage+.5))/log(11))+.3; //this equation comes from the assumption that the difference between the cell voltage we want and the minimum cell voltage will be within 4 volts.  
+    float final_scalar = std::min(temperature_scalar, voltage_scalar); 
+    float saftey_check = std::min(final_scalar, static_cast<float>(1)); //ensures we never go above the set MAXIMUM_NEVER_EXCEED_CURRENT
+    float calculated_current = MAXIMUM_NEVER_EXCEED_CURRENT * saftey_check; 
+
+    return calculated_current; //amps
+  }
+
+  return 0; //amps
+
 }
