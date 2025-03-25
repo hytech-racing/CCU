@@ -4,7 +4,6 @@
 
 #include "hytech_msgs.pb.h"
 #include "SharedFirmwareTypes.h"
-#include <vector>
 
 struct CCUOutput_s 
 //Output values struct (what CCU is sending out)

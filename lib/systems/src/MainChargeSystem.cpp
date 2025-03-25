@@ -3,9 +3,6 @@
 #include <algorithm>
 #include <cmath>
 
-constexpr int NUM_CELLS = 126; 
-constexpr int NUM_TEMP_SENSORS = 48;
-constexpr int MAXIMUM_NEVER_EXCEED_CURRENT = 25; //25 is a tentative amp value based on 6kw at 240 volts, may need to be adjusted depending on voltage
 
 float MainChargeSystem::calculate_charge_current(ACUAllData_s inputValues, CCUParams &chargeParams)
 { 
@@ -27,7 +24,6 @@ float MainChargeSystem::calculate_charge_current(ACUAllData_s inputValues, CCUPa
       max_cell_temperature = inputValues.cell_temperatures[i];
     }
   }
-  
 
   if (max_cell_voltage <= chargeParams.target_voltage && max_cell_temperature < chargeParams.max_allowable_cell_temperature) //checks exit conditions
   {
@@ -40,7 +36,5 @@ float MainChargeSystem::calculate_charge_current(ACUAllData_s inputValues, CCUPa
 
     return calculated_current; //amps
   }
-
   return 0; //amps
-
 }
