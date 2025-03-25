@@ -14,10 +14,14 @@
 /* Parameters */
 ACUAllData_s acu_all_data;
 CCUParams ccu_params; 
+ACUAllData_s acu_all_data;
+CCUParams ccu_params; 
 
 /* Systems */
 namespace qn = qindesign::network; //setup of qn namespace
 qn::EthernetUDP udp; //setup of qn namespace
+
+HT_SCHED::Scheduler& scheduler = HT_SCHED::Scheduler::getInstance(); //initializing HTScheduler
 
 HT_SCHED::Scheduler& scheduler = HT_SCHED::Scheduler::getInstance(); //initializing HTScheduler
 
@@ -29,5 +33,6 @@ void setup() {
 }
 
 void loop() {
+  scheduler.run();
   scheduler.run();
 }
