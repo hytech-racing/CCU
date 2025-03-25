@@ -9,5 +9,3 @@ struct CCUParams
   float max_allowable_cell_temperature = 70; //need data for this
 };
 #endif
-
-//don't know if we still need this - const float ideal_cell_temp = 40;
