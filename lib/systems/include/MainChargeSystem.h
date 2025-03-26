@@ -26,7 +26,7 @@ class MainChargeSystem {
     float calculate_charge_current(ACUAllData_s inputValues); 
 
   private:
-    const int MAXIMUM_NEVER_EXCEED_CURRENT = 25; //25 is a tentative amp value based on 6kw at 240 volts, may need to be adjusted depending on voltage
+    const float MAXIMUM_NEVER_EXCEED_CURRENT = 25; //25 is a tentative amp value based on 6kw at 240 volts, may need to be adjusted depending on voltage
     float target_voltage_per_cell;
     float max_allowable_cell_temperature;
     };

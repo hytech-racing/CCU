@@ -30,7 +30,7 @@ float MainChargeSystem::calculate_charge_current(ACUAllData_s inputValues)
   {
     float temperature_scalar = ((max_allowable_cell_temperature - max_cell_temperature)/10); //NOLINT when the difference is less than 10, temperature can affect charge current, assumed that when the temperature difference is greater that we don't care
     float distance_from_ideal_voltage = target_voltage_per_cell - max_cell_voltage;
-    float voltage_scalar = ((log(distance_from_ideal_voltage+.5))/log(11))+.3; //NOLINT this is an equation and the numbers are important, it comes from the assumption that the difference between the cell voltage we want and the minimum cell voltage will be within 4 volts, at x=4 it is = to 1, at x=0 it is zero, follows ln path otherwise.
+    float voltage_scalar = ((logf(distance_from_ideal_voltage+.5))/log(11))+.3; //NOLINT this is an equation and the numbers are important, it comes from the assumption that the difference between the cell voltage we want and the minimum cell voltage will be within 4 volts, at x=4 it is = to 1, at x=0 it is zero, follows ln path otherwise.
     float final_scalar = std::min(temperature_scalar, voltage_scalar); 
     float saftey_check = std::min(final_scalar, static_cast<float>(1.00)); //ensures we never go above the set MAXIMUM_NEVER_EXCEED_CURRENT
     float calculated_current = MAXIMUM_NEVER_EXCEED_CURRENT * saftey_check; 
