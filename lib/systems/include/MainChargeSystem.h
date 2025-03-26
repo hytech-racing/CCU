@@ -13,8 +13,7 @@
 class MainChargeSystem {
   public:
     /**
-     * @param target_volt The wanted final voltage for an individual cell
-     * @param max_cell_volt The maximum allowable cell voltage
+     * @param target_volt The wanted final voltage for an individual cell, the charger will not charge past this voltage
      * @param max_cell_temp The maximum allowable cell temperature while charging
      */
     MainChargeSystem(float target_volt, float max_allow_cell_temp);
@@ -26,9 +25,9 @@ class MainChargeSystem {
     float calculate_charge_current(ACUAllData_s inputValues); 
 
   private:
-    const float MAXIMUM_NEVER_EXCEED_CURRENT = 25; //25 is a tentative amp value based on 6kw at 240 volts, may need to be adjusted depending on voltage
-    float target_voltage_per_cell;
-    float max_allowable_cell_temperature;
+    const float _MAXIMUM_NEVER_EXCEED_CURRENT = 25; //25 is a tentative amp value based on 6kw at 240 volts, may need to be adjusted depending on voltage
+    float _target_voltage_per_cell; //final voltage that we should charge to
+    float _max_allowable_cell_temperature;
     };
 
 #endif
