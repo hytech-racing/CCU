@@ -2,7 +2,7 @@
 #define __ETHERNETINTERFACE_H__
 
 
-//#include "hytech_msgs.pb.h" - commented out just to pass github checks
+#include "hytech_msgs.pb.h" 
 
 //WHAT ETHERERNET INTERFACE NEEDS TO DO
 //1. get the protobuf message 2. map the values to a struct 3. send out those values to main charge sys
