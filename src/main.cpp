@@ -2,18 +2,18 @@
 #include <Arduino.h>
 #include <QNEthernet.h>
 #include "MainChargeSystem.h"
-#include "shared_firmware_types.h"
+#include "SharedFirmwareTypes.h"
 #include "CCUParams.h"
 #include "ht_sched.hpp"
 #include "ht_task.hpp"
-#include "ChargeStates.h"
+#include "ChargerStateMachine.h"
 
 /* Parameters */
 ACUAllData_s acu_all_data;
 CCUParams ccu_params; 
 
 /* Initialization of the charging state machine */
-ChargerStateMachine _current_state = ChargerState_e::INITIAL;
+ChargerStateMachine state_machine;
 
 /* Systems */
 namespace qn = qindesign::network; //setup of qn namespace

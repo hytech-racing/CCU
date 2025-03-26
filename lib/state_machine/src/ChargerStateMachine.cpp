@@ -2,7 +2,7 @@
 
 
 //logic for changing states - still need to account for dial_position
-ChargerState_e ChargerStateMachine::evaluate_charger_state_machine(ChargerState_e _current_state, bool balancing_enabled, int dial_position, bool start_button_pressed) 
+ChargerState_e ChargerStateMachine::evaluate_charger_state_machine(ChargerState_e& _current_state, bool balancing_enabled, int dial_position, bool start_button_pressed) 
 {
     switch (_current_state) //takes in the _current_state variables and matches it to each case
     {
@@ -13,29 +13,25 @@ ChargerState_e ChargerStateMachine::evaluate_charger_state_machine(ChargerState_
             }
 
             if (balancing_enabled) {
-                set_state(ChargerState_e::BALANCING);
+                set_state(ChargerState_e::CHARGING_WITH_BALANCING);
             } 
 
             break;
 
         }
 
-        case ChargerState_e::BALANCING:
+        case ChargerState_e::CHARGING_WITH_BALANCING:
         {
-            if (balancing_enabled) {
-                set_state(ChargerState_e::BALANCING);
-                break;
-
-            } else {
+            if (!balancing_enabled) {
                 set_state(ChargerState_e::CHARGING_NO_BALANCING);
-                break;
-            }
+            } 
+            break;
         }
 
         case ChargerState_e::CHARGING_NO_BALANCING:
         {
             if (balancing_enabled) {
-                set_state(ChargerState_e::BALANCING);
+                set_state(ChargerState_e::CHARGING_WITH_BALANCING);
                 break;
 
             } else {
@@ -74,7 +70,7 @@ void ChargerStateMachine::handle_exit_logic(ChargerState_e prev_state)
         {
             break;
         }
-        case ChargerState_e::BALANCING:
+        case ChargerState_e::CHARGING_WITH_BALANCING:
         {
             break;
         }
@@ -98,7 +94,7 @@ void ChargerStateMachine::handle_entry_logic(ChargerState_e new_state)
         {
             break;
         }
-        case ChargerState_e::BALANCING:
+        case ChargerState_e::CHARGING_WITH_BALANCING:
         {
             break;
         }
