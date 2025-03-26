@@ -9,19 +9,19 @@ float MainChargeSystem::calculate_charge_current(ACUAllData_s inputValues, CCUPa
   float max_cell_voltage = 0;
   float max_cell_temperature = 0;  
 
-  for (int i = 0; i < NUM_CELLS; i++)
+  for (auto& e : inputValues.voltages)
   {
-    if (inputValues.voltages[i] > max_cell_voltage) 
+    if (e > max_cell_voltage) 
     {
-      max_cell_voltage = inputValues.voltages[i];
+      max_cell_voltage = e;
     }
   }
 
-  for (int i = 0; i < NUM_TEMP_SENSORS; i++)
+  for (auto& e : inputValues.cell_temperatures)
   {
-    if (inputValues.cell_temperatures[i] > max_cell_temperature) 
+    if (e > max_cell_temperature) 
     {
-      max_cell_temperature = inputValues.cell_temperatures[i];
+      max_cell_temperature = e;
     }
   }
 

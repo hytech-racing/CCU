@@ -12,8 +12,8 @@ void CCUEthernetInterface::recieve_pb_msg_acu_all_data(const hytech_msgs_ACUAllD
     { 
         acu_all_data.voltages[i] = msg_in.voltages[i]; //NOLINT should be passed in as normal voltage based on vcr
     }
-    for (uint32_t i = 0; i < msg_in.cell_temperatures_count; ++i) //NOLINT
+    for (uint32_t i = 0; i < msg_in.cell_temperatures_count; ++i) //NOLINT vcr said so
     {
-        acu_all_data.cell_temperatures[i] = msg_in.cell_temperatures[i]; //NOLINT
+        acu_all_data.cell_temperatures[i] = msg_in.cell_temperatures[i]; //NOLINT vcr said so
     }
 }
