@@ -1,5 +1,5 @@
-#ifndef CHARGESTATES_H
-#define CHARGESTATES_H
+#ifndef __CHARGESTATES_H__
+#define __CHARGESTATES_H__
 
 enum ChargeStates {
     INITIAL, //not charging

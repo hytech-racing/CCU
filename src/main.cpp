@@ -1,13 +1,8 @@
 /* Libraries */
-
-#ifdef ARDUINO
 #include <Arduino.h>
-
-#endif
-
 #include <QNEthernet.h>
 #include "MainChargeSystem.h"
-#include "SharedFirmwareTypes.h"
+#include "shared_firmware_types.h"
 #include "CCUParams.h"
 #include "ht_sched.hpp"
 
@@ -15,13 +10,11 @@
 ACUAllData_s acu_all_data;
 CCUParams ccu_params; 
 
-
 /* Systems */
 namespace qn = qindesign::network; //setup of qn namespace
 qn::EthernetUDP udp; //setup of qn namespace
 
 HT_SCHED::Scheduler& scheduler = HT_SCHED::Scheduler::getInstance(); //initializing HTScheduler
-
 
 /* Functions */
 void setup() {
@@ -32,5 +25,4 @@ void setup() {
 
 void loop() {
   scheduler.run();
-
 }

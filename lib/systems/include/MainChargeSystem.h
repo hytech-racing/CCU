@@ -1,33 +1,30 @@
-#ifndef MAINCHARGE_H
-#define MAINCHARGE_H
+#ifndef __MAINCHARGE_H__
+#define __MAINCHARGE_H__
 
-#ifdef TEENSY_OPT_SMALLEST_CODE
+
 #include "CCUEthernetInterface.h"
-#endif
-
-#include "CCUParams.h"
-#include "SharedFirmwareTypes.h"
 
 
 
 class MainChargeSystem {
   public:
     /**
-     * @param target_volt The wanted final voltage for an individual cell, the charger will not charge past this voltage
+     * @param target_volt The wanted final voltage for an individual cell
+     * @param max_charge_current The maximum charge current that should be given to ACU
      * @param max_cell_temp The maximum allowable cell temperature while charging
      */
-    MainChargeSystem(float target_volt, float max_allow_cell_temp);
-
-  /**
- * @brief function that returns a float value of the current to be sent to charge controller for this charge cycle 
- * @param ACUAllData_s struct populated with raw data from ACU
- */
-    float calculate_charge_current(ACUAllData_s inputValues); 
+    MainChargeSystem(float target_volt, float max_charge_current, float max_cell_temp);
+    /**
+     * @param CCUInput_s The incoming struct from ACU
+     * @param CCUOutput_s The output struct from CCU with charge current and whether to enable charging
+     */
+    void calculate_charge_current(CCUInput_s inputValues, CCUOutput_s& outputValues); 
 
   private:
-    const float _MAXIMUM_NEVER_EXCEED_CURRENT = 25; //25 is a tentative amp value based on 6kw at 240 volts, may need to be adjusted depending on voltage
-    float _target_voltage_per_cell; //final voltage that we should charge to
-    float _max_allowable_cell_temperature;
+
+    float target_voltage;
+    float max_ac_charging_current;
+    float max_allowable_cell_temperature;
     };
 
 #endif
