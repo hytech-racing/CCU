@@ -1,5 +1,5 @@
-#ifndef __CCUPARAMS_H__
-#define __CCUPARAMS_H__
+#ifndef CCUPARAMS_H
+#define CCUPARAMS_H
 
 struct CCUParams
 {

@@ -1,5 +1,5 @@
-#ifndef __ETHERNETINTERFACE_H__
-#define __ETHERNETINTERFACE_H__
+#ifndef CCUETHERNETINTERFACE_H
+#define CCUETHERNETINTERFACE_H
 
 
 #include "hytech_msgs.pb.h"

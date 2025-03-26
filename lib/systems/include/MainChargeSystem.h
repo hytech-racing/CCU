@@ -1,5 +1,5 @@
-#ifndef __MAINCHARGE_H__
-#define __MAINCHARGE_H__
+#ifndef MAINCHARGE_H
+#define MAINCHARGE_H
 
 #ifdef TEENSY_OPT_SMALLEST_CODE
 #include "CCUEthernetInterface.h"

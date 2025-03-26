@@ -1,5 +1,5 @@
-#ifndef __CHARGECYCLE_T__
-#define __CHARGECYCLE_T__
+#ifndef CHARGECYCLE_T
+#define CHARGECYCLE_T
 
 #include "MainChargeSystem.h"
 #include <gtest/gtest.h>
