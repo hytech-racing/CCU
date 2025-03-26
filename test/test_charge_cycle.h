@@ -116,24 +116,22 @@ namespace MockCCUInterface
     }
 }
 CCUParams chargeparams;
+MainChargeSystem mainChargeLoop(chargeparams.target_voltage_per_cell, chargeparams.max_allowable_cell_temperature);
 
 TEST(mainChargeTest, bothTooHigh){ 
-
-    EXPECT_EQ(MainChargeSystem::calculate_charge_current(MockCCUInterface::mock_receive_message(fake_data::volts_too_much, fake_data::all_temp_high), chargeparams),0);
-
+    EXPECT_EQ(mainChargeLoop.calculate_charge_current(MockCCUInterface::mock_receive_message(fake_data::volts_too_much, fake_data::all_temp_high)),0);
 };
 
 TEST(mainChargeTest, TempTooHigh){  
-
-    EXPECT_EQ(MainChargeSystem::calculate_charge_current(MockCCUInterface::mock_receive_message(fake_data::good_volts_low, fake_data::some_temp_high), chargeparams),0);
+    EXPECT_EQ(mainChargeLoop.calculate_charge_current(MockCCUInterface::mock_receive_message(fake_data::good_volts_low, fake_data::some_temp_high)),0);
 };
 
 TEST(mainChargeTest, VoltsTooHigh){  
-    EXPECT_EQ(MainChargeSystem::calculate_charge_current(MockCCUInterface::mock_receive_message(fake_data::more_volts_too_much, fake_data::good_temp), chargeparams),0);
+    EXPECT_EQ(mainChargeLoop.calculate_charge_current(MockCCUInterface::mock_receive_message(fake_data::more_volts_too_much, fake_data::good_temp)),0);
 };
 
 TEST(mainChargeTest, shouldBeTrue){  
-    EXPECT_NE(MainChargeSystem::calculate_charge_current(MockCCUInterface::mock_receive_message(fake_data::good_volts_high, fake_data::good_temp), chargeparams), 0);
+    EXPECT_NE(mainChargeLoop.calculate_charge_current(MockCCUInterface::mock_receive_message(fake_data::good_volts_high, fake_data::good_temp)),0);
 };
 
 

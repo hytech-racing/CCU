@@ -15,6 +15,7 @@
 ACUAllData_s acu_all_data;
 CCUParams ccu_params; 
 
+
 /* Systems */
 namespace qn = qindesign::network; //setup of qn namespace
 qn::EthernetUDP udp; //setup of qn namespace

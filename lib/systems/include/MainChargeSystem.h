@@ -8,18 +8,27 @@
 #include "CCUParams.h"
 #include "SharedFirmwareTypes.h"
 
-namespace MainChargeSystem
-{
-  constexpr int MAXIMUM_NEVER_EXCEED_CURRENT = 25; //25 is a tentative amp value based on 6kw at 240 volts, may need to be adjusted depending on voltage
 
 
+class MainChargeSystem {
+  public:
+    /**
+     * @param target_volt The wanted final voltage for an individual cell
+     * @param max_cell_volt The maximum allowable cell voltage
+     * @param max_cell_temp The maximum allowable cell temperature while charging
+     */
+    MainChargeSystem(float target_volt, float max_allow_cell_temp);
 
   /**
  * @brief function that returns a float value of the current to be sent to charge controller for this charge cycle 
  * @param ACUAllData_s struct populated with raw data from ACU
- * @param CCUParams struct with params that control the charge control unit
  */
-  float calculate_charge_current(ACUAllData_s inputValues, CCUParams& chargeParams); 
-}
+    float calculate_charge_current(ACUAllData_s inputValues); 
+
+  private:
+    const int MAXIMUM_NEVER_EXCEED_CURRENT = 25; //25 is a tentative amp value based on 6kw at 240 volts, may need to be adjusted depending on voltage
+    float target_voltage_per_cell;
+    float max_allowable_cell_temperature;
+    };
 
 #endif
