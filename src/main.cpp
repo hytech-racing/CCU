@@ -1,5 +1,10 @@
 /* Libraries */
+
+#ifdef ARDUINO
 #include <Arduino.h>
+
+#endif
+
 #include <QNEthernet.h>
 #include "MainChargeSystem.h"
 #include "SharedFirmwareTypes.h"
@@ -27,10 +32,11 @@ HT_SCHED::Scheduler& scheduler = HT_SCHED::Scheduler::getInstance();
 HT_TASK::Task change_charging_state();
 HT_TASK::Task update_display();
 HT_TASK::Task read_dial();
-HT_TASK::Task CAN_send();
+HT_TASK::Task CAN_send(); // NOLINT (capitalization of CAN)
 HT_TASK::Task eth_send();
-HT_TASK::Task CAN_recieve();
+HT_TASK::Task CAN_recieve(); // NOLINT (capitalization of CAN)
 HT_TASK::Task eth_receive();
+
 
 /* Functions */
 void setup() {
@@ -41,4 +47,5 @@ void setup() {
 
 void loop() {
   scheduler.run();
+
 }
