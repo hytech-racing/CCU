@@ -10,11 +10,15 @@ ChargerState_e ChargerStateMachine::evaluate_charger_state_machine(ChargerState_
         {
             if (start_button_pressed) {
                 set_state(ChargerState_e::CHARGING_NO_BALANCING);
+                break;
             }
 
             if (balancing_enabled) {
                 set_state(ChargerState_e::CHARGING_WITH_BALANCING);
-            } 
+                break;
+            }
+
+            // Code that must run in INITIAL state (sending CAN messages, checking exit conditions)
 
             break;
 
@@ -24,7 +28,11 @@ ChargerState_e ChargerStateMachine::evaluate_charger_state_machine(ChargerState_
         {
             if (!balancing_enabled) {
                 set_state(ChargerState_e::CHARGING_NO_BALANCING);
+                break;
             } 
+
+            // Code that must run in CHARGING_WITH_BALANCING state (sending CAN messages, checking for exit condition, etc)
+
             break;
         }
 
@@ -39,8 +47,10 @@ ChargerState_e ChargerStateMachine::evaluate_charger_state_machine(ChargerState_
                 break;
             }
 
+            // Code that must run in CHARGING_NO_BALANCING state
+
         }
-        default: 
+        default: // Should never occur
         {
             break;
         }
