@@ -1,14 +1,14 @@
 #ifndef CCUETHERNETINTERFACE_H
 #define CCUETHERNETINTERFACE_H
 
-
 #include "hytech_msgs.pb.h"
 #include "SharedFirmwareTypes.h"
 
+/**
+ * Output values from CCU to ACU.
+ */
 struct CCUOutput_s 
-//Output values struct (what CCU is sending out)
 {
-    bool current_flow;
     float current_setpoint;
     bool allow_balance;
 };
