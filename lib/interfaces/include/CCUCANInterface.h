@@ -9,8 +9,8 @@
 using CANRXBufferType = Circular_Buffer<uint8_t, (uint32_t)16, sizeof(CAN_message_t)>;
 using CANTXBufferType = Circular_Buffer<uint8_t, (uint32_t)16, sizeof(CAN_message_t)>; 
 
-namespace CCUCANInterface{
-
+namespace CCUCANInterface
+{
         const float CHARGERSCALINGFACTOR = 10;
         const float NUMCELLS = 126;
 
