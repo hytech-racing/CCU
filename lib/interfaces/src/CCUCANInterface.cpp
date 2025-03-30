@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-#define CHARGERSCALINGFACTOR 10
+
 
 
 CCUParams chargeParams;
@@ -15,8 +15,8 @@ CANTXBufferType CAN1_txBuffer;
 
 void CCUCANInterface::send_charge_control_message(float max_charging_current)
 {
-    uint16_t scaled_charging_current = static_cast<uint16_t>(max_charging_current * CHARGERSCALINGFACTOR);
-    uint16_t scaled_maximum_voltage = static_cast<uint16_t>(chargeParams.target_voltage_per_cell * 126 * CHARGERSCALINGFACTOR);
+    uint16_t scaled_charging_current = static_cast<uint16_t>(max_charging_current * CCUCANInterface::CHARGERSCALINGFACTOR);
+    uint16_t scaled_maximum_voltage = static_cast<uint16_t>(chargeParams.target_voltage_per_cell * CCUCANInterface::NUMCELLS * CCUCANInterface::CHARGERSCALINGFACTOR);
 
     CHARGER_CONTROL_t msg;
     

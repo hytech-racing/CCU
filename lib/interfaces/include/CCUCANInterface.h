@@ -11,6 +11,9 @@ using CANTXBufferType = Circular_Buffer<uint8_t, (uint32_t)16, sizeof(CAN_messag
 
 namespace CCUCANInterface{
 
+        const float CHARGERSCALINGFACTOR = 10;
+        const float NUMCELLS = 126;
+
         extern CANRXBufferType CAN1_rxBuffer;
         extern CANTXBufferType CAN1_txBuffer;
 
