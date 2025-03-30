@@ -23,14 +23,14 @@ qn::EthernetUDP udp; //setup of qn namespace
 /* Scheduler Setup */
 HT_SCHED::Scheduler& scheduler = HT_SCHED::Scheduler::getInstance(); 
 
-/* Task Declarations */
+/* Task Declarations 
 HT_TASK::Task change_charging_state();
 HT_TASK::Task update_display();
 HT_TASK::Task read_dial();
 HT_TASK::Task CAN_send();
 HT_TASK::Task eth_send();
 HT_TASK::Task CAN_recieve();
-HT_TASK::Task eth_receive();
+HT_TASK::Task eth_receive(); */
 
 /* Functions */
 void setup() {
@@ -41,4 +41,5 @@ void setup() {
 
 void loop() {
   scheduler.run();
+  
 }
