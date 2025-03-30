@@ -15,3 +15,5 @@ namespace CCUCANInterface{
         extern CANTXBufferType CAN1_txBuffer;
         void send_charge_control_message(FlexCAN_T4_Base *can_interface, uint16_t max_charging_current);
 }
+
+#endif
