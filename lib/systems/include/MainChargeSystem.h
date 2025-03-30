@@ -22,7 +22,7 @@ class MainChargeSystem {
  * @brief function that returns a float value of the current to be sent to charge controller for this charge cycle 
  * @param ACUAllData_s struct populated with raw data from ACU
  */
-    uint16_t calculate_charge_current(ACUAllData_s inputValues); 
+    float calculate_charge_current(ACUAllData_s inputValues); 
 
   private:
     const float _MAXIMUM_NEVER_EXCEED_CURRENT = 25; //25 is a tentative amp value based on 6kw at 240 volts, may need to be adjusted depending on voltage

@@ -3,7 +3,7 @@
 
 #include "hytech.h"
 #include "CANInterface.h"
-
+#include "CCUParams.h"
 
 
 using CANRXBufferType = Circular_Buffer<uint8_t, (uint32_t)16, sizeof(CAN_message_t)>;
@@ -16,7 +16,7 @@ namespace CCUCANInterface{
 
         extern FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> CCU_CAN;
 
-        void send_charge_control_message(FlexCAN_T4_Base *can_interface, uint16_t max_charging_current);
+        void send_charge_control_message(float max_charging_current);
 }
 
 #endif
