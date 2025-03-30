@@ -1,0 +1,14 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "PlatformIO",
+			"task": "Test (test_systems_env)",
+			"problemMatcher": [
+				"$platformio"
+			],
+			"group": "test",
+			"label": "PlatformIO: Test (test_systems_env)"
+		}
+	]
+}
