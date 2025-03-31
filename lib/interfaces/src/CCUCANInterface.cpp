@@ -39,12 +39,17 @@ void send_charge_control_message(float max_charging_current)
     CAN_util::enqueue_msg(&msg, &Pack_CHARGER_CONTROL_hytech, CCUCANInterface::CAN1_txBuffer);
 }
 
-void send_acu_message()
+void send_ccu_status_to_acu_message(float max_charging_current)
 {
     CCU_STATUS_t msg;
-
-    msg.charger_enabled = 1; //NOLINT tells ACU charger is connected
-
+    if (max_charging_current != 0)
+    {
+        msg.charger_enabled = 1; //NOLINT tells ACU car is charging
+    }
+    else
+    {
+        msg.charger_enabled = 0; //NOLINT tells ACU car is not charging
+    }
     CAN_util::enqueue_msg(&msg, &Pack_CCU_STATUS_hytech, CCUCANInterface::CAN1_txBuffer); //Might need to change this so it sends to a different CAN line
 }
 }
