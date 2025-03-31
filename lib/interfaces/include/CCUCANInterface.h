@@ -7,7 +7,7 @@
 
 
 using CANRXBufferType = Circular_Buffer<uint8_t, (uint32_t)16, sizeof(CAN_message_t)>;
-using CANTXBufferType = Circular_Buffer<uint8_t, (uint32_t)16, sizeof(CAN_message_t)>; 
+using CANTXBufferType = Circular_Buffer<uint8_t, (uint32_t)128, sizeof(CAN_message_t)>; 
 
 namespace CCUCANInterface
 {
