@@ -12,6 +12,7 @@
 #include "ht_sched.hpp"
 #include "ht_task.hpp"
 #include "ChargerStateMachine.h"
+#include "CCUCANInterfaceImpl.h"
 
 /* Parameters */
 ACUAllData_s acu_all_data;
