@@ -11,9 +11,9 @@ CANRXBufferType CAN1_rxBuffer;
 CANTXBufferType CAN1_txBuffer;
 
 
+namespace CCUCANInterface {
 
-
-void CCUCANInterface::send_charge_control_message(float max_charging_current)
+void send_charge_control_message(float max_charging_current)
 {
     uint16_t scaled_charging_current = static_cast<uint16_t>(max_charging_current * CCUCANInterface::CHARGERSCALINGFACTOR);
     uint16_t scaled_maximum_voltage = static_cast<uint16_t>(chargeParams.target_voltage_per_cell * CCUCANInterface::NUMCELLS * CCUCANInterface::CHARGERSCALINGFACTOR);
@@ -37,4 +37,14 @@ void CCUCANInterface::send_charge_control_message(float max_charging_current)
         msg.control = (1); //NOLINT turns charging off
     }
     CAN_util::enqueue_msg(&msg, &Pack_CHARGER_CONTROL_hytech, CCUCANInterface::CAN1_txBuffer);
+}
+
+void send_acu_message()
+{
+    CCU_STATUS_t msg;
+
+    msg.charger_enabled = 1; //NOLINT tells ACU charger is connected
+
+    CAN_util::enqueue_msg(&msg, &Pack_CCU_STATUS_hytech, CCUCANInterface::CAN1_txBuffer); //Might need to change this so it sends to a different CAN line
+}
 }

@@ -20,6 +20,7 @@ namespace CCUCANInterface
         extern FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> CCU_CAN;
 
         void send_charge_control_message(float max_charging_current);
+        void send_acu_message();
 }
 
 #endif
