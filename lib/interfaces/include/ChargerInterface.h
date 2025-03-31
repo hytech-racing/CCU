@@ -4,6 +4,7 @@
 #include "FlexCAN_T4.h"
 #include "hytech.h"
 #include "SharedFirmwareTypes.h"
+#include "CANInterface.h"
 #include "etl/singleton.h"
 
 class ChargerInterface
@@ -12,6 +13,8 @@ class ChargerInterface
     void receive_charger_data_message(const CAN_message_t& msg, unsigned long curr_millis);
 
     void send_charger_message();
+
+    void enqueue_charging_data();
 
     private:
     CHARGER_DATA_t _curr_data = {};
