@@ -1,4 +1,5 @@
 #include "ACUInterface.h"
+#include "CCUCANInterfaceImpl.h"
 
 void ACUInterface::reset_acu_heartbeat()
 {
@@ -28,4 +29,11 @@ void ACUInterface::receive_voltages_message(const CAN_message_t& msg, unsigned l
     _curr_data.low_voltage = HYTECH_low_voltage_ro_fromS(static_cast<float>(voltages_msg.low_voltage_ro));
     _curr_data.high_voltage = HYTECH_high_voltage_ro_fromS(static_cast<float>(voltages_msg.high_voltage_ro));
     _curr_data.total_voltage = HYTECH_total_voltage_ro_fromS(static_cast<float>(voltages_msg.total_voltage_ro));
+}
+
+void ACUInterface::enqueue_ccu_status_data()
+{
+    CCU_STATUS_t ccu_status = {};
+    ccu_status.charger_enabled = true; // Treat this as a balancing_enabled boolean
+    CAN_util::enqueue_msg(&ccu_status, &Pack_CCU_STATUS_hytech, CCUCANInterfaceImpl::acu_can_tx_buffer);
 }

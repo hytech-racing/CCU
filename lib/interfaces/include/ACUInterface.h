@@ -5,6 +5,7 @@
 #include "hytech.h"
 #include "SharedFirmwareTypes.h"
 #include "etl/singleton.h"
+#include "CANInterface.h"
 
 struct ACUInterfaceData_s
 {
@@ -17,7 +18,8 @@ struct ACUInterfaceData_s
     bool heartbeat_ok = false;
 };
 
-class ACUInterface {
+class ACUInterface
+{
 public:
 
     ACUInterface() = delete;
@@ -35,6 +37,8 @@ public:
     void receive_voltages_message(const CAN_message_t& msg, unsigned long curr_millis);
     
     ACUInterfaceData_s get_latest_data() {return _curr_data;};
+
+    void enqueue_ccu_status_data();
 
 private:
 

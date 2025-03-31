@@ -17,7 +17,7 @@ template <CAN_DEV_TABLE CAN_DEV> using FlexCAN_Type = FlexCAN_T4<CAN_DEV, RX_SIZ
 struct CANInterfaces
 {
     explicit CANInterfaces(
-        ACUInterface &acu_int, 
+        ACUInterface &acu_int,
         ChargerInterface &charger_int
     )
         : acu_interface(acu_int), 
@@ -26,8 +26,6 @@ struct CANInterfaces
     ACUInterface &acu_interface;
     ChargerInterface &charger_interface;
 };
-
-using CANInterfacesInstance = etl::singleton<CANInterfaces>;
 
 namespace CCUCANInterfaceImpl
 {

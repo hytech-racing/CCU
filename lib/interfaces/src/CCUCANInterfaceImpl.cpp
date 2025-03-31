@@ -62,4 +62,5 @@ void send_all_CAN_msgs(CANTXBufferType &buffer, FlexCAN_T4_Base *can_interface) 
         can_interface->write(msg);
     }
 }
+
 } // namespace CCUCANInterfaceImpl
