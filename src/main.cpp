@@ -34,13 +34,8 @@ HT_TASK::Task update_display();
 HT_TASK::Task read_dial();
 HT_TASK::Task CAN_send(); // NOLINT (capitalization of CAN)
 HT_TASK::Task eth_send();
-<<<<<<< HEAD
-HT_TASK::Task CAN_recieve();
-HT_TASK::Task eth_receive(); */
-=======
 HT_TASK::Task CAN_recieve(); // NOLINT (capitalization of CAN)
-HT_TASK::Task eth_receive();
->>>>>>> a1bc59b8b586950e731269eb89212acbe819dad3
+HT_TASK::Task eth_receive(); */
 
 
 /* Functions */
@@ -52,9 +47,5 @@ void setup() {
 
 void loop() {
   scheduler.run();
-<<<<<<< HEAD
   
-=======
-
->>>>>>> a1bc59b8b586950e731269eb89212acbe819dad3
 }

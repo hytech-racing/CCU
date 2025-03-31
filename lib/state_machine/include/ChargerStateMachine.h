@@ -12,7 +12,7 @@ class ChargerStateMachine
     public:
     ChargerState_e evaluate_charger_state_machine(ChargerState_e& _current_state, bool balancing_enabled, int dial_position, bool start_button_pressed);
 
-    ChargerState_e get_state() {return _current_state};
+    ChargerState_e get_state() {return _current_state;}
 
     private:
     void set_state(ChargerState_e new_state);
