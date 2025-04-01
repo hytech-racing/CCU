@@ -13,7 +13,7 @@ CANTXBufferType CAN1_txBuffer;
 
 namespace CCUCANInterface {
 
-void send_charge_control_message(float max_charging_current)
+void enqueue_charge_control_message(float max_charging_current)
 {
     uint16_t scaled_charging_current = static_cast<uint16_t>(max_charging_current * CCUCANInterface::CHARGERSCALINGFACTOR);
     uint16_t scaled_maximum_voltage = static_cast<uint16_t>(chargeParams.target_voltage_per_cell * CCUCANInterface::NUMCELLS * CCUCANInterface::CHARGERSCALINGFACTOR);
@@ -39,7 +39,7 @@ void send_charge_control_message(float max_charging_current)
     CAN_util::enqueue_msg(&msg, &Pack_CHARGER_CONTROL_hytech, CCUCANInterface::CAN1_txBuffer);
 }
 
-void send_ccu_status_to_acu_message(float max_charging_current)
+void enqueue_ccu_status_to_acu_message(float max_charging_current)
 {
     CCU_STATUS_t msg;
     if (max_charging_current != 0)
