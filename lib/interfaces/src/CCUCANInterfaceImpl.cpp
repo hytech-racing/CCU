@@ -14,14 +14,14 @@ CANTXBufferType charger_can_tx_buffer;
 void on_acu_can_receive(const CAN_message_t &msg) {
     // Serial.println("recvd");
     uint8_t buf[sizeof(CAN_message_t)];
-    memmove(buf, &msg, sizeof(msg));
+    memmove(buf, &msg, sizeof(msg)); // NOLINT (decay of array to pointer)
     acu_can_rx_buffer.push_back(buf, sizeof(CAN_message_t));
 }
 
 void on_charger_can_receive(const CAN_message_t &msg) {
     // Serial.println("recvd");
     uint8_t buf[sizeof(CAN_message_t)];
-    memmove(buf, &msg, sizeof(msg));
+    memmove(buf, &msg, sizeof(msg)); // NOLINT (decay of array to pointer)
     charger_can_rx_buffer.push_back(buf, sizeof(CAN_message_t));
 }
 
@@ -58,7 +58,7 @@ void send_all_CAN_msgs(CANTXBufferType &buffer, FlexCAN_T4_Base *can_interface) 
         CAN_message_t msg;
         uint8_t buf[sizeof(CAN_message_t)];
         buffer.pop_front(buf, sizeof(CAN_message_t));
-        memmove(&msg, buf, sizeof(msg));
+        memmove(&msg, buf, sizeof(msg)); // NOLINT (decay of array to pointer)
         can_interface->write(msg);
     }
 }

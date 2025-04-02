@@ -1,14 +1,8 @@
 #ifndef MAINCHARGE_H
 #define MAINCHARGE_H
 
-#ifdef TEENSY_OPT_SMALLEST_CODE
-#include "CCUEthernetInterface.h"
-#endif
-
 #include "CCUParams.h"
 #include "SharedFirmwareTypes.h"
-
-
 
 class MainChargeSystem {
   public:
@@ -28,6 +22,6 @@ class MainChargeSystem {
     const float _MAXIMUM_NEVER_EXCEED_CURRENT = 25; //25 is a tentative amp value based on 6kw at 240 volts, may need to be adjusted depending on voltage
     float _target_voltage_per_cell; //final voltage that we should charge to
     float _max_allowable_cell_temperature;
-    };
+};
 
 #endif
