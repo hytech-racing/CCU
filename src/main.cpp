@@ -13,6 +13,7 @@
 #include "ht_task.hpp"
 #include "ChargerStateMachine.h"
 #include "CCUCANInterfaceImpl.h"
+#include "CCUTasks.h"
 
 /* Parameters */
 ACUAllData_s acu_all_data;
@@ -29,20 +30,39 @@ qn::EthernetUDP udp; //setup of qn namespace
 /* Scheduler Setup */
 HT_SCHED::Scheduler& scheduler = HT_SCHED::Scheduler::getInstance(); 
 
-/* Task Declarations 
-HT_TASK::Task change_charging_state();
-HT_TASK::Task update_display();
-HT_TASK::Task read_dial();
-HT_TASK::Task CAN_send(); // NOLINT (capitalization of CAN)
-HT_TASK::Task eth_send();
-HT_TASK::Task CAN_recieve(); // NOLINT (capitalization of CAN)
-HT_TASK::Task eth_receive(); */
+
+/* Task Declarations */
+HT_TASK::Task update_display_task(HT_TASK::DUMMY_FUNCTION, run_update_display_task, 2, 20000UL); //not sure what the priorities and loop rate should be for each task
+HT_TASK::Task read_dial_task(HT_TASK::DUMMY_FUNCTION, run_read_dial_task, 2, 20000UL);
+HT_TASK::Task send_ACU_CAN(HT_TASK::DUMMY_FUNCTION, handle_enqueue_ACU_CAN_data, 2, 20000UL);
+HT_TASK::Task send_Charger_CAN(HT_TASK::DUMMY_FUNCTION, handle_enqueue_Charger_CAN_data, 2, 20000UL);
+HT_TASK::Task send_ethernet(HT_TASK::DUMMY_FUNCTION, run_send_ethernet, 2, 20000UL);
+HT_TASK::Task receive_ethernet(HT_TASK::DUMMY_FUNCTION, run_receive_ethernet, 2, 20000UL);
+HT_TASK::Task send_all_data(HT_TASK::DUMMY_FUNCTION, handle_send_all_data, 2, 20000UL);
+
+
+ 
+/* Extern CAN instances */
+FlexCAN_Type<CAN1> CCUCANInterfaceImpl::ACU_CAN;
+FlexCAN_Type<CAN2> CCUCANInterfaceImpl::CHARGER_CAN;
+
 
 
 /* Functions */
 void setup() {
   //Serial.begin(115200); //I dont know if this is the baudrate I also don't know if this is even needed
   qn::Ethernet.begin(); //begins QNEthernet
+
+  ACUInterfaceInstance::instance();
+  ChargerInterfaceInstance::instance();
+
+  scheduler.schedule(update_display_task);
+  scheduler.schedule(read_dial_task);
+  scheduler.schedule(send_ACU_CAN);
+  scheduler.schedule(send_Charger_CAN);
+  scheduler.schedule(send_ethernet);
+  scheduler.schedule(receive_ethernet);
+  scheduler.schedule(send_all_data);
   
 }
 

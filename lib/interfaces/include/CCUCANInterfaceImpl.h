@@ -27,6 +27,7 @@ struct CANInterfaces
     ChargerInterface &charger_interface;
 };
 
+
 namespace CCUCANInterfaceImpl
 {
 
@@ -39,8 +40,7 @@ namespace CCUCANInterfaceImpl
     extern CANTXBufferType acu_can_tx_buffer;
 
     extern FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> CHARGER_CAN; // gets defined in main as of right now
-    extern FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> ACU_CAN; // gets defined in main as of right now
-
+    extern FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> ACU_CAN; // gets defined in main as of right now       
 
     void on_inverter_can_receive(const CAN_message_t &msg);
     void on_telem_can_receive(const CAN_message_t &msg);
