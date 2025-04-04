@@ -1,17 +1,17 @@
 #include "Arduino.h"
 
-bool kick = 1;
+bool kick = 1; // NOLINT
 
 void setup() {
-    pinMode(26, OUTPUT); //watchdog
-    pinMode(27, OUTPUT); //sw shutdown
-    Serial.begin(115200);
+    pinMode(26, OUTPUT); // NOLINT watchdog
+    pinMode(27, OUTPUT); //NOLINT sw shutdown
+    Serial.begin(115200); // NOLINT
 }
 
 void loop() {
-    digitalWrite(26, kick);
-    digitalWrite(27, HIGH);
+    digitalWrite(26, kick); // NOLINT
+    digitalWrite(27, HIGH); // NOLINT
     kick = !kick;
-    delay(10);
+    delay(10); // NOLINT
     Serial.println(kick);
 }

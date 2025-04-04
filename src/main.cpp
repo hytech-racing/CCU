@@ -32,13 +32,13 @@ HT_SCHED::Scheduler& scheduler = HT_SCHED::Scheduler::getInstance();
 
 
 /* Task Declarations */
-HT_TASK::Task update_display_task(HT_TASK::DUMMY_FUNCTION, run_update_display_task, 2, 20000UL); //not sure what the priorities and loop rate should be for each task
-HT_TASK::Task read_dial_task(HT_TASK::DUMMY_FUNCTION, run_read_dial_task, 2, 20000UL);
-HT_TASK::Task send_ACU_CAN(HT_TASK::DUMMY_FUNCTION, handle_enqueue_ACU_CAN_data, 2, 20000UL);
-HT_TASK::Task send_Charger_CAN(HT_TASK::DUMMY_FUNCTION, handle_enqueue_Charger_CAN_data, 2, 20000UL);
-HT_TASK::Task send_ethernet(HT_TASK::DUMMY_FUNCTION, run_send_ethernet, 2, 20000UL);
-HT_TASK::Task receive_ethernet(HT_TASK::DUMMY_FUNCTION, run_receive_ethernet, 2, 20000UL);
-HT_TASK::Task send_all_data(HT_TASK::DUMMY_FUNCTION, handle_send_all_data, 2, 20000UL);
+HT_TASK::Task update_display_task(HT_TASK::DUMMY_FUNCTION, run_update_display_task, CCUConstants::UPDATE_DISPLAY_PRIORITY, CCUConstants::HT_SCHED_PERIOD_US); //not sure what the priorities and loop rate should be for each task
+HT_TASK::Task read_dial_task(HT_TASK::DUMMY_FUNCTION, run_read_dial_task, CCUConstants::READ_DIAL_PRIORITY, CCUConstants::HT_SCHED_PERIOD_US);
+HT_TASK::Task send_ACU_CAN(HT_TASK::DUMMY_FUNCTION, handle_enqueue_acu_can_data, CCUConstants::ENQUEUE_ACU_CAN_DATA_PRIORITY, CCUConstants::HT_SCHED_PERIOD_US);
+HT_TASK::Task send_Charger_CAN(HT_TASK::DUMMY_FUNCTION, handle_enqueue_charger_can_data, CCUConstants::ENQUEUE_CHARGER_CAN_DATA_PRIORITY, CCUConstants::HT_SCHED_PERIOD_US);
+HT_TASK::Task send_ethernet(HT_TASK::DUMMY_FUNCTION, run_send_ethernet, CCUConstants::SEND_ETHERNET_PRIORITY, CCUConstants::HT_SCHED_PERIOD_US);
+HT_TASK::Task receive_ethernet(HT_TASK::DUMMY_FUNCTION, run_receive_ethernet, CCUConstants::RECIEVE_ETHERNET_PRIORITY, CCUConstants::HT_SCHED_PERIOD_US);
+HT_TASK::Task send_all_data(HT_TASK::DUMMY_FUNCTION, handle_send_all_data, CCUConstants::SEND_ALL_DATA_PRIORITY, CCUConstants::HT_SCHED_PERIOD_US);
 
 
  

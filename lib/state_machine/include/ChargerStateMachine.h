@@ -1,7 +1,7 @@
 #ifndef CHARGERSTATEMACHINE_H
 #define CHARGERSTATEMACHINE_H
 
-enum class ChargerState_e {
+enum class ChargerState_e { //NOLINT
     INITIAL, //not charging
     CHARGING_NO_BALANCING, //charging but no balancing
     CHARGING_WITH_BALANCING //charging with balancing

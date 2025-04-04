@@ -7,4 +7,17 @@ struct CCUParams
   float target_voltage_per_cell = 3.1; //per cell
   float max_allowable_cell_temperature = 70; //need data for this
 };
+
+
+namespace CCUConstants
+{
+  constexpr unsigned long HT_SCHED_PERIOD_US = 20000UL;
+  constexpr unsigned long UPDATE_DISPLAY_PRIORITY = 2;
+  constexpr unsigned long READ_DIAL_PRIORITY = 2;
+  constexpr unsigned long ENQUEUE_ACU_CAN_DATA_PRIORITY = 2;
+  constexpr unsigned long ENQUEUE_CHARGER_CAN_DATA_PRIORITY = 2;
+  constexpr unsigned long SEND_ETHERNET_PRIORITY = 2;
+  constexpr unsigned long RECIEVE_ETHERNET_PRIORITY = 2;
+  constexpr unsigned long SEND_ALL_DATA_PRIORITY = 2;
+}
 #endif

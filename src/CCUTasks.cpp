@@ -12,12 +12,12 @@ bool run_read_dial_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo&
 }
 
 
-bool handle_enqueue_ACU_CAN_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+bool handle_enqueue_acu_can_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
     ACUInterfaceInstance::instance().enqueue_ccu_status_data();
     return true;
 }
 
-bool handle_enqueue_Charger_CAN_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+bool handle_enqueue_charger_can_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
     ChargerInterfaceInstance::instance().enqueue_charging_data();
     return true;
 }
