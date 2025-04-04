@@ -6,6 +6,7 @@
 #include "SharedFirmwareTypes.h"
 #include "etl/singleton.h"
 #include "CANInterface.h"
+#include "CCUParams.h"
 
 struct ACUInterfaceData_s
 {

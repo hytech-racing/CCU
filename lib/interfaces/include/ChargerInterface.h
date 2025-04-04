@@ -9,14 +9,15 @@
 
 class ChargerInterface
 {
-    public:
+public:
+
     void receive_charger_data_message(const CAN_message_t& msg, unsigned long curr_millis);
 
     void send_charger_message();
 
     void enqueue_charging_data();
 
-    private:
+private:
     CHARGER_DATA_t _curr_data = {};
 };
 

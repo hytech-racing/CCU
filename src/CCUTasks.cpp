@@ -1,5 +1,18 @@
 #include "CCUTasks.h"
 
+void intitialize_all_interfaces()
+{
+    Serial.begin(115200);
+    
+    /* ACU Interface */
+    ACUInterfaceInstance::instance();
+
+    /* Charger Interface */
+    ChargerInterfaceInstance::instance();
+  
+    handle_CAN_setup(CCUCANInterfaceImpl::ACU_CAN, CCUConstants::CAN_BAUDRATE, &CCUCANInterfaceImpl::on_acu_can_receive);
+}
+
 bool run_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
 
     return true;
@@ -36,7 +49,7 @@ bool run_receive_ethernet(const unsigned long& sysMicros, const HT_TASK::TaskInf
 
 bool handle_send_all_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
     CCUCANInterfaceImpl::send_all_CAN_msgs(CCUCANInterfaceImpl::acu_can_tx_buffer, &CCUCANInterfaceImpl::ACU_CAN);
-    CCUCANInterfaceImpl::send_all_CAN_msgs(CCUCANInterfaceImpl::charger_can_tx_buffer, &CCUCANInterfaceImpl::CHARGER_CAN);
+    //CCUCANInterfaceImpl::send_all_CAN_msgs(CCUCANInterfaceImpl::charger_can_tx_buffer, &CCUCANInterfaceImpl::CHARGER_CAN);
     return true;
 }
 

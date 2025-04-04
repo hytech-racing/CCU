@@ -2,14 +2,13 @@
 
 #include <cstdint>
 
+CANRXBufferType CCUCANInterfaceImpl::acu_can_rx_buffer;
+CANRXBufferType CCUCANInterfaceImpl::charger_can_rx_buffer;
+
+CANTXBufferType CCUCANInterfaceImpl::acu_can_tx_buffer;
+CANTXBufferType CCUCANInterfaceImpl::charger_can_tx_buffer;
 
 namespace CCUCANInterfaceImpl {
-
-CANRXBufferType acu_can_rx_buffer;
-CANRXBufferType charger_can_rx_buffer;
-
-CANTXBufferType acu_can_tx_buffer;
-CANTXBufferType charger_can_tx_buffer;
 
 void on_acu_can_receive(const CAN_message_t &msg) {
     // Serial.println("recvd ACU");

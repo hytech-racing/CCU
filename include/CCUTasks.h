@@ -8,6 +8,8 @@
 #include "CCUEthernetInterface.h"
 #include "ChargerInterface.h"
 
+void intitialize_all_interfaces();
+
 bool run_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
 bool run_read_dial_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);

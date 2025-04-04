@@ -43,30 +43,29 @@ HT_TASK::Task send_all_data(HT_TASK::DUMMY_FUNCTION, handle_send_all_data, CCUCo
 
  
 /* Extern CAN instances */
-FlexCAN_Type<CAN1> CCUCANInterfaceImpl::ACU_CAN;
-FlexCAN_Type<CAN2> CCUCANInterfaceImpl::CHARGER_CAN;
-
+FlexCAN_T4<CAN1> CCUCANInterfaceImpl::ACU_CAN;
+FlexCAN_T4<CAN2> CCUCANInterfaceImpl::CHARGER_CAN;
 
 
 /* Functions */
 void setup() {
-  //Serial.begin(115200); //I dont know if this is the baudrate I also don't know if this is even needed
+  Serial.begin(115200); //I dont know if this is the baudrate I also don't know if this is even needed
   qn::Ethernet.begin(); //begins QNEthernet
+
 
   ACUInterfaceInstance::instance();
   ChargerInterfaceInstance::instance();
 
-  scheduler.schedule(update_display_task);
-  scheduler.schedule(read_dial_task);
+  //scheduler.schedule(update_display_task);
+  //scheduler.schedule(read_dial_task);
   scheduler.schedule(send_ACU_CAN);
   scheduler.schedule(send_Charger_CAN);
-  scheduler.schedule(send_ethernet);
-  scheduler.schedule(receive_ethernet);
+  //scheduler.schedule(send_ethernet);
+  //scheduler.schedule(receive_ethernet);
   scheduler.schedule(send_all_data);
   
 }
 
 void loop() {
   scheduler.run();
-  
 }

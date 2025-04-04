@@ -28,9 +28,9 @@ void setup()
 
 void loop()
 {
-    delay(10);
+    delay(100);
     CAN_message_t test_msg;
-    test_msg.id = 0x11;
+    test_msg.id = 0xdd;
     test_msg.len = 1;
     test_msg.buf[0] = 0x45;
     MAIN_CAN.write(test_msg);
