@@ -12,14 +12,14 @@ CANTXBufferType acu_can_tx_buffer;
 CANTXBufferType charger_can_tx_buffer;
 
 void on_acu_can_receive(const CAN_message_t &msg) {
-    // Serial.println("recvd");
+    // Serial.println("recvd ACU");
     uint8_t buf[sizeof(CAN_message_t)];
     memmove(buf, &msg, sizeof(msg)); // NOLINT (decay of array to pointer)
     acu_can_rx_buffer.push_back(buf, sizeof(CAN_message_t));
 }
 
 void on_charger_can_receive(const CAN_message_t &msg) {
-    // Serial.println("recvd");
+    // Serial.println("recvd charger");
     uint8_t buf[sizeof(CAN_message_t)];
     memmove(buf, &msg, sizeof(msg)); // NOLINT (decay of array to pointer)
     charger_can_rx_buffer.push_back(buf, sizeof(CAN_message_t));

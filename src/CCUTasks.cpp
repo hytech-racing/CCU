@@ -1,9 +1,4 @@
 #include "CCUTasks.h"
-#include "CCUCANInterfaceImpl.h"
-#include "ACUInterface.h"
-#include "CCUEthernetInterface.h"
-#include "ChargerInterface.h"
-
 
 bool run_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
 
