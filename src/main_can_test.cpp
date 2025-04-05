@@ -6,7 +6,7 @@ FlexCAN_T4<CAN1> MAIN_CAN;
 
 void on_recv(const CAN_message_t &msg)
 {
-    Serial.println("msg recvd");
+    Serial.println("ccu msg recvd");
     Serial.print("MB: "); Serial.print(msg.mb);
     Serial.print("  ID: 0x"); Serial.print(msg.id, HEX);
     Serial.print("  EXT: "); Serial.print(msg.flags.extended);
@@ -28,6 +28,7 @@ void setup()
 
 void loop()
 {
+  Serial.println("looping");
     delay(100);
     CAN_message_t test_msg;
     test_msg.id = 0xdd;

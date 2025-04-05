@@ -43,8 +43,8 @@ HT_TASK::Task send_all_data(HT_TASK::DUMMY_FUNCTION, handle_send_all_data, CCUCo
 
  
 /* Extern CAN instances */
-FlexCAN_T4<CAN1> CCUCANInterfaceImpl::ACU_CAN;
-FlexCAN_T4<CAN2> CCUCANInterfaceImpl::CHARGER_CAN;
+FlexCAN_T4<CAN1> ACU_CAN;
+FlexCAN_T4<CAN2> CHARGER_CAN;
 
 
 /* Functions */

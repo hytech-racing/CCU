@@ -16,7 +16,7 @@ namespace CCUConstants
   constexpr unsigned long HT_SCHED_PERIOD_US = 20000UL;
   constexpr unsigned long UPDATE_DISPLAY_PRIORITY = 2;
   constexpr unsigned long READ_DIAL_PRIORITY = 2;
-  constexpr unsigned long ENQUEUE_ACU_CAN_DATA_PRIORITY = 2;
+  constexpr unsigned long ENQUEUE_ACU_CAN_DATA_PRIORITY = 1;
   constexpr unsigned long ENQUEUE_CHARGER_CAN_DATA_PRIORITY = 2;
   constexpr unsigned long SEND_ETHERNET_PRIORITY = 2;
   constexpr unsigned long RECIEVE_ETHERNET_PRIORITY = 2;
