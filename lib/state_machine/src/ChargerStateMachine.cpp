@@ -2,19 +2,19 @@
 
 
 //logic for changing states - still need to account for dial_position
-ChargerState_e ChargerStateMachine::evaluate_charger_state_machine(ChargerState_e& _current_state, bool balancing_enabled, int dial_position, bool start_button_pressed) 
+void ChargerStateMachine::tick_state_machine(ChargerState_e& _current_state, bool balancing_enabled, int dial_position, bool start_button_pressed, unsigned long current_millis) 
 {
     switch (_current_state) //takes in the _current_state variables and matches it to each case
     {
         case ChargerState_e::INITIAL:
         {
             if (start_button_pressed) {
-                set_state(ChargerState_e::CHARGING_NO_BALANCING);
+                set_state(ChargerState_e::CHARGING_NO_BALANCING, current_millis);
                 break;
             }
 
             if (balancing_enabled) {
-                set_state(ChargerState_e::CHARGING_WITH_BALANCING);
+                set_state(ChargerState_e::CHARGING_WITH_BALANCING, current_millis);
                 break;
             }
 
@@ -27,7 +27,7 @@ ChargerState_e ChargerStateMachine::evaluate_charger_state_machine(ChargerState_
         case ChargerState_e::CHARGING_WITH_BALANCING:
         {
             if (!balancing_enabled) {
-                set_state(ChargerState_e::CHARGING_NO_BALANCING);
+                set_state(ChargerState_e::CHARGING_NO_BALANCING, current_millis);
                 break;
             } 
 
@@ -39,11 +39,11 @@ ChargerState_e ChargerStateMachine::evaluate_charger_state_machine(ChargerState_
         case ChargerState_e::CHARGING_NO_BALANCING:
         {
             if (balancing_enabled) {
-                set_state(ChargerState_e::CHARGING_WITH_BALANCING);
+                set_state(ChargerState_e::CHARGING_WITH_BALANCING, current_millis);
                 break;
 
             } else {
-                set_state(ChargerState_e::CHARGING_NO_BALANCING);
+                set_state(ChargerState_e::CHARGING_NO_BALANCING, current_millis);
                 break;
             }
 
@@ -56,19 +56,19 @@ ChargerState_e ChargerStateMachine::evaluate_charger_state_machine(ChargerState_
         }
 
     }
-    return _current_state;
+
 }
 
-void ChargerStateMachine::set_state(ChargerState_e new_state) 
+void ChargerStateMachine::set_state(ChargerState_e new_state, unsigned long current_millis) 
 {
-    handle_exit_logic(_current_state);
+    handle_exit_logic(_current_state, current_millis);
     _current_state = new_state;
-    handle_entry_logic(_current_state);
+    handle_entry_logic(_current_state, current_millis);
     
 }
 
 //reset each state as you leave it
-void ChargerStateMachine::handle_exit_logic(ChargerState_e prev_state)
+void ChargerStateMachine::handle_exit_logic(ChargerState_e prev_state, unsigned long current_millis)
 {
     switch(prev_state)
     {
@@ -92,7 +92,7 @@ void ChargerStateMachine::handle_exit_logic(ChargerState_e prev_state)
 }
 
 //make sure each state is reset before you enter it
-void ChargerStateMachine::handle_entry_logic(ChargerState_e new_state)
+void ChargerStateMachine::handle_entry_logic(ChargerState_e new_state, unsigned long current_millis)
 {
     switch(new_state)
     {

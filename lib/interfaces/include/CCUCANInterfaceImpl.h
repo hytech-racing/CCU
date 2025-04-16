@@ -27,6 +27,7 @@ struct CANInterfaces
 };
 
 using CANInterfacesInstance = etl::singleton<CANInterfaces>;
+
 extern FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> CHARGER_CAN; // gets defined in main as of right now
 extern FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> ACU_CAN; // gets defined in main as of right now
 
@@ -38,10 +39,7 @@ namespace CCUCANInterfaceImpl
     /* TX buffer for Charger CAN */
     extern CANTXBufferType charger_can_tx_buffer;
     /* TX buffer for ACU CAN */
-    extern CANTXBufferType acu_can_tx_buffer;
-
-    // extern FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> CHARGER_CAN; // gets defined in main as of right now
-    // extern FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> ACU_CAN; // gets defined in main as of right now       
+    extern CANTXBufferType acu_can_tx_buffer;  
 
     void on_acu_can_receive(const CAN_message_t &msg);
     void on_charger_can_receive(const CAN_message_t &msg);

@@ -8,6 +8,10 @@
 #include "CCUEthernetInterface.h"
 #include "ChargerInterface.h"
 #include "SystemTimeInterface.h"
+#include "CCU_Constants.h"
+#include "WatchdogInterface.h"
+#include "ChargerStateMachine.h"
+#include "SharedFirmwareTypes.h"
 
 
 void intitialize_all_interfaces();
@@ -28,11 +32,14 @@ bool handle_send_all_data(const unsigned long& sysMicros, const HT_TASK::TaskInf
 
 bool sample_CAN_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
+bool init_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
-//ChargerState_e evaulate_state_machine(ChargerStateMachine &current_state);
+bool run_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
-//bool run_receive_ACU_CAN(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+bool print_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
-//bool run_receive_Charger_CAN(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+bool print_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+
+
 
 #endif

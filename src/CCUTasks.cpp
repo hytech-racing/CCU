@@ -28,9 +28,7 @@ bool run_read_dial_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo&
 
 
 bool handle_enqueue_acu_can_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
-    // Serial.println("handle enqueue acu data");
     ACUInterfaceInstance::instance().enqueue_ccu_status_data();
-    // Serial.println("got past acu interface instance.instance");
     return true;
 }
 
@@ -54,18 +52,13 @@ bool run_receive_ethernet(const unsigned long& sysMicros, const HT_TASK::TaskInf
 
 
 bool handle_send_all_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
-    // Serial.println("handle send all data");
     CCUCANInterfaceImpl::send_all_CAN_msgs(CCUCANInterfaceImpl::acu_can_tx_buffer, &ACU_CAN);
-    // Serial.println("sending acu");
     CCUCANInterfaceImpl::send_all_CAN_msgs(CCUCANInterfaceImpl::charger_can_tx_buffer, &CHARGER_CAN);
-    //Serial.println("sending charger");
     return true;
 }
 
 
 bool sample_CAN_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
-    // Serial.println("Sampling");
-    etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)> main_can_recv = etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)>::create<CCUCANInterfaceImpl::ccu_CAN_recv>();
     process_ring_buffer(CCUCANInterfaceImpl::acu_can_rx_buffer, CANInterfacesInstance::instance(), millis(), main_can_recv); 
     process_ring_buffer(CCUCANInterfaceImpl::charger_can_rx_buffer, CANInterfacesInstance::instance(), millis(), main_can_recv); 
 
@@ -73,9 +66,40 @@ bool sample_CAN_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& ta
 }
 
 
+bool run_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+    
+    digitalWrite(WATCHDOG_PIN, WatchdogInstance::instance().get_watchdog_state(sys_time::hal_millis()));
+    return true;
 
-/*
-ChargerState_e evaulate_state_machine(ChargerStateMachine &current_state) {
-     
-} 
-*/
+}
+
+bool init_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
+{
+    WatchdogInstance::create(WATCHDOG_KICK_INTERVAL_MS); // NOLINT
+    pinMode(WATCHDOG_PIN, OUTPUT);
+    return true;
+}
+
+bool print_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+    //needs to print: ccu is ok; charging state; watchdog state; cell voltage max, min, avg; cell temp max, min
+
+    Serial.print("Charging Status: ");
+    Serial.println(static_cast<int>(ChargerStateMachineInstance::instance().get_state()));
+    Serial.print("Cell Voltage max: ");
+    Serial.println(ACUInterfaceInstance::instance().get_latest_data().high_voltage);
+    Serial.print("Cell voltage min: ");
+    Serial.println(ACUInterfaceInstance::instance().get_latest_data().low_voltage);
+    Serial.print("Cell voltage average: ");
+    Serial.println(ACUInterfaceInstance::instance().get_latest_data().average_voltage);
+    Serial.print("Cell voltage max and min delta: ");
+    Serial.println((ACUInterfaceInstance::instance().get_latest_data().high_voltage) - (ACUInterfaceInstance::instance().get_latest_data().low_voltage));
+    Serial.print("Cell temp max: "); //maximum cell temperature that ACU says cells should have
+    Serial.println();
+    Serial.print("Current cell temp: "); 
+    Serial.println();
+    Serial.print("Cell balancing status: "); //data recieved from ACU
+    Serial.println();
+    Serial.print("Charging current: "); //how much current the charger is supplying
+    Serial.println();
+    return true;
+}

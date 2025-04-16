@@ -14,6 +14,8 @@
 #include "ChargerStateMachine.h"
 #include "CCUCANInterfaceImpl.h"
 #include "CCUTasks.h"
+#include "SystemTimeInterface.h"
+
 
 
 FlexCAN_Type<CAN2> CHARGER_CAN; // gets defined in main as of right now
@@ -45,26 +47,29 @@ HT_TASK::Task queue_ACU_CAN(HT_TASK::DUMMY_FUNCTION, handle_enqueue_acu_can_data
 HT_TASK::Task queue_Charger_CAN(HT_TASK::DUMMY_FUNCTION, handle_enqueue_charger_can_data, 1, 100000UL);
 HT_TASK::Task send_ethernet(HT_TASK::DUMMY_FUNCTION, run_send_ethernet, CCUConstants::SEND_ETHERNET_PRIORITY, CCUConstants::HT_SCHED_PERIOD_US);
 HT_TASK::Task receive_ethernet(HT_TASK::DUMMY_FUNCTION, run_receive_ethernet, CCUConstants::RECIEVE_ETHERNET_PRIORITY, CCUConstants::HT_SCHED_PERIOD_US);
-HT_TASK::Task send_all_data(HT_TASK::DUMMY_FUNCTION, handle_send_all_data, 2);
+HT_TASK::Task send_all_data(HT_TASK::DUMMY_FUNCTION, handle_send_all_data, 1);
 HT_TASK::Task run_sample_CAN_data(HT_TASK::DUMMY_FUNCTION, sample_CAN_data, 2);
+HT_TASK::Task kick_watchdog_task(init_kick_watchdog, run_kick_watchdog, 1);
 
  
-/* Extern CAN instances 
-FlexCAN_T4<CAN1> ACU_CAN;
-FlexCAN_T4<CAN2> CHARGER_CAN; */
+
+bool evaluate_state_machine(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+  auto state = state_machine.tick_state_machine(sys_time::hal_millis());
+  return true;    
+}
+
 
 
 /* Functions */
 void setup() {
-  Serial.begin(115200); //I dont know if this is the baudrate I also don't know if this is even needed
-  delay(4000);
+
   qn::Ethernet.begin(); //begins QNEthernet
 
 
- // ACUInterfaceInstance::instance();
-  //ChargerInterfaceInstance::instance();
-
   intitialize_all_interfaces();
+
+  scheduler.setTimingFunction(micros);
+
   scheduler.schedule(update_display_task);
   scheduler.schedule(read_dial_task);
   scheduler.schedule(queue_ACU_CAN);
@@ -75,10 +80,11 @@ void setup() {
 
   handle_CAN_setup(ACU_CAN, CCUConstants::CAN_BAUDRATE, &CCUCANInterfaceImpl::on_acu_can_receive);
   handle_CAN_setup(CHARGER_CAN, CCUConstants::CAN_BAUDRATE, &CCUCANInterfaceImpl::on_charger_can_receive);
+
+  //while(!Serial) {};
   
 }
 
 void loop() {
   scheduler.run();
-  delay(10);
 }

@@ -1,10 +1,47 @@
 /* Imports */
 #include "MainChargeSystem.h"
+#include "CCUParams.h"
+#include "ACUInterface.h"
+#include "ChargerInterface.h"
 #include <algorithm>
 #include <cmath>
 
-MainChargeSystem::MainChargeSystem(float target_volt, float max_allow_cell_temp) : _target_voltage_per_cell(target_volt), _max_allowable_cell_temperature(max_allow_cell_temp){}
+extern struct CCUParams ccu_params;
 
+/* Constructor */
+MainChargeSystem::MainChargeSystem(float target_volt, float max_allow_cell_temp) : _target_voltage_per_cell(target_volt), _max_allowable_cell_temperature(max_allow_cell_temp){} 
+
+
+/* This function uses data sent from ACU over CAN. The commented out function would be applicable over ethernet */
+float MainChargeSystem::calculate_charge_current(float target_volt) {
+
+  volt average_voltage = ACUInterfaceInstance::instance().get_latest_data().average_voltage; //average voltage across the cells
+  volt low_voltage = ACUInterfaceInstance::instance().get_latest_data().low_voltage; //the lowest voltage in any of the cells
+  volt high_voltage = ACUInterfaceInstance::instance().get_latest_data().high_voltage; //the highest voltage in any of the cells
+
+  ccu_params.curr_charger_current = ChargerInterfaceInstance::instance().get_latest_charger_data().output_current_high; //the current the charger is supplying at the moment
+
+
+  float charge_current; // amp (initialization)
+
+  if (average_voltage <= ccu_params.cutoff_voltage) { //stop charging 
+
+    ccu_params.balancing_enabled = false;
+    return 0;
+
+  } else {
+
+    float voltage_taper = (high_voltage - target_volt) / (ccu_params.cutoff_voltage - target_volt);
+    charge_current = ccu_params.charger_current_max * (1 - voltage_taper); 
+
+  }
+
+  return charge_current;
+  
+}
+
+
+/*
 float MainChargeSystem::calculate_charge_current(ACUAllData_s inputValues)
 { 
   float max_cell_voltage = 0;
@@ -38,4 +75,4 @@ float MainChargeSystem::calculate_charge_current(ACUAllData_s inputValues)
     return calculated_current; //amps
   }
   return 0; //amps
-}
+}  */
