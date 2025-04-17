@@ -2,6 +2,7 @@
 #define CCUPARAMS_H
 
 #include <cstdint>
+
 struct CCUParams
 {
   bool balancing_enabled = false; //tells ACU whether balancing is allowed or not

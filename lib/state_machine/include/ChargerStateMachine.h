@@ -1,6 +1,12 @@
 #ifndef CHARGERSTATEMACHINE_H
 #define CHARGERSTATEMACHINE_H
 
+#include "etl/delegate.h"
+#include "CCUParams.h"
+#include "CCUParams.h"
+#include "ACUInterface.h"
+#include "ChargerInterface.h"
+
 enum class ChargerState_e { //NOLINT
     INITIAL = 0, //not charging
     CHARGING_NO_BALANCING = 1, //charging but no balancing
@@ -9,24 +15,23 @@ enum class ChargerState_e { //NOLINT
 
 class ChargerStateMachine
 {
-public:
+    public:
+        ChargerState_e tick_state_machine(unsigned long current_millis); //need to put these parameters in a struct?
+        ChargerState_e get_state() {return _current_state;}
 
-    void tick_state_machine(ChargerState_e& _current_state, bool balancing_enabled, int dial_position, bool start_button_pressed, unsigned long current_millis);
+    private:
 
-    ChargerState_e get_state() {return _current_state;}
+        void set_state(ChargerState_e new_state, unsigned long current_millis);
+        
+        //handle exit/entry logic make sure that each state is properly reset when the state machine leaves it
+        void handle_exit_logic(ChargerState_e prev_state, unsigned long current_millis);
 
-private:
+        void handle_entry_logic(ChargerState_e new_state, unsigned long current_millis);
+        
+        ChargerState_e _current_state;
 
-    void set_state(ChargerState_e new_state, unsigned long current_millis);
-    
-    //handle exit/entry logic make sure that each state is properly reset when the state machine leaves it
-    void handle_exit_logic(ChargerState_e prev_state, unsigned long current_millis);
-
-    void handle_entry_logic(ChargerState_e new_state, unsigned long current_millis);
-    
-    ChargerState_e _current_state;
+        
 };
 
-using ChargerStateMachineInstance = etl::singleton<ChargerStateMachine>;
 
 #endif 

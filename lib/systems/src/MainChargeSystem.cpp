@@ -1,8 +1,5 @@
 /* Imports */
 #include "MainChargeSystem.h"
-#include "CCUParams.h"
-#include "ACUInterface.h"
-#include "ChargerInterface.h"
 #include <algorithm>
 #include <cmath>
 
@@ -22,7 +19,7 @@ float MainChargeSystem::calculate_charge_current(float target_volt) {
   ccu_params.curr_charger_current = ChargerInterfaceInstance::instance().get_latest_charger_data().output_current_high; //the current the charger is supplying at the moment
 
 
-  float charge_current; // amp (initialization)
+  float calculated_charge_current; // amp (initialization)
 
   if (average_voltage <= ccu_params.cutoff_voltage) { //stop charging 
 
@@ -32,11 +29,11 @@ float MainChargeSystem::calculate_charge_current(float target_volt) {
   } else {
 
     float voltage_taper = (high_voltage - target_volt) / (ccu_params.cutoff_voltage - target_volt);
-    charge_current = ccu_params.charger_current_max * (1 - voltage_taper); 
+    calculated_charge_current = ccu_params.charger_current_max * (1 - voltage_taper); 
 
   }
 
-  return charge_current;
+  return calculated_charge_current;
   
 }
 

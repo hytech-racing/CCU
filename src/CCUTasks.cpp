@@ -59,8 +59,9 @@ bool handle_send_all_data(const unsigned long& sysMicros, const HT_TASK::TaskInf
 
 
 bool sample_CAN_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
-    process_ring_buffer(CCUCANInterfaceImpl::acu_can_rx_buffer, CANInterfacesInstance::instance(), millis(), main_can_recv); 
-    process_ring_buffer(CCUCANInterfaceImpl::charger_can_rx_buffer, CANInterfacesInstance::instance(), millis(), main_can_recv); 
+    etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)> main_can_recv = etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)>::create<CCUCANInterfaceImpl::ccu_CAN_recv>();
+    process_ring_buffer(CCUCANInterfaceImpl::acu_can_rx_buffer, CANInterfacesInstance::instance(), sys_time::hal_millis(), main_can_recv); 
+    process_ring_buffer(CCUCANInterfaceImpl::charger_can_rx_buffer, CANInterfacesInstance::instance(), sys_time::hal_millis(), main_can_recv); 
 
     return true;
 }
@@ -84,7 +85,7 @@ bool print_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInf
     //needs to print: ccu is ok; charging state; watchdog state; cell voltage max, min, avg; cell temp max, min
 
     Serial.print("Charging Status: ");
-    Serial.println(static_cast<int>(ChargerStateMachineInstance::instance().get_state()));
+    Serial.println();
     Serial.print("Cell Voltage max: ");
     Serial.println(ACUInterfaceInstance::instance().get_latest_data().high_voltage);
     Serial.print("Cell voltage min: ");

@@ -36,8 +36,6 @@ qn::EthernetUDP udp; //setup of qn namespace
 /* Scheduler Setup */
 HT_SCHED::Scheduler& scheduler = HT_SCHED::Scheduler::getInstance(); 
 
-etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)> main_can_recv = etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)>::create<CCUCANInterfaceImpl::ccu_CAN_recv>();
-
 
 
 /* Task Declarations */
