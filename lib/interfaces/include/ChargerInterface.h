@@ -10,7 +10,7 @@
 #include "CCUParams.h"
 
 
-struct charger_data {
+struct charger_data_s {
     uint8_t output_dc_voltage_high;
     uint8_t output_dc_voltage_low;
     uint8_t output_current_high;
@@ -32,10 +32,10 @@ public:
 
     void enqueue_charging_data();
 
-    charger_data get_latest_charger_data() {return _curr_charger_data;};
+    charger_data_s get_latest_charger_data() {return _curr_charger_data;};
 
 private:
-    charger_data _curr_charger_data;
+    charger_data_s _curr_charger_data;
 
 };
 

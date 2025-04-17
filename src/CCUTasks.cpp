@@ -3,7 +3,7 @@
 
 void intitialize_all_interfaces()
 {
-    Serial.begin(115200);
+    //Serial.begin(115200);
     
     /* ACU Interface */
     ACUInterfaceInstance::create(millis(), 1000);
@@ -59,7 +59,7 @@ bool handle_send_all_data(const unsigned long& sysMicros, const HT_TASK::TaskInf
 }
 
 
-bool sample_CAN_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+bool sample_can_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
     etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)> main_can_recv = etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)>::create<CCUCANInterfaceImpl::ccu_CAN_recv>();
     process_ring_buffer(CCUCANInterfaceImpl::acu_can_rx_buffer, CANInterfacesInstance::instance(), sys_time::hal_millis(), main_can_recv); 
     process_ring_buffer(CCUCANInterfaceImpl::charger_can_rx_buffer, CANInterfacesInstance::instance(), sys_time::hal_millis(), main_can_recv); 

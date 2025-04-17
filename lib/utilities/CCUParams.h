@@ -6,11 +6,11 @@
 struct CCUParams
 {
   bool balancing_enabled = false; //tells ACU whether balancing is allowed or not
-  float target_voltage_per_cell = 3.1; //per cell
-  float max_allowable_cell_temperature = 70; //need data for this
-  float cutoff_voltage; //need this value
-  float curr_charger_current = 0;
-  float charger_current_max = 13; //amps - double check this value (datasheet?)
+  constexpr unsigned float target_voltage_per_cell = 3.1; //per cell
+  constexpr unsigned float max_allowable_cell_temperature = 70; //need data for this
+  constexpr unsigned float cutoff_voltage = 4; //need this value
+  constexpr unsigned float curr_charger_current = 0;
+  constexpr unsigned float charger_current_max = 13; //amps - double check this value (datasheet?)
 };
 
 
@@ -25,6 +25,7 @@ namespace CCUConstants
   constexpr unsigned long SEND_ETHERNET_PRIORITY = 2;
   constexpr unsigned long RECIEVE_ETHERNET_PRIORITY = 2;
   constexpr unsigned long SEND_ALL_DATA_PRIORITY = 2;
+  constexpr unsigned long HT_SCHED_CAN_PERIOD = 100000UL;
 
   /* CAN Constants */
   const uint32_t CAN_BAUDRATE = 500000UL; 

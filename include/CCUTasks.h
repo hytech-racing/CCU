@@ -33,7 +33,7 @@ bool run_receive_ethernet(const unsigned long& sysMicros, const HT_TASK::TaskInf
 
 bool handle_send_all_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
-bool sample_CAN_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+bool sample_can_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
 bool init_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 

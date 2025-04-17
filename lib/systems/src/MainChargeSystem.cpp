@@ -5,20 +5,26 @@
 
 extern struct CCUParams ccu_params;
 
+constexpr unsigned volt average_voltage;
+constexpr unsigned volt low_voltage;
+constexpr unsigned volt high_voltage;
+constexpr unsigned float calculated_charge_current; // amp (initialization)
+constexpr unsigned float voltage_taper; 
+
+
+
 /* Constructor */
 MainChargeSystem::MainChargeSystem(float target_volt, float max_allow_cell_temp) : _target_voltage_per_cell(target_volt), _max_allowable_cell_temperature(max_allow_cell_temp){} 
 
 /* This function uses data sent from ACU over CAN. The commented out function would be applicable over ethernet */
 void MainChargeSystem::calculate_charge_current(float target_volt) {
 
-  volt average_voltage = ACUInterfaceInstance::instance().get_latest_data().average_voltage; //average voltage across the cells
-  volt low_voltage = ACUInterfaceInstance::instance().get_latest_data().low_voltage; //the lowest voltage in any of the cells
-  volt high_voltage = ACUInterfaceInstance::instance().get_latest_data().high_voltage; //the highest voltage in any of the cells
+  average_voltage = ACUInterfaceInstance::instance().get_latest_data().average_voltage; //average voltage across the cells
+  low_voltage = ACUInterfaceInstance::instance().get_latest_data().low_voltage; //the lowest voltage in any of the cells
+  high_voltage = ACUInterfaceInstance::instance().get_latest_data().high_voltage; //the highest voltage in any of the cells
 
   ccu_params.curr_charger_current = ChargerInterfaceInstance::instance().get_latest_charger_data().output_current_high; //the current the charger is supplying at the moment
 
-
-  float calculated_charge_current; // amp (initialization)
 
   if (average_voltage <= ccu_params.cutoff_voltage) { //stop charging 
 
@@ -27,7 +33,7 @@ void MainChargeSystem::calculate_charge_current(float target_volt) {
 
   } else {
 
-    float voltage_taper = (high_voltage - target_volt) / (ccu_params.cutoff_voltage - target_volt);
+    voltage_taper = (high_voltage - target_volt) / (ccu_params.cutoff_voltage - target_volt);
     calculated_charge_current = ccu_params.charger_current_max * (1 - voltage_taper); 
 
   }
