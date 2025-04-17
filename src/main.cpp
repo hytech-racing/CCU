@@ -43,7 +43,7 @@ HT_TASK::Task queue_Charger_CAN(HT_TASK::DUMMY_FUNCTION, handle_enqueue_charger_
 HT_TASK::Task send_ethernet(HT_TASK::DUMMY_FUNCTION, run_send_ethernet, CCUConstants::SEND_ETHERNET_PRIORITY, CCUConstants::HT_SCHED_PERIOD_US);
 HT_TASK::Task receive_ethernet(HT_TASK::DUMMY_FUNCTION, run_receive_ethernet, CCUConstants::RECIEVE_ETHERNET_PRIORITY, CCUConstants::HT_SCHED_PERIOD_US);
 HT_TASK::Task send_all_data(HT_TASK::DUMMY_FUNCTION, handle_send_all_data, 1);
-HT_TASK::Task run_sample_can_data(HT_TASK::DUMMY_FUNCTION, sample_CAN_data, 2);
+HT_TASK::Task run_sample_can_data(HT_TASK::DUMMY_FUNCTION, sample_can_data, 2);
 HT_TASK::Task kick_watchdog_task(init_kick_watchdog, run_kick_watchdog, 1);
 
 

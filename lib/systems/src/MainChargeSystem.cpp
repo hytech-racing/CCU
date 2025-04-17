@@ -5,12 +5,8 @@
 
 extern struct CCUParams ccu_params;
 
-constexpr unsigned volt average_voltage;
-constexpr unsigned volt low_voltage;
-constexpr unsigned volt high_voltage;
-constexpr unsigned float calculated_charge_current; // amp (initialization)
-constexpr unsigned float voltage_taper; 
 
+using volt = float;
 
 
 /* Constructor */
@@ -18,6 +14,12 @@ MainChargeSystem::MainChargeSystem(float target_volt, float max_allow_cell_temp)
 
 /* This function uses data sent from ACU over CAN. The commented out function would be applicable over ethernet */
 void MainChargeSystem::calculate_charge_current(float target_volt) {
+
+  float average_voltage;
+  float low_voltage;
+  float high_voltage;
+  float calculated_charge_current; 
+  float voltage_taper;
 
   average_voltage = ACUInterfaceInstance::instance().get_latest_data().average_voltage; //average voltage across the cells
   low_voltage = ACUInterfaceInstance::instance().get_latest_data().low_voltage; //the lowest voltage in any of the cells

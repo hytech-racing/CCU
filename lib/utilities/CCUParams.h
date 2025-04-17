@@ -6,11 +6,11 @@
 struct CCUParams
 {
   bool balancing_enabled = false; //tells ACU whether balancing is allowed or not
-  constexpr unsigned float target_voltage_per_cell = 3.1; //per cell
-  constexpr unsigned float max_allowable_cell_temperature = 70; //need data for this
-  constexpr unsigned float cutoff_voltage = 4; //need this value
-  constexpr unsigned float curr_charger_current = 0;
-  constexpr unsigned float charger_current_max = 13; //amps - double check this value (datasheet?)
+  static constexpr float target_voltage_per_cell = 3.1; //per cell
+  static constexpr float max_allowable_cell_temperature = 70; //need data for this
+  static constexpr float cutoff_voltage = 4; //need this value
+  float curr_charger_current = 0;
+  static constexpr float charger_current_max = 13; //amps - double check this value (datasheet?)
 };
 
 
