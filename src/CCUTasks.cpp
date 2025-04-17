@@ -1,5 +1,6 @@
 #include "CCUTasks.h"
 
+
 void intitialize_all_interfaces()
 {
     Serial.begin(115200);
@@ -11,6 +12,8 @@ void intitialize_all_interfaces()
     ChargerInterfaceInstance::create();
 
     // CANInterfacesInstance::create();
+
+    ChargerStateMachineInstance::create();
   }
 
 bool run_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
@@ -79,11 +82,17 @@ bool init_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo&
     return true;
 }
 
+
+bool tick_state_machine(const unsigned long &sysMicros, const HT_TASK::TaskInfo &taskInfo) {
+    ChargerStateMachineInstance::instance().tick_state_machine(sys_time::hal_millis());
+    return true;
+}
+
+
 bool print_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
-    //needs to print: ccu is ok; charging state; watchdog state; cell voltage max, min, avg; cell temp max, min
 
     Serial.print("Charging Status: ");
-    Serial.println();
+    Serial.println(static_cast<int>(ChargerStateMachineInstance::instance().get_state()));
     Serial.print("Cell Voltage max: ");
     Serial.println(ACUInterfaceInstance::instance().get_latest_data().high_voltage);
     Serial.print("Cell voltage min: ");
@@ -92,13 +101,11 @@ bool print_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInf
     Serial.println(ACUInterfaceInstance::instance().get_latest_data().average_voltage);
     Serial.print("Cell voltage max and min delta: ");
     Serial.println((ACUInterfaceInstance::instance().get_latest_data().high_voltage) - (ACUInterfaceInstance::instance().get_latest_data().low_voltage));
-    Serial.print("Cell temp max: "); //maximum cell temperature that ACU says cells should have
-    Serial.println();
-    Serial.print("Current cell temp: "); 
-    Serial.println();
-    Serial.print("Cell balancing status: "); //data recieved from ACU
-    Serial.println();
+    // Serial.print("Cell temp max: "); //maximum cell temperature that ACU says cells should have
+    // Serial.println();
+    // Serial.print("Current cell temp: "); 
+    // Serial.println();
     Serial.print("Charging current: "); //how much current the charger is supplying
-    Serial.println();
+    Serial.println(ChargerInterfaceInstance::instance().get_latest_charger_data().output_current_high);
     return true;
 }

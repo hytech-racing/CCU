@@ -13,6 +13,7 @@
 #include "ChargerStateMachine.h"
 #include "SharedFirmwareTypes.h"
 #include "SystemTimeInterface.h"
+#include "CCUParams.h"
 
 
 
@@ -38,7 +39,7 @@ bool init_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo&
 
 bool run_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
-bool print_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+bool tick_state_machine(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
 bool print_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 

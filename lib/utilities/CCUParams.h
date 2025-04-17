@@ -9,7 +9,7 @@ struct CCUParams
   float target_voltage_per_cell = 3.1; //per cell
   float max_allowable_cell_temperature = 70; //need data for this
   float cutoff_voltage; //need this value
-  float curr_charger_current;
+  float curr_charger_current = 0;
   float charger_current_max = 13; //amps - double check this value (datasheet?)
 };
 
@@ -29,4 +29,6 @@ namespace CCUConstants
   /* CAN Constants */
   const uint32_t CAN_BAUDRATE = 500000UL; 
 }
+
+
 #endif

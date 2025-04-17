@@ -25,9 +25,6 @@ FlexCAN_Type<CAN1> ACU_CAN;
 ACUAllData_s acu_all_data;
 CCUParams ccu_params; 
 
-/* Initialization of the charging state machine */
-ChargerStateMachine state_machine;
-
 /* Systems */
 namespace qn = qindesign::network; //setup of qn namespace
 qn::EthernetUDP udp; //setup of qn namespace
@@ -48,8 +45,6 @@ HT_TASK::Task receive_ethernet(HT_TASK::DUMMY_FUNCTION, run_receive_ethernet, CC
 HT_TASK::Task send_all_data(HT_TASK::DUMMY_FUNCTION, handle_send_all_data, 1);
 HT_TASK::Task run_sample_CAN_data(HT_TASK::DUMMY_FUNCTION, sample_CAN_data, 2);
 HT_TASK::Task kick_watchdog_task(init_kick_watchdog, run_kick_watchdog, 1);
-
- 
 
 
 

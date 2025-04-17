@@ -33,5 +33,7 @@ class ChargerStateMachine
         
 };
 
+using ChargerStateMachineInstance = etl::singleton<ChargerStateMachine>;
+
 
 #endif 
