@@ -7,6 +7,7 @@
 #include "ChargerInterface.h"
 
 #include "etl/singleton.h"
+#include <etl/delegate.h>
 #include "FlexCAN_T4.h"
 
 #include "hytech.h" // generated CAN library

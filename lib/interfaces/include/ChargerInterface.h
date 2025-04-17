@@ -6,7 +6,7 @@
 #include "SharedFirmwareTypes.h"
 #include "CANInterface.h"
 #include "etl/singleton.h"
-#include "MainChargeSystem.h"
+#include <etl/delegate.h>
 #include "CCUParams.h"
 
 

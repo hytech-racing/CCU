@@ -2,6 +2,8 @@
 #define MAINCHARGE_H
 
 #include "CCUParams.h"
+#include "ACUInterface.h"
+#include "ChargerInterface.h"
 #include "SharedFirmwareTypes.h"
 
 class MainChargeSystem {
@@ -16,7 +18,7 @@ class MainChargeSystem {
  * @brief function that returns a float value of the current to be sent to charge controller for this charge cycle 
  * @param ACUAllData_s struct populated with raw data from ACU
  */
-    float calculate_charge_current(float target_volt); 
+    void calculate_charge_current(float target_volt); 
 
   private:
     const float _MAXIMUM_NEVER_EXCEED_CURRENT = 25; //25 is a tentative amp value based on 6kw at 240 volts, may need to be adjusted depending on voltage

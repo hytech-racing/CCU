@@ -2,7 +2,7 @@
 #include "CCUCANInterfaceImpl.h"
 
 extern struct CCUParams ccu_params;
-MainChargeSystem main_charge_system; //initializing a MainChargeSystem object to access the calculate_charge_current function
+//MainChargeSystem main_charge_system(ccu_params.target_voltage_per_cell, ccu_params.max_allowable_cell_temperature); //initializing a MainChargeSystem object to access the calculate_charge_current function
 
 void ChargerInterface::receive_charger_data_message(const CAN_message_t& msg, unsigned long curr_millis) {
     CHARGER_DATA_t charger_data_msg;
@@ -28,7 +28,7 @@ void ChargerInterface::enqueue_charging_data()
     CHARGER_CONTROL_t charger_control = {};
     charger_control.max_charging_voltage_high = 0x14; //NOLINT (see comment)
     charger_control.max_charging_voltage_low = 0xB4; //NOLINT (see comment)
-    charger_control.max_charging_current_high = main_charge_system.calculate_charge_current(ccu_params.target_voltage_per_cell); //charging current reads from function
+    charger_control.max_charging_current_high = ccu_params.curr_charger_current; //charging current reads from function
     charger_control.max_charging_current_low = 0; 
     CAN_util::enqueue_msg(&charger_control, &Pack_CHARGER_CONTROL_hytech, CCUCANInterfaceImpl::charger_can_tx_buffer);
 }

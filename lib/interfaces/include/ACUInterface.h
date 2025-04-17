@@ -5,6 +5,7 @@
 #include "hytech.h"
 #include "SharedFirmwareTypes.h"
 #include "etl/singleton.h"
+#include <etl/delegate.h>
 #include "CANInterface.h"
 #include "CCUParams.h"
 

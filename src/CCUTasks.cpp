@@ -1,6 +1,4 @@
 #include "CCUTasks.h"
-#include "SystemTimeInterface.h"
-
 
 void intitialize_all_interfaces()
 {

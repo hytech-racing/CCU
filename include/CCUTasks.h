@@ -2,7 +2,7 @@
 #define CCUTASKS_H
 
 #include <ht_sched.hpp>
-
+#include "CANInterface.h"
 #include "CCUCANInterfaceImpl.h"
 #include "ACUInterface.h"
 #include "CCUEthernetInterface.h"
@@ -12,6 +12,8 @@
 #include "WatchdogInterface.h"
 #include "ChargerStateMachine.h"
 #include "SharedFirmwareTypes.h"
+#include "SystemTimeInterface.h"
+
 
 
 void intitialize_all_interfaces();

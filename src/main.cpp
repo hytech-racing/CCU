@@ -51,11 +51,6 @@ HT_TASK::Task kick_watchdog_task(init_kick_watchdog, run_kick_watchdog, 1);
 
  
 
-bool evaluate_state_machine(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
-  auto state = state_machine.tick_state_machine(sys_time::hal_millis());
-  return true;    
-}
-
 
 
 /* Functions */
