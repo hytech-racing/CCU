@@ -1,16 +1,18 @@
-#ifndef CCUPARAMS_H
-#define CCUPARAMS_H
+#ifndef CCUDATA_H
+#define CCUDATA_H
 
 #include <cstdint>
 
-struct CCUParams
+struct CCUData
 {
   bool balancing_enabled = false; //tells ACU whether balancing is allowed or not
-  static constexpr float target_voltage_per_cell = 3.1; //per cell
   static constexpr float max_allowable_cell_temperature = 70; //need data for this
-  static constexpr float cutoff_voltage = 4; //need this value
-  float curr_charger_current = 0;
+  static constexpr float cutoff_voltage = 4.2; //max voltage that cells can be at - if high = this, stop charging
   static constexpr float charger_current_max = 13; //amps - double check this value (datasheet?)
+  float calculated_charge_current = 0;
+  float threshold_voltage = 4.0; //when to begin tapering charge current - based purely on cutoff_voltage so value subject to change
+  static constexpr float min_pack_voltage = 403; //need to double check this number
+  static constexpr float max_pack_voltage = 520; //need to douvle check this number
 };
 
 

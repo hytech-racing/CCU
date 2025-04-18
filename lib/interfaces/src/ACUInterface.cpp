@@ -2,7 +2,7 @@
 
 #include "CCUCANInterfaceImpl.h"
 
-extern struct CCUParams ccu_params;
+
 
 void ACUInterface::reset_acu_heartbeat()
 {
@@ -39,6 +39,6 @@ void ACUInterface::receive_voltages_message(const CAN_message_t& msg, unsigned l
 void ACUInterface::enqueue_ccu_status_data()
 {
     CCU_STATUS_t ccu_status = {};
-    ccu_status.charger_enabled = ccu_params.balancing_enabled; // Treat this as a balancing_enabled boolean
+    ccu_status.charger_enabled = _ccu_data.balancing_enabled; // Treat this as a balancing_enabled boolean
     CAN_util::enqueue_msg(&ccu_status, &Pack_CCU_STATUS_hytech, CCUCANInterfaceImpl::acu_can_tx_buffer);
 }

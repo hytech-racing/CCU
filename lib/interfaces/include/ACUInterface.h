@@ -7,7 +7,7 @@
 #include "etl/singleton.h"
 #include <etl/delegate.h>
 #include "CANInterface.h"
-#include "CCUParams.h"
+#include "CCUData.h"
 
 struct ACUInterfaceData_s 
 {
@@ -24,7 +24,7 @@ class ACUInterface
 {
 public:
 
-    ACUInterface() = delete;
+    ACUInterface(CCUData &ccu_data) :  _ccu_data(ccu_data) {};
 
     ACUInterface(unsigned long init_millis, unsigned long max_heartbeat_interval_ms) : _max_heartbeat_interval_ms(max_heartbeat_interval_ms)
     {
@@ -51,6 +51,7 @@ public:
 private:
 
     ACUInterfaceData_s _curr_data;
+    CCUData &_ccu_data;
 
     unsigned long _max_heartbeat_interval_ms;
     bool _first_received_message_heartbeat_init = false;

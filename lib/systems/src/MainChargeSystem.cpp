@@ -3,46 +3,63 @@
 #include <algorithm>
 #include <cmath>
 
-extern struct CCUParams ccu_params;
 
-
-using volt = float;
 
 
 /* Constructor */
-MainChargeSystem::MainChargeSystem(float target_volt, float max_allow_cell_temp) : _target_voltage_per_cell(target_volt), _max_allowable_cell_temperature(max_allow_cell_temp){} 
+//MainChargeSystem::MainChargeSystem(float target_volt, float max_allow_cell_temp) : _target_voltage_per_cell(target_volt), _max_allowable_cell_temperature(max_allow_cell_temp){} 
+
 
 /* This function uses data sent from ACU over CAN. The commented out function would be applicable over ethernet */
-void MainChargeSystem::calculate_charge_current(float target_volt) {
+float MainChargeSystem::calculate_charge_current() {
 
   float average_voltage;
   float low_voltage;
   float high_voltage;
+  float total_voltage;
   float calculated_charge_current; 
-  float voltage_taper;
+  //float voltage_taper;
+  float distance_from_ideal_voltage;
+  //float voltage_scalar;
+
+  float normalized_voltage;
 
   average_voltage = ACUInterfaceInstance::instance().get_latest_data().average_voltage; //average voltage across the cells
   low_voltage = ACUInterfaceInstance::instance().get_latest_data().low_voltage; //the lowest voltage in any of the cells
   high_voltage = ACUInterfaceInstance::instance().get_latest_data().high_voltage; //the highest voltage in any of the cells
+  total_voltage = ACUInterfaceInstance::instance().get_latest_data().total_voltage; //the total voltage in the pack
 
-  ccu_params.curr_charger_current = ChargerInterfaceInstance::instance().get_latest_charger_data().output_current_high; //the current the charger is supplying at the moment
 
 
-  if (average_voltage <= ccu_params.cutoff_voltage) { //stop charging 
-
-    ccu_params.balancing_enabled = false;
+  if (high_voltage >= _ccu_data.cutoff_voltage || average_voltage >= _ccu_data.threshold_voltage || total_voltage >= _ccu_data.max_pack_voltage) { //stop charging if one of the cells or the average, or the total voltage, is too high
+    _ccu_data.balancing_enabled = false;
     return 0;
-
+  } else if (total_voltage < 510) { //only start tapering once close to total voltage (505 volts)
+    _ccu_data.balancing_enabled = true;
+    return _ccu_data.charger_current_max;
   } else {
 
-    voltage_taper = (high_voltage - target_volt) / (ccu_params.cutoff_voltage - target_volt);
-    calculated_charge_current = ccu_params.charger_current_max * (1 - voltage_taper); 
+    normalized_voltage = (total_voltage / _ccu_data.max_pack_voltage);
+    calculated_charge_current = (_ccu_data.charger_current_max * (1 - pow(normalized_voltage, 0.5))) * 100;
+    //calculated_charge_current = _ccu_data.charger_current_max * (1 + (100*std::log10f(normalized_voltage))); //NOLINT - 100 is used for scaling purposes
 
+   
   }
 
-  ccu_params.curr_charger_current = calculated_charge_current;
-  
+  _ccu_data.calculated_charge_current = calculated_charge_current;
+  return calculated_charge_current;
 }
+
+
+
+    //this works, but not as efficient
+    //voltage_taper = (average_voltage - _ccu_data.threshold_voltage) / (low_voltage - _ccu_data.cutoff_voltage);
+    //calculated_charge_current = _ccu_data.charger_current_max * (1 - voltage_taper);
+
+    //distance_from_ideal_voltage = ccu_params.target_voltage_per_cell - high_voltage;
+    //voltage_scalar = ((logf(distance_from_ideal_voltage+.5))/log(11))+.3; //NOLINT
+    //calculated_charge_current = _ccu_data.charger_current_max * voltage_scalar; 
+
 
 
 /*

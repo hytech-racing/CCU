@@ -20,7 +20,7 @@ FlexCAN_Type<CAN1> ACU_CAN;
 
 /* Parameters */
 ACUAllData_s acu_all_data;
-CCUParams ccu_params; 
+//CCUParams ccu_params; 
 
 /* Initialization of the charging state machine */
 ChargerStateMachine state_machine;

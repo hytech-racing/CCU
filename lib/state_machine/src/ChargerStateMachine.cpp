@@ -1,7 +1,5 @@
 #include "ChargerStateMachine.h"
 
-extern struct CCUParams ccu_params; //is there a better way than using an extern struct everytime I need to access CCU Params data?
-
 
 //logic for changing states - still need to account for dial_position
 ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_millis) 
@@ -11,7 +9,7 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
         case ChargerState_e::INITIAL:
         {
 
-            if (ccu_params.balancing_enabled) {
+            if (_ccu_data.balancing_enabled) {
                 set_state(ChargerState_e::CHARGING_WITH_BALANCING, current_millis);
                 break;
             }
@@ -24,7 +22,7 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
 
         case ChargerState_e::CHARGING_WITH_BALANCING:
         {
-            if (!ccu_params.balancing_enabled) {
+            if (!(_ccu_data.balancing_enabled)) {
                 set_state(ChargerState_e::CHARGING_NO_BALANCING, current_millis);
                 break;
             } 
@@ -36,7 +34,7 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
 
         case ChargerState_e::CHARGING_NO_BALANCING:
         {
-            if (ccu_params.balancing_enabled) {
+            if (_ccu_data.balancing_enabled) {
                 set_state(ChargerState_e::CHARGING_WITH_BALANCING, current_millis);
                 break;
 

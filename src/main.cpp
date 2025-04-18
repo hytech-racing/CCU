@@ -23,7 +23,6 @@ FlexCAN_Type<CAN1> ACU_CAN;
 
 /* Parameters */
 ACUAllData_s acu_all_data;
-CCUParams ccu_params; 
 
 /* Systems */
 namespace qn = qindesign::network; //setup of qn namespace
