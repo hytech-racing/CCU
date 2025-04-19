@@ -154,10 +154,10 @@ TEST(mainChargeTest, calculate_charge_current_can_low) { //should output max cha
     EXPECT_FLOAT_EQ(mainChargeLoop.calculate_charge_current(), 13.0);
 }
 
-TEST(mainChargeTest, calculate_charge_current_can_normal) { //should output a tapered value because total voltage is higher than taper start value (505)
+TEST(mainChargeTest, calculate_charge_current_can_normal) { //should output a tapered value because total voltage is higher than taper start value (510)
     ACUInterfaceInstance::create(ccu_data);
     ChargerInterfaceInstance::create(ccu_data);
-    ACUInterfaceInstance::instance().set_latest_data({3.5, 3.1, 3.3, 510}); //change this data to get closer to the target voltage
+    ACUInterfaceInstance::instance().set_latest_data({3.5, 3.1, 3.3, 510}); 
     ChargerInterfaceInstance::instance().set_charger_latest_data({13});
     EXPECT_FLOAT_EQ(mainChargeLoop.calculate_charge_current(), 12.561); //change output match
 //change 

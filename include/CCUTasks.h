@@ -13,7 +13,7 @@
 #include "ChargerStateMachine.h"
 #include "SharedFirmwareTypes.h"
 #include "SystemTimeInterface.h"
-#include "CCUParams.h"
+#include "CCUData.h"
 
 
 

@@ -39,7 +39,7 @@ public:
 private:
     charger_data_s _curr_charger_data;
     
-    CCUData &_ccu_data
+    CCUData &_ccu_data;
 
 };
 

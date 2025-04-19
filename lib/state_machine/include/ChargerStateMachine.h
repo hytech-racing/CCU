@@ -2,8 +2,7 @@
 #define CHARGERSTATEMACHINE_H
 
 #include <etl/delegate.h>
-#include "CCUParams.h"
-#include "CCUParams.h"
+#include "CCUData.h"
 #include "ACUInterface.h"
 #include "ChargerInterface.h"
 
@@ -16,6 +15,9 @@ enum class ChargerState_e { //NOLINT
 class ChargerStateMachine
 {
     public:
+
+        ChargerStateMachine(CCUData &ccu_data) :  _ccu_data(ccu_data) {};
+
         ChargerState_e tick_state_machine(unsigned long current_millis); //need to put these parameters in a struct?
         ChargerState_e get_state() {return _current_state;}
 
@@ -29,6 +31,8 @@ class ChargerStateMachine
         void handle_entry_logic(ChargerState_e new_state, unsigned long current_millis);
         
         ChargerState_e _current_state;
+
+        CCUData &_ccu_data;
 
         
 };

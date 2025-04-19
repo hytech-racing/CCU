@@ -8,7 +8,7 @@
 #include <QNEthernet.h>
 #include "MainChargeSystem.h"
 #include "SharedFirmwareTypes.h"
-#include "CCUParams.h"
+#include "CCUData.h"
 #include "ht_sched.hpp"
 #include "ht_task.hpp"
 #include "ChargerStateMachine.h"

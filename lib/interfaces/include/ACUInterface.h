@@ -24,9 +24,7 @@ class ACUInterface
 {
 public:
 
-    ACUInterface(CCUData &ccu_data) :  _ccu_data(ccu_data) {};
-
-    ACUInterface(unsigned long init_millis, unsigned long max_heartbeat_interval_ms) : _max_heartbeat_interval_ms(max_heartbeat_interval_ms)
+    ACUInterface(unsigned long init_millis, unsigned long max_heartbeat_interval_ms, CCUData &ccu_data) : _max_heartbeat_interval_ms(max_heartbeat_interval_ms), _ccu_data(ccu_data)
     {
         _curr_data.last_recv_status_millis = 0;
         _curr_data.heartbeat_ok = false; // start out false

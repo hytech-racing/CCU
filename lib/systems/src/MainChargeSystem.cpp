@@ -34,7 +34,7 @@ float MainChargeSystem::calculate_charge_current() {
   if (high_voltage >= _ccu_data.cutoff_voltage || average_voltage >= _ccu_data.threshold_voltage || total_voltage >= _ccu_data.max_pack_voltage) { //stop charging if one of the cells or the average, or the total voltage, is too high
     _ccu_data.balancing_enabled = false;
     return 0;
-  } else if (total_voltage < 510) { //only start tapering once close to total voltage (505 volts)
+  } else if (total_voltage < 510) { //begins tapering at 510 pack total voltage
     _ccu_data.balancing_enabled = true;
     return _ccu_data.charger_current_max;
   } else {

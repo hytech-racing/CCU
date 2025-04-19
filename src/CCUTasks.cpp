@@ -4,16 +4,18 @@
 void intitialize_all_interfaces()
 {
     //Serial.begin(115200);
+
+    CCUData ccu_data;
     
     /* ACU Interface */
-    ACUInterfaceInstance::create(millis(), 1000);
+    ACUInterfaceInstance::create(millis(), 1000, ccu_data);
 
     /* Charger Interface */
-    ChargerInterfaceInstance::create();
+    ChargerInterfaceInstance::create(ccu_data);
 
     // CANInterfacesInstance::create();
 
-    ChargerStateMachineInstance::create();
+    ChargerStateMachineInstance::create(ccu_data);
   }
 
 bool run_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
