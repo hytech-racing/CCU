@@ -5,7 +5,7 @@ void intitialize_all_interfaces()
 {
     //Serial.begin(115200);
 
-    CCUData ccu_data;
+    CCUData ccu_data; 
     
     /* ACU Interface */
     ACUInterfaceInstance::create(millis(), 1000, ccu_data);

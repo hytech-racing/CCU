@@ -5,7 +5,7 @@
 
 void ChargerInterface::receive_charger_data_message(const CAN_message_t& msg, unsigned long curr_millis) {
     CHARGER_DATA_t charger_data_msg;
-    charger_data_s charger_data;
+    charger_data_s charger_data; //NOLINT - needed for initialization
     Unpack_CHARGER_DATA_hytech(&charger_data_msg, &msg.buf[0], msg.len);
     charger_data.output_dc_voltage_high = charger_data_msg.output_dc_voltage_high;
     charger_data.output_dc_voltage_low = charger_data_msg.output_dc_voltage_low;

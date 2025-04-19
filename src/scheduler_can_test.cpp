@@ -40,12 +40,12 @@ etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)> main_
 /* Task Declarations */
 // HT_TASK::Task update_display_task(HT_TASK::DUMMY_FUNCTION, run_update_display_task, CCUConstants::UPDATE_DISPLAY_PRIORITY, CCUConstants::HT_SCHED_PERIOD_US); //not sure what the priorities and loop rate should be for each task
 // HT_TASK::Task read_dial_task(HT_TASK::DUMMY_FUNCTION, run_read_dial_task, CCUConstants::READ_DIAL_PRIORITY, CCUConstants::HT_SCHED_PERIOD_US);
-HT_TASK::Task queue_ACU_CAN(HT_TASK::DUMMY_FUNCTION, handle_enqueue_acu_can_data, 1, 100000UL);
-HT_TASK::Task queue_Charger_CAN(HT_TASK::DUMMY_FUNCTION, handle_enqueue_charger_can_data, 1, 100000UL);
+HT_TASK::Task queue_ACU_CAN(HT_TASK::DUMMY_FUNCTION, handle_enqueue_acu_can_data, 1, 100000UL); //NOLINT
+HT_TASK::Task queue_Charger_CAN(HT_TASK::DUMMY_FUNCTION, handle_enqueue_charger_can_data, 1, 100000UL); //NOLINT
 // HT_TASK::Task send_ethernet(HT_TASK::DUMMY_FUNCTION, run_send_ethernet, CCUConstants::SEND_ETHERNET_PRIORITY, CCUConstants::HT_SCHED_PERIOD_US);
 // HT_TASK::Task receive_ethernet(HT_TASK::DUMMY_FUNCTION, run_receive_ethernet, CCUConstants::RECIEVE_ETHERNET_PRIORITY, CCUConstants::HT_SCHED_PERIOD_US);
-HT_TASK::Task send_all_data(HT_TASK::DUMMY_FUNCTION, handle_send_all_data, 2);
-HT_TASK::Task run_sample_CAN_data(HT_TASK::DUMMY_FUNCTION, sample_CAN_data, 2);
+HT_TASK::Task send_all_data(HT_TASK::DUMMY_FUNCTION, handle_send_all_data, 2); //NOLINT
+HT_TASK::Task run_sample_CAN_data(HT_TASK::DUMMY_FUNCTION, sample_CAN_data, 2); //NOLINT
 
 
 
@@ -53,8 +53,8 @@ HT_TASK::Task run_sample_CAN_data(HT_TASK::DUMMY_FUNCTION, sample_CAN_data, 2);
 
 /* Functions */
 void setup() {
-  Serial.begin(115200);
-  delay(4000);
+  //Serial.begin(115200);
+  //delay(4000);
   //Serial.println("started setup");
   //Serial.println("handle can setup");
   intitialize_all_interfaces();

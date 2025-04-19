@@ -13,16 +13,15 @@
 /* This function uses data sent from ACU over CAN. The commented out function would be applicable over ethernet */
 float MainChargeSystem::calculate_charge_current() {
 
-  float average_voltage;
-  float low_voltage;
-  float high_voltage;
-  float total_voltage;
+  float average_voltage; 
+  float low_voltage; 
+  float high_voltage; 
+  float total_voltage; 
   float calculated_charge_current; 
   //float voltage_taper;
-  float distance_from_ideal_voltage;
   //float voltage_scalar;
 
-  float normalized_voltage;
+  float normalized_voltage; //NOLINT
 
   average_voltage = ACUInterfaceInstance::instance().get_latest_data().average_voltage; //average voltage across the cells
   low_voltage = ACUInterfaceInstance::instance().get_latest_data().low_voltage; //the lowest voltage in any of the cells
@@ -34,13 +33,13 @@ float MainChargeSystem::calculate_charge_current() {
   if (high_voltage >= _ccu_data.cutoff_voltage || average_voltage >= _ccu_data.threshold_voltage || total_voltage >= _ccu_data.max_pack_voltage) { //stop charging if one of the cells or the average, or the total voltage, is too high
     _ccu_data.balancing_enabled = false;
     return 0;
-  } else if (total_voltage < 510) { //begins tapering at 510 pack total voltage
+  } else if (total_voltage < 510) { //NOLINT - 510 is what the formula is calibrated to
     _ccu_data.balancing_enabled = true;
     return _ccu_data.charger_current_max;
   } else {
 
     normalized_voltage = (total_voltage / _ccu_data.max_pack_voltage);
-    calculated_charge_current = std::round((_ccu_data.charger_current_max * (1 - pow(normalized_voltage, 0.5))*100)*1000.0) / 1000.0;
+    calculated_charge_current = std::round((_ccu_data.charger_current_max * (1 - pow(normalized_voltage, 0.5))*100)*1000.0) / 1000.0; //NOLINT
     //calculated_charge_current = _ccu_data.charger_current_max * (1 + (100*std::log10f(normalized_voltage))); //NOLINT - 100 is used for scaling purposes
 
    
