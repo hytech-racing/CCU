@@ -1,5 +1,5 @@
-#ifndef __SYSTEMTIMEINTERFACE_H__
-#define __SYSTEMTIMEINTERFACE_H__
+#ifndef SYSTEMTIMEINTERFACE_H 
+#define SYSTEMTIMEINTERFACE_H
 
 namespace sys_time
 {

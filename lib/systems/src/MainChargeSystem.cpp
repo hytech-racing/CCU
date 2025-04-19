@@ -13,15 +13,15 @@
 /* This function uses data sent from ACU over CAN. The commented out function would be applicable over ethernet */
 float MainChargeSystem::calculate_charge_current() {
 
-  float average_voltage; 
-  float low_voltage; 
-  float high_voltage; 
-  float total_voltage; 
-  float calculated_charge_current; 
+  float average_voltage = 0; 
+  float low_voltage = 0; 
+  float high_voltage = 0; 
+  float total_voltage = 0; 
+  float calculated_charge_current = 0; 
   //float voltage_taper;
   //float voltage_scalar;
 
-  float normalized_voltage; //NOLINT
+  float normalized_voltage = 0; 
 
   average_voltage = ACUInterfaceInstance::instance().get_latest_data().average_voltage; //average voltage across the cells
   low_voltage = ACUInterfaceInstance::instance().get_latest_data().low_voltage; //the lowest voltage in any of the cells

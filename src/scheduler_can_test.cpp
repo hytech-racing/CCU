@@ -76,6 +76,6 @@ void setup() {
 
 void loop() {
   scheduler.run();
-  delay(10);
+  //delay(10);
   
 }

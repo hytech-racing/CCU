@@ -5,17 +5,17 @@ void intitialize_all_interfaces()
 {
     //Serial.begin(115200);
 
-    CCUData ccu_data; 
+    CCUData ccu_data; //NOLINT (necessary for passing ccu_data struct as a reference)
     
     /* ACU Interface */
     ACUInterfaceInstance::create(millis(), 1000, ccu_data);
 
     /* Charger Interface */
-    ChargerInterfaceInstance::create(ccu_data);
+    ChargerInterfaceInstance::create(ccu_data); //NOLINT (necessary for passing ccu_data struct as a reference)
 
     // CANInterfacesInstance::create();
 
-    ChargerStateMachineInstance::create(ccu_data);
+    ChargerStateMachineInstance::create(ccu_data); //NOLINT (necessary for passing ccu_data struct as a reference)
   }
 
 bool run_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
