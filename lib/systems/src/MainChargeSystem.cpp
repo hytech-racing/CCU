@@ -40,7 +40,7 @@ float MainChargeSystem::calculate_charge_current() {
   } else {
 
     normalized_voltage = (total_voltage / _ccu_data.max_pack_voltage);
-    calculated_charge_current = (_ccu_data.charger_current_max * (1 - pow(normalized_voltage, 0.5))) * 100;
+    calculated_charge_current = std::round((_ccu_data.charger_current_max * (1 - pow(normalized_voltage, 0.5))*100)*1000.0) / 1000.0;
     //calculated_charge_current = _ccu_data.charger_current_max * (1 + (100*std::log10f(normalized_voltage))); //NOLINT - 100 is used for scaling purposes
 
    
