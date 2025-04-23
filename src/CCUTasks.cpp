@@ -16,6 +16,8 @@ void intitialize_all_interfaces()
     // CANInterfacesInstance::create();
 
     ChargerStateMachineInstance::create(ccu_data); //NOLINT (necessary for passing ccu_data struct as a reference)
+
+    etl::delegate<void()> init_watchdog = etl::delegate<void()>::create<WatchdogInterface, &WatchdogInterface::set_teensy_sw_high>(WatchdogInstance::instance());
   }
 
 bool run_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
@@ -81,6 +83,8 @@ bool init_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo&
 {
     WatchdogInstance::create(WATCHDOG_KICK_INTERVAL_MS); // NOLINT
     pinMode(WATCHDOG_PIN, OUTPUT);
+    pinMode(SOFTWARE_OK_PIN, OUTPUT);
+    pinMode(SOFTWARE_OK_PIN, HIGH);
     return true;
 }
 
@@ -92,7 +96,7 @@ bool tick_state_machine(const unsigned long &sysMicros, const HT_TASK::TaskInfo 
 
 
 bool print_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
-
+ 
     Serial.print("Charging Status: ");
     Serial.println(static_cast<int>(ChargerStateMachineInstance::instance().get_state()));
     Serial.print("Cell Voltage max: ");

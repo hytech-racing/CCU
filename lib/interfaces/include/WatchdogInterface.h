@@ -7,7 +7,7 @@
 using pin = size_t;
 
 /* Watchdog Constants */
-namespace Watchdog_Params {
+namespace WATCHDOG_PARAMS {
 
     constexpr const pin WATCHDOG_PIN = 26; //teensy input to watchdog
     constexpr const pin SOFTWARE_OK_PIN = 27; // Watchdog's !RESET pin
@@ -19,10 +19,19 @@ namespace Watchdog_Params {
 class WatchdogInterface
 {
 public:
+    
+    WatchdogInterface(
+        pin sw_ok_pin = WATCHDOG_PARAMS::SOFTWARE_OK_PIN,
+        pin wd_kick_pin = WATCHDOG_PARAMS::WATCHDOG_PIN,
+        const unsigned long kick_interval_ms = 10UL) : 
+            teensy_wd_pin(wd_kick_pin),
+            teensy_sw_pin(sw_ok_pin),
+            _watchdog_time(0), 
+            _watchdog_state(false), 
+            _watchdog_kick_interval(kick_interval_ms) 
+    {};
 
     void init();
-    
-    WatchdogInterface(const unsigned long kick_interval_ms = 10UL) : _watchdog_time(0), _watchdog_state(false), _watchdog_kick_interval(kick_interval_ms) {};
 
 private:
 
@@ -40,6 +49,8 @@ public:
 
     /* Get and update watchdog state */
     bool get_watchdog_state(unsigned long curr_millis);
+
+    void set_teensy_sw_high();
 };
 
 using WatchdogInstance = etl::singleton<WatchdogInterface>;
