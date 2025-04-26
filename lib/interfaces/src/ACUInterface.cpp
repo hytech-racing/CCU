@@ -22,6 +22,7 @@ void ACUInterface::receive_status_message(const CAN_message_t &msg, unsigned lon
     }
     
     _curr_data.last_recv_status_millis = curr_millis;
+    
 }
 
 void ACUInterface::receive_voltages_message(const CAN_message_t& msg, unsigned long curr_millis)

@@ -11,7 +11,7 @@
 
 
 /* This function uses data sent from ACU over CAN. The commented out function would be applicable over ethernet */
-float MainChargeSystem::calculate_charge_current() {
+void MainChargeSystem::calculate_charge_current() {
 
   float average_voltage = 0; 
   float low_voltage = 0; 
@@ -30,23 +30,19 @@ float MainChargeSystem::calculate_charge_current() {
 
 
 
-  if (high_voltage >= _ccu_data.cutoff_voltage || average_voltage >= _ccu_data.threshold_voltage || total_voltage >= _ccu_data.max_pack_voltage) { //stop charging if one of the cells or the average, or the total voltage, is too high
-    _ccu_data.balancing_enabled = false;
-    return 0;
-  } else if (total_voltage < 510) { //NOLINT - 510 is what the formula is calibrated to
-    _ccu_data.balancing_enabled = true;
-    return _ccu_data.charger_current_max;
-  } else {
+  if (total_voltage >= _ccu_data.max_pack_voltage || digitalRead(_ccu_data.SHDN_E_READ) != HIGH) { //stop charging if one of the cells or the average, or the total voltage, is too high
+    _ccu_data.calculated_charge_current = 0;
+    
+  } else if (total_voltage < _ccu_data.max_pack_voltage) { //NOLINT - 510 is what the formula is calibrated to
+    _ccu_data.calculated_charge_current = _ccu_data.charger_current_max;
+    
+  } 
 
-    normalized_voltage = (total_voltage / _ccu_data.max_pack_voltage);
-    calculated_charge_current = std::round((_ccu_data.charger_current_max * (1 - pow(normalized_voltage, 0.5))*100)*1000.0) / 1000.0; //NOLINT
-    //calculated_charge_current = _ccu_data.charger_current_max * (1 + (100*std::log10f(normalized_voltage))); //NOLINT - 100 is used for scaling purposes
+    // normalized_voltage = (total_voltage / _ccu_data.max_pack_voltage);
+    // calculated_charge_current = std::round((_ccu_data.charger_current_max * (1 - pow(normalized_voltage, 0.5))*100)*1000.0) / 1000.0; //NOLINT
+    // _ccu_data.calculated_charge_current = calculated_charge_current; 
 
-   
-  }
 
-  _ccu_data.calculated_charge_current = calculated_charge_current;
-  return calculated_charge_current;
 }
 
 

@@ -1,24 +1,29 @@
 #include "CCUTasks.h"
 
 
+CCUData ccu_data; //NOLINT (necessary for passing ccu_data struct as a reference)
+
 void intitialize_all_interfaces()
 {
-    //Serial.begin(115200);
-
-    CCUData ccu_data; //NOLINT (necessary for passing ccu_data struct as a reference)
-    
     /* ACU Interface */
     ACUInterfaceInstance::create(millis(), 1000, ccu_data);
 
     /* Charger Interface */
     ChargerInterfaceInstance::create(ccu_data); //NOLINT (necessary for passing ccu_data struct as a reference)
 
-    // CANInterfacesInstance::create();
-
     ChargerStateMachineInstance::create(ccu_data); //NOLINT (necessary for passing ccu_data struct as a reference)
 
-    etl::delegate<void()> init_watchdog = etl::delegate<void()>::create<WatchdogInterface, &WatchdogInterface::set_teensy_sw_high>(WatchdogInstance::instance());
-  }
+    WatchdogInstance::create();
+    WatchdogInstance::instance().init(); 
+
+    CANInterfacesInstance::create(ACUInterfaceInstance::instance(), ChargerInterfaceInstance::instance());
+
+    pinMode(ccu_data.SHDN_E_READ, INPUT);
+
+    MainChargeSystemInstance::create(ccu_data);
+
+
+}
 
 bool run_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
 
@@ -64,6 +69,7 @@ bool handle_send_all_data(const unsigned long& sysMicros, const HT_TASK::TaskInf
 
 
 bool sample_can_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+    // Serial.println("sample can data");
     etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)> main_can_recv = etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)>::create<CCUCANInterfaceImpl::ccu_CAN_recv>();
     process_ring_buffer(CCUCANInterfaceImpl::acu_can_rx_buffer, CANInterfacesInstance::instance(), sys_time::hal_millis(), main_can_recv); 
     process_ring_buffer(CCUCANInterfaceImpl::charger_can_rx_buffer, CANInterfacesInstance::instance(), sys_time::hal_millis(), main_can_recv); 
@@ -74,7 +80,7 @@ bool sample_can_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& ta
 
 bool run_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
     
-    digitalWrite(WATCHDOG_PIN, WatchdogInstance::instance().get_watchdog_state(sys_time::hal_millis()));
+    WatchdogInstance::instance().get_watchdog_state(sys_time::hal_millis());
     return true;
 
 }
@@ -83,8 +89,6 @@ bool init_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo&
 {
     WatchdogInstance::create(WATCHDOG_KICK_INTERVAL_MS); // NOLINT
     pinMode(WATCHDOG_PIN, OUTPUT);
-    pinMode(SOFTWARE_OK_PIN, OUTPUT);
-    pinMode(SOFTWARE_OK_PIN, HIGH);
     return true;
 }
 
@@ -94,11 +98,21 @@ bool tick_state_machine(const unsigned long &sysMicros, const HT_TASK::TaskInfo 
     return true;
 }
 
+bool calculate_charge_current(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+    MainChargeSystemInstance::instance().calculate_charge_current();
+    return true;
+}
+
+
 
 bool print_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
- 
+    
+    Serial.print("Charge enable: ");
+    Serial.println(ccu_data.balancing_enabled);
     Serial.print("Charging Status: ");
     Serial.println(static_cast<int>(ChargerStateMachineInstance::instance().get_state()));
+    Serial.print("BMS Status: ");
+    Serial.println(static_cast<int>(ACUInterfaceInstance::instance().get_latest_data().acu_state));
     Serial.print("Cell Voltage max: ");
     Serial.println(ACUInterfaceInstance::instance().get_latest_data().high_voltage);
     Serial.print("Cell voltage min: ");
@@ -107,11 +121,19 @@ bool print_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInf
     Serial.println(ACUInterfaceInstance::instance().get_latest_data().average_voltage);
     Serial.print("Cell voltage max and min delta: ");
     Serial.println((ACUInterfaceInstance::instance().get_latest_data().high_voltage) - (ACUInterfaceInstance::instance().get_latest_data().low_voltage));
+    Serial.print("Total pack voltage: ");
+    Serial.println(ACUInterfaceInstance::instance().get_latest_data().total_voltage);
     // Serial.print("Cell temp max: "); //maximum cell temperature that ACU says cells should have
     // Serial.println();
     // Serial.print("Current cell temp: "); 
     // Serial.println();
     Serial.print("Charging current: "); //how much current the charger is supplying
-    Serial.println(ChargerInterfaceInstance::instance().get_latest_charger_data().output_current_high);
+    Serial.println(ChargerInterfaceInstance::instance().get_latest_charger_data().output_current_low);
+
+    Serial.print("Calculated charge current: ");
+    Serial.println(ccu_data.calculated_charge_current);
+   // Serial.print("SHDN_E high: ");
+   // Serial.println(digitalRead(ccu_data.SHDN_E_READ) == HIGH);
+
     return true;
 }

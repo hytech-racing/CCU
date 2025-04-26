@@ -50,7 +50,7 @@ public:
     /* Get and update watchdog state */
     bool get_watchdog_state(unsigned long curr_millis);
 
-    void set_teensy_sw_high();
+    void set_teensy_sw_high(); //never used
 };
 
 using WatchdogInstance = etl::singleton<WatchdogInterface>;

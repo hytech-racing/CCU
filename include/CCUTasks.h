@@ -14,7 +14,7 @@
 #include "SharedFirmwareTypes.h"
 #include "SystemTimeInterface.h"
 #include "CCUData.h"
-
+#include "MainChargeSystem.h"
 
 
 void intitialize_all_interfaces();
@@ -40,6 +40,8 @@ bool init_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo&
 bool run_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
 bool tick_state_machine(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+
+bool calculate_charge_current(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
 bool print_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 

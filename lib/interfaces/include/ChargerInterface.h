@@ -10,6 +10,7 @@
 #include "CCUData.h"
 
 
+
 struct charger_data_s {
     uint8_t output_dc_voltage_high;
     uint8_t output_dc_voltage_low;
@@ -34,10 +35,10 @@ public:
 
     void enqueue_charging_data();
 
-    charger_data_s get_latest_charger_data() {return _curr_charger_data;};
+    charger_data_s get_latest_charger_data() {return charger_data;};
 
 private:
-    charger_data_s _curr_charger_data;
+    charger_data_s charger_data;
     
     CCUData &_ccu_data;
 

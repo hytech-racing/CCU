@@ -5,7 +5,7 @@
 
 void ChargerInterface::receive_charger_data_message(const CAN_message_t& msg, unsigned long curr_millis) {
     CHARGER_DATA_t charger_data_msg;
-    charger_data_s charger_data; //NOLINT - needed for initialization
+    //charger_data_s charger_data; //NOLINT - needed for initialization
     Unpack_CHARGER_DATA_hytech(&charger_data_msg, &msg.buf[0], msg.len);
     charger_data.output_dc_voltage_high = charger_data_msg.output_dc_voltage_high;
     charger_data.output_dc_voltage_low = charger_data_msg.output_dc_voltage_low;
@@ -14,6 +14,8 @@ void ChargerInterface::receive_charger_data_message(const CAN_message_t& msg, un
     charger_data.flags = charger_data_msg.flags;
     charger_data.input_ac_voltage_high = charger_data_msg.input_ac_voltage_high;
     charger_data.input_ac_voltage_low = charger_data_msg.input_ac_voltage_low;
+    _ccu_data.balancing_enabled = true; //if a charger message is received, we are ready to start charging
+    //Serial.println("receieved charger message");
 }
 
 void ChargerInterface::enqueue_charging_data()
@@ -25,9 +27,9 @@ void ChargerInterface::enqueue_charging_data()
     // NOTE: The "high" and "low" values are not max and min-- rather, they are the "high" and "low"
     // bytes of a 16-bit integer.
     CHARGER_CONTROL_t charger_control = {};
-    charger_control.max_charging_voltage_high = 0x14; //NOLINT (see comment)
+    charger_control.max_charging_voltage_high = 0x14; //NOLINT (see comment) - need to change this in PCAN library... but how?
     charger_control.max_charging_voltage_low = 0xB4; //NOLINT (see comment)
-    charger_control.max_charging_current_high = static_cast<uint8_t>(std::round(_ccu_data.calculated_charge_current)); //charging current reads from function
-    charger_control.max_charging_current_low = 0; 
+    charger_control.max_charging_current_high = 0; //charging current reads from function
+    charger_control.max_charging_current_low = _ccu_data.calculated_charge_current;  
     CAN_util::enqueue_msg(&charger_control, &Pack_CHARGER_CONTROL_hytech, CCUCANInterfaceImpl::charger_can_tx_buffer);
 }
