@@ -36,7 +36,7 @@ HT_SCHED::Scheduler& scheduler = HT_SCHED::Scheduler::getInstance();
 
 
 // Task Declarations 
-HT_TASK::Task update_display_task(HT_TASK::DUMMY_FUNCTION, run_update_display_task, CCUConstants::UPDATE_DISPLAY_PRIORITY, 10000000UL);
+HT_TASK::Task update_display_task(HT_TASK::DUMMY_FUNCTION, run_update_display_task, CCUConstants::UPDATE_DISPLAY_PRIORITY, 1000000UL);
 
 HT_TASK::Task read_dial_task(HT_TASK::DUMMY_FUNCTION, run_read_dial_task, CCUConstants::READ_DIAL_PRIORITY, CCUConstants::HT_SCHED_PERIOD_US);
 HT_TASK::Task queue_ACU_CAN(HT_TASK::DUMMY_FUNCTION, handle_enqueue_acu_can_data, CCUConstants::ENQUEUE_ACU_CAN_DATA_PRIORITY, CCUConstants::ENQUEUE_ACU_CAN_DATA_PERIOD);
