@@ -22,11 +22,12 @@ void intitialize_all_interfaces()
 
     MainChargeSystemInstance::create(ccu_data);
 
+    DisplaySystemInstance::create(ccu_data);
 
 }
 
 bool run_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
-
+    DisplaySystemInstance::instance().display_data();
     return true;
 }
 
@@ -78,17 +79,19 @@ bool sample_can_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& ta
 }
 
 
-bool run_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
-    
-    WatchdogInstance::instance().get_watchdog_state(sys_time::hal_millis());
-    return true;
-
-}
-
 bool init_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
 {
     WatchdogInstance::create(WATCHDOG_KICK_INTERVAL_MS); // NOLINT
     pinMode(WATCHDOG_PIN, OUTPUT);
+    pinMode(SOFTWARE_OK_PIN, OUTPUT);
+    return true;
+}
+
+
+bool run_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+    
+    digitalWrite(WATCHDOG_PIN, WatchdogInstance::instance().get_watchdog_state(sys_time::hal_millis()));
+    //WatchdogInstance::instance().get_watchdog_state(sys_time::hal_millis());
     return true;
 }
 
@@ -102,7 +105,6 @@ bool calculate_charge_current(const unsigned long& sysMicros, const HT_TASK::Tas
     MainChargeSystemInstance::instance().calculate_charge_current();
     return true;
 }
-
 
 
 bool print_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {

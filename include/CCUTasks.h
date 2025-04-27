@@ -15,6 +15,7 @@
 #include "SystemTimeInterface.h"
 #include "CCUData.h"
 #include "MainChargeSystem.h"
+#include "DisplaySystem.h"
 
 
 void intitialize_all_interfaces();

@@ -35,11 +35,11 @@ void MainChargeSystem::calculate_charge_current() {
     
   } else if (total_voltage < _ccu_data.max_pack_voltage) { //NOLINT - 510 is what the formula is calibrated to
     _ccu_data.calculated_charge_current = _ccu_data.charger_current_max;
-    
+
   } 
 
     // normalized_voltage = (total_voltage / _ccu_data.max_pack_voltage);
-    // calculated_charge_current = std::round((_ccu_data.charger_current_max * (1 - pow(normalized_voltage, 0.5))*100)*1000.0) / 1000.0; //NOLINT
+    // calculated_charge_current = std::round((_ccu_data.charger_current_max * (1 - pow(normalized_voltage, 0.5))*100)*1000.0) / 1000.0; //NOLINT - only optimized for values after 510
     // _ccu_data.calculated_charge_current = calculated_charge_current; 
 
 

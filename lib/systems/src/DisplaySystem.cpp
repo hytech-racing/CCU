@@ -1,0 +1,39 @@
+#include "DisplaySystem.h"
+
+
+void DisplaySystem::display_data() {
+    Adafruit_ILI9341 Display = Adafruit_ILI9341(DISPLAY_PINS::LCD_CS, DISPLAY_PINS::LCD_DC, DISPLAY_PINS::LCD_MOSI, DISPLAY_PINS::LCD_SCK, DISPLAY_PINS::LCD_RESET, DISPLAY_PINS::LCD_MISO);
+    Display.begin();
+    //Display.fillScreen(ILI9341_WHITE);
+    Display.setRotation(3);
+    Display.setTextSize(2);
+
+    Display.println("Charging Status: ");
+    if (_ccu_data.balancing_enabled) {
+        Display.println("Charging");
+    } else {
+        Display.println("Not Charging");
+    }
+    Display.println();
+
+    Display.print("Cell Voltage max: ");
+    Display.println(ACUInterfaceInstance::instance().get_latest_data().high_voltage);
+    Display.println();
+   
+    Display.print("Cell Voltage min: ");
+    Display.println(ACUInterfaceInstance::instance().get_latest_data().low_voltage);
+    Display.println();
+
+    Display.print("Cell Voltage average: ");
+    Display.println(ACUInterfaceInstance::instance().get_latest_data().average_voltage);
+    Display.println();
+
+    Display.print("Cell Voltage delta: ");
+    Display.println(ACUInterfaceInstance::instance().get_latest_data().high_voltage - ACUInterfaceInstance::instance().get_latest_data().low_voltage);
+    Display.println();
+
+    Display.print("Total pack voltage: ");
+    Display.print(ACUInterfaceInstance::instance().get_latest_data().total_voltage);
+
+
+}

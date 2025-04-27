@@ -20,10 +20,10 @@ struct CCUData
 namespace CCUConstants
 {
   /* Task Constants */
-  constexpr unsigned long KICK_WATCHDOG_PERIOD = 2000UL; //500 hz
+  constexpr unsigned long KICK_WATCHDOG_PERIOD = 10000UL; //100 hz
   constexpr unsigned long KICK_WATCHDOG_PRIORITY = 1;
 
-  constexpr unsigned long TICK_STATE_MACHINE_PERIOD = 1000UL; //1000 hz
+  constexpr unsigned long TICK_STATE_MACHINE_PERIOD = 20000UL;
   constexpr unsigned long TICK_STATE_MACHINE_PRIORITY = 2;
 
   constexpr unsigned long SAMPLE_CAN_DATA_PRIORITY = 3; //0?
@@ -36,7 +36,7 @@ namespace CCUConstants
   constexpr unsigned long ENQUEUE_CHARGER_CAN_DATA_PERIOD = 100000UL;
 
   constexpr unsigned long HT_SCHED_PERIOD_US = 20000UL;
-  constexpr unsigned long UPDATE_DISPLAY_PRIORITY = 9;
+  constexpr unsigned long UPDATE_DISPLAY_PRIORITY = 11;
   constexpr unsigned long READ_DIAL_PRIORITY = 10;
   constexpr unsigned long SEND_ETHERNET_PRIORITY = 8;
   constexpr unsigned long RECIEVE_ETHERNET_PRIORITY = 7;
@@ -46,6 +46,7 @@ namespace CCUConstants
   /* CAN Constants */
   const uint32_t CAN_BAUDRATE = 500000; //CAN for ACU
   const uint32_t CHARGER_CAN_BAUDRATE = 500000; //CAN for charger
+
 }
 
 
