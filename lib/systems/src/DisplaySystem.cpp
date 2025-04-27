@@ -34,6 +34,5 @@ void DisplaySystem::display_data() {
 
     Display.print("Total pack voltage: ");
     Display.print(ACUInterfaceInstance::instance().get_latest_data().total_voltage);
-
-
+    
 }

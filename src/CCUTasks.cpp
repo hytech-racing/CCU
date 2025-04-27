@@ -20,15 +20,10 @@ void intitialize_all_interfaces()
 
     pinMode(ccu_data.SHDN_E_READ, INPUT);
 
+    /* These should be put in a CCU Systems Tasks but I put it here just to get CCU working asap */
     MainChargeSystemInstance::create(ccu_data);
-
     DisplaySystemInstance::create(ccu_data);
 
-}
-
-bool run_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
-    DisplaySystemInstance::instance().display_data();
-    return true;
 }
 
 
@@ -103,6 +98,12 @@ bool tick_state_machine(const unsigned long &sysMicros, const HT_TASK::TaskInfo 
 
 bool calculate_charge_current(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
     MainChargeSystemInstance::instance().calculate_charge_current();
+    return true;
+}
+
+bool run_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+    bool run_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+    DisplaySystemInstance::instance().display_data();
     return true;
 }
 
