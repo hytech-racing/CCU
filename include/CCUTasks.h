@@ -20,6 +20,8 @@
 
 void intitialize_all_interfaces();
 
+bool init_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+
 bool run_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
 bool run_read_dial_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);

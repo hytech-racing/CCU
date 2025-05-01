@@ -1,10 +1,17 @@
 #include "DisplaySystem.h"
 
-
-void DisplaySystem::display_data() {
-    Adafruit_ILI9341 Display = Adafruit_ILI9341(DISPLAY_PINS::LCD_CS, DISPLAY_PINS::LCD_DC, DISPLAY_PINS::LCD_MOSI, DISPLAY_PINS::LCD_SCK, DISPLAY_PINS::LCD_RESET, DISPLAY_PINS::LCD_MISO);
+void DisplaySystem::init() {
     Display.begin();
     //Display.fillScreen(ILI9341_WHITE);
+    Display.setRotation(3);
+    Display.setTextSize(2);
+    Display.fillScreen(ILI9341_BLACK);
+}
+
+void DisplaySystem::display_data() {
+
+    //Adafruit_ILI9341 Display = Adafruit_ILI9341(DISPLAY_PINS::LCD_CS, DISPLAY_PINS::LCD_DC, DISPLAY_PINS::LCD_MOSI, DISPLAY_PINS::LCD_SCK, DISPLAY_PINS::LCD_RESET, DISPLAY_PINS::LCD_MISO);
+    Display.setCursor(0,0);
     Display.setRotation(3);
     Display.setTextSize(2);
 
@@ -34,5 +41,14 @@ void DisplaySystem::display_data() {
 
     Display.print("Total pack voltage: ");
     Display.print(ACUInterfaceInstance::instance().get_latest_data().total_voltage);
-    
+
+
+}
+
+void DisplaySystem::refresh_display_data(unsigned long curr_millis) {
+
+    if ((curr_millis - display_time) >= display_update_interval) {
+        Display.fillScreen(ILI9341_BLACK);
+        display_time = curr_millis;
+    }
 }

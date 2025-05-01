@@ -101,11 +101,18 @@ bool calculate_charge_current(const unsigned long& sysMicros, const HT_TASK::Tas
     return true;
 }
 
-bool run_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
-    bool run_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
-    DisplaySystemInstance::instance().display_data();
+bool init_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+    //Adafruit_ILI9341 Display = Adafruit_ILI9341(DISPLAY_PINS::LCD_CS, DISPLAY_PINS::LCD_DC, DISPLAY_PINS::LCD_MOSI, DISPLAY_PINS::LCD_SCK, DISPLAY_PINS::LCD_RESET, DISPLAY_PINS::LCD_MISO);
+    DisplaySystemInstance::instance().init();
     return true;
 }
+
+bool run_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+    DisplaySystemInstance::instance().display_data();
+    DisplaySystemInstance::instance().refresh_display_data(sys_time::hal_millis());
+    return true;
+}
+
 
 
 bool print_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {

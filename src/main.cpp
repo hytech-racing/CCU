@@ -15,6 +15,7 @@
 #include "CCUCANInterfaceImpl.h"
 #include "CCUTasks.h"
 #include "SystemTimeInterface.h"
+#include "DisplaySystem.h"
 #include <IntervalTimer.h>
 
 IntervalTimer watchdogTimer; 
@@ -36,7 +37,7 @@ HT_SCHED::Scheduler& scheduler = HT_SCHED::Scheduler::getInstance();
 
 
 // Task Declarations 
-HT_TASK::Task update_display_task(HT_TASK::DUMMY_FUNCTION, run_update_display_task, CCUConstants::UPDATE_DISPLAY_PRIORITY, 1000000UL);
+HT_TASK::Task update_display_task(init_update_display_task, run_update_display_task, CCUConstants::UPDATE_DISPLAY_PRIORITY, 100000UL);
 
 HT_TASK::Task read_dial_task(HT_TASK::DUMMY_FUNCTION, run_read_dial_task, CCUConstants::READ_DIAL_PRIORITY, CCUConstants::HT_SCHED_PERIOD_US);
 HT_TASK::Task queue_ACU_CAN(HT_TASK::DUMMY_FUNCTION, handle_enqueue_acu_can_data, CCUConstants::ENQUEUE_ACU_CAN_DATA_PRIORITY, CCUConstants::ENQUEUE_ACU_CAN_DATA_PERIOD);
@@ -51,15 +52,17 @@ HT_TASK::Task tick_state_machine_task(HT_TASK::DUMMY_FUNCTION, tick_state_machin
 
 HT_TASK::Task calculate_charge_current_task(HT_TASK::DUMMY_FUNCTION, calculate_charge_current, CCUConstants::TICK_STATE_MACHINE_PRIORITY, CCUConstants::TICK_STATE_MACHINE_PERIOD);
 
-bool kick = 1;
-void toggleWatchdog() {
-  kick = !kick;
-  digitalWrite(WATCHDOG_PIN, kick);
-}
+// bool kick = 1;
+// void toggleWatchdog() {
+//   kick = !kick;
+//   digitalWrite(WATCHDOG_PIN, kick);
+// }
 
 /* Functions */
 void setup() {
 
+  SPI.begin();
+  SPI.beginTransaction(SPISettings(4000000, MSBFIRST, SPI_MODE0));
  
   qn::Ethernet.begin(); //begins QNEthernet
 
@@ -77,14 +80,14 @@ void setup() {
   scheduler.schedule(debug_print_task);
   scheduler.schedule(run_sample_can_data);
   scheduler.schedule(kick_watchdog_task); 
-  //scheduler.schedule(tick_state_machine_task); //this breaks the ccu_ok led for some reason - no need for a state machine if we only have charging or not charging (controlled by balancing_enabled)
+ // scheduler.schedule(tick_state_machine_task); //this breaks the ccu_ok led for some reason - no need for a state machine if we only have charging or not charging (controlled by balancing_enabled)
   scheduler.schedule(calculate_charge_current_task);
   scheduler.schedule(update_display_task);
 
   handle_CAN_setup(ACU_CAN, CCUConstants::CAN_BAUDRATE, &CCUCANInterfaceImpl::on_acu_can_receive);
   handle_CAN_setup(CHARGER_CAN, CCUConstants::CHARGER_CAN_BAUDRATE, &CCUCANInterfaceImpl::on_charger_can_receive);
 
-  watchdogTimer.begin(toggleWatchdog, 10000);
+  //watchdogTimer.begin(toggleWatchdog, 10000);
   
 }
 
