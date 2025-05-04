@@ -18,35 +18,35 @@
 #include "DisplaySystem.h"
 
 
-void intitialize_all_interfaces();
+HT_TASK::TaskResponse intitialize_all_interfaces();
 
-bool init_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+HT_TASK::TaskResponse init_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
-bool run_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+HT_TASK::TaskResponse run_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
-bool run_read_dial_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+HT_TASK::TaskResponse run_read_dial_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
-bool handle_enqueue_acu_can_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+HT_TASK::TaskResponse handle_enqueue_acu_can_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
-bool handle_enqueue_charger_can_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+HT_TASK::TaskResponse handle_enqueue_charger_can_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
-bool run_send_ethernet(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+HT_TASK::TaskResponse run_send_ethernet(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
-bool run_receive_ethernet(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+HT_TASK::TaskResponse run_receive_ethernet(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
-bool handle_send_all_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+HT_TASK::TaskResponse sample_can_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
-bool sample_can_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+HT_TASK::TaskResponse handle_send_all_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
-bool init_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+HT_TASK::TaskResponse init_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
-bool run_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+HT_TASK::TaskResponse run_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
-bool tick_state_machine(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+HT_TASK::TaskResponse tick_state_machine(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
-bool calculate_charge_current(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+HT_TASK::TaskResponse calculate_charge_current(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
-bool print_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+HT_TASK::TaskResponse print_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
 
 

@@ -34,6 +34,10 @@ void ACUInterface::receive_voltages_message(const CAN_message_t& msg, unsigned l
     _curr_data.high_voltage = HYTECH_high_voltage_ro_fromS(static_cast<float>(voltages_msg.high_voltage_ro));
     _curr_data.total_voltage = HYTECH_total_voltage_ro_fromS(static_cast<float>(voltages_msg.total_voltage_ro));
 
+    BMS_DETAILED_VOLTAGES_t detailed_msg;
+    Unpack_BMS_DETAILED_VOLTAGES_hytech(&detailed_msg, &msg.buf[0], msg.len);
+    
+
     //BMS_DETAILED_VOLTAGES_t for temps
 }
 

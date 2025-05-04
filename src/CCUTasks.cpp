@@ -3,7 +3,7 @@
 
 CCUData ccu_data; //NOLINT (necessary for passing ccu_data struct as a reference)
 
-void intitialize_all_interfaces()
+HT_TASK::TaskResponse intitialize_all_interfaces()
 {
     /* ACU Interface */
     ACUInterfaceInstance::create(millis(), 1000, ccu_data);
@@ -24,98 +24,102 @@ void intitialize_all_interfaces()
     MainChargeSystemInstance::create(ccu_data);
     DisplaySystemInstance::create(ccu_data);
 
+    return HT_TASK::TaskResponse::YIELD;
+
 }
 
 
-bool run_read_dial_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+HT_TASK::TaskResponse run_read_dial_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
 
-    return true;
+    return HT_TASK::TaskResponse::YIELD;
 }
 
 
-bool handle_enqueue_acu_can_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+HT_TASK::TaskResponse handle_enqueue_acu_can_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
     ACUInterfaceInstance::instance().enqueue_ccu_status_data();
-    return true;
+    return HT_TASK::TaskResponse::YIELD;
 }
 
 
-bool handle_enqueue_charger_can_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+HT_TASK::TaskResponse handle_enqueue_charger_can_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
     ChargerInterfaceInstance::instance().enqueue_charging_data();
-    return true;
+    return HT_TASK::TaskResponse::YIELD;
 }
 
 
-bool run_send_ethernet(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+HT_TASK::TaskResponse run_send_ethernet(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
 
-    return true;
+    return HT_TASK::TaskResponse::YIELD;
 }
 
 
-bool run_receive_ethernet(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+HT_TASK::TaskResponse run_receive_ethernet(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
 
-    return true;
+    return HT_TASK::TaskResponse::YIELD;
 }
 
 
-bool handle_send_all_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+HT_TASK::TaskResponse handle_send_all_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+
     CCUCANInterfaceImpl::send_all_CAN_msgs(CCUCANInterfaceImpl::acu_can_tx_buffer, &ACU_CAN);
     CCUCANInterfaceImpl::send_all_CAN_msgs(CCUCANInterfaceImpl::charger_can_tx_buffer, &CHARGER_CAN);
-    return true;
+    return HT_TASK::TaskResponse::YIELD;
 }
 
 
-bool sample_can_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
-    // Serial.println("sample can data");
+HT_TASK::TaskResponse sample_can_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+
     etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)> main_can_recv = etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)>::create<CCUCANInterfaceImpl::ccu_CAN_recv>();
     process_ring_buffer(CCUCANInterfaceImpl::acu_can_rx_buffer, CANInterfacesInstance::instance(), sys_time::hal_millis(), main_can_recv); 
     process_ring_buffer(CCUCANInterfaceImpl::charger_can_rx_buffer, CANInterfacesInstance::instance(), sys_time::hal_millis(), main_can_recv); 
 
-    return true;
+    return HT_TASK::TaskResponse::YIELD;
 }
 
 
-bool init_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
+HT_TASK::TaskResponse init_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
 {
     WatchdogInstance::create(WATCHDOG_KICK_INTERVAL_MS); // NOLINT
     pinMode(WATCHDOG_PIN, OUTPUT);
     pinMode(SOFTWARE_OK_PIN, OUTPUT);
-    return true;
+    return HT_TASK::TaskResponse::YIELD;
 }
 
 
-bool run_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+HT_TASK::TaskResponse run_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
     
     digitalWrite(WATCHDOG_PIN, WatchdogInstance::instance().get_watchdog_state(sys_time::hal_millis()));
-    //WatchdogInstance::instance().get_watchdog_state(sys_time::hal_millis());
-    return true;
+    return HT_TASK::TaskResponse::YIELD;
 }
 
 
-bool tick_state_machine(const unsigned long &sysMicros, const HT_TASK::TaskInfo &taskInfo) {
+HT_TASK::TaskResponse tick_state_machine(const unsigned long &sysMicros, const HT_TASK::TaskInfo &taskInfo) {
+   
     ChargerStateMachineInstance::instance().tick_state_machine(sys_time::hal_millis());
-    return true;
+    return HT_TASK::TaskResponse::YIELD;
 }
 
-bool calculate_charge_current(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+HT_TASK::TaskResponse calculate_charge_current(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+   
     MainChargeSystemInstance::instance().calculate_charge_current();
-    return true;
+    return HT_TASK::TaskResponse::YIELD;
 }
 
-bool init_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
-    //Adafruit_ILI9341 Display = Adafruit_ILI9341(DISPLAY_PINS::LCD_CS, DISPLAY_PINS::LCD_DC, DISPLAY_PINS::LCD_MOSI, DISPLAY_PINS::LCD_SCK, DISPLAY_PINS::LCD_RESET, DISPLAY_PINS::LCD_MISO);
+HT_TASK::TaskResponse init_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+
     DisplaySystemInstance::instance().init();
-    return true;
+    return HT_TASK::TaskResponse::YIELD;
 }
 
-bool run_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+HT_TASK::TaskResponse run_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
     DisplaySystemInstance::instance().display_data();
     DisplaySystemInstance::instance().refresh_display_data(sys_time::hal_millis());
-    return true;
+    return HT_TASK::TaskResponse::YIELD;
 }
 
 
 
-bool print_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+HT_TASK::TaskResponse print_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
     
     Serial.print("Charge enable: ");
     Serial.println(ccu_data.balancing_enabled);
@@ -145,5 +149,5 @@ bool print_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInf
    // Serial.print("SHDN_E high: ");
    // Serial.println(digitalRead(ccu_data.SHDN_E_READ) == HIGH);
 
-    return true;
+   return HT_TASK::TaskResponse::YIELD;
 }
