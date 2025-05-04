@@ -30,6 +30,6 @@ void ChargerInterface::enqueue_charging_data()
     charger_control.max_charging_voltage_high = 0x14; //NOLINT (see comment) - need to change this in PCAN library... but how?
     charger_control.max_charging_voltage_low = 0xB4; //NOLINT (see comment)
     charger_control.max_charging_current_high = 0; //charging current reads from function
-    charger_control.max_charging_current_low = _ccu_data.calculated_charge_current;  
+    charger_control.max_charging_current_low = _ccu_data.calculated_charge_current; //NOLINT (this works)  
     CAN_util::enqueue_msg(&charger_control, &Pack_CHARGER_CONTROL_hytech, CCUCANInterfaceImpl::charger_can_tx_buffer);
 }

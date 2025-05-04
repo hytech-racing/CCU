@@ -21,8 +21,8 @@ HT_TASK::TaskResponse intitialize_all_interfaces()
     pinMode(ccu_data.SHDN_E_READ, INPUT);
 
     /* These should be put in a CCU Systems Tasks but I put it here just to get CCU working asap */
-    MainChargeSystemInstance::create(ccu_data);
-    DisplaySystemInstance::create(ccu_data);
+    MainChargeSystemInstance::create(ccu_data); //NOLINT (necessary for passing ccu_data struct as a reference)
+    DisplaySystemInstance::create(ccu_data); //NOLINT (necessary for passing ccu_data struct as a reference)
 
     return HT_TASK::TaskResponse::YIELD;
 
