@@ -30,7 +30,7 @@ void MainChargeSystem::calculate_charge_current() {
 
 
 
-  if (total_voltage >= _ccu_data.max_pack_voltage || digitalRead(_ccu_data.SHDN_E_READ) != HIGH) { //stop charging if one of the cells or the average, or the total voltage, is too high
+  if (total_voltage >= _ccu_data.max_pack_voltage || digitalRead(_ccu_data.SHDN_E_READ) != HIGH || high_voltage >= _ccu_data.cutoff_voltage) { //stop charging if one of the cells or the average, or the total voltage, is too high
     _ccu_data.calculated_charge_current = 0;
     
   } else if (total_voltage < _ccu_data.max_pack_voltage) { //NOLINT - 510 is what the formula is calibrated to
