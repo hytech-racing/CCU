@@ -118,9 +118,10 @@ namespace MockCCUInterface
     }
 }
 
+/*
 CCUData ccu_data;
 MainChargeSystem mainChargeLoop(ccu_data);
-/*
+
 TEST(mainChargeTest, calculate_charge_current_can_high_avg) { //should not charge because average cell voltage is too high
     ACUInterfaceInstance::create(ccu_data);
     ChargerInterfaceInstance::create(ccu_data);
