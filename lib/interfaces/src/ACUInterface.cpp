@@ -34,11 +34,15 @@ void ACUInterface::receive_voltages_message(const CAN_message_t& msg, unsigned l
     _curr_data.high_voltage = HYTECH_high_voltage_ro_fromS(static_cast<float>(voltages_msg.high_voltage_ro));
     _curr_data.total_voltage = HYTECH_total_voltage_ro_fromS(static_cast<float>(voltages_msg.total_voltage_ro));
 
-    BMS_DETAILED_VOLTAGES_t detailed_msg;
-    Unpack_BMS_DETAILED_VOLTAGES_hytech(&detailed_msg, &msg.buf[0], msg.len);
-    
+}
 
-    //BMS_DETAILED_VOLTAGES_t for temps
+void ACUInterface::receive_temps_message(const CAN_message_t& msg, unsigned long curr_millis) 
+{
+    BMS_TEMPS_t temps_msg;
+    Unpack_BMS_TEMPS_hytech(&temps_msg, &msg.buf[0], msg.len);
+    _curr_data.high_temp = HYTECH_high_temp_ro_fromS(static_cast<float>(temps_msg.high_temp_ro));
+    _curr_data.low_temp = HYTECH_low_temp_ro_fromS(static_cast<float>(temps_msg.low_temp_ro));
+    _curr_data.average_temp = HYTECH_average_temp_ro_fromS(static_cast<float>(temps_msg.average_temp_ro));
 }
 
 void ACUInterface::enqueue_ccu_status_data()

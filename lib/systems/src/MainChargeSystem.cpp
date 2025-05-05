@@ -18,6 +18,7 @@ void MainChargeSystem::calculate_charge_current() {
   float high_voltage = 0; 
   float total_voltage = 0; 
   float calculated_charge_current = 0; 
+  float max_temp = 0;
   //float voltage_taper;
   //float voltage_scalar;
 
@@ -27,15 +28,15 @@ void MainChargeSystem::calculate_charge_current() {
   low_voltage = ACUInterfaceInstance::instance().get_latest_data().low_voltage; //the lowest voltage in any of the cells
   high_voltage = ACUInterfaceInstance::instance().get_latest_data().high_voltage; //the highest voltage in any of the cells
   total_voltage = ACUInterfaceInstance::instance().get_latest_data().total_voltage; //the total voltage in the pack
+  max_temp = ACUInterfaceInstance::instance().get_latest_data().high_temp;
 
 
-
-  if (total_voltage >= _ccu_data.max_pack_voltage || digitalRead(_ccu_data.SHDN_E_READ) != HIGH || high_voltage >= _ccu_data.cutoff_voltage) { //stop charging if one of the cells or the average, or the total voltage, is too high
+  /* Stop charging if cell temperature gets too high, shutdown button is pressed, or max cell voltage is too high */
+  if (max_temp >= _ccu_data.max_allowable_cell_temperature || digitalRead(_ccu_data.SHDN_E_READ) != HIGH || high_voltage >= _ccu_data.cutoff_voltage) { //stop charging if one of the cells or the average, or the total voltage, is too high
     _ccu_data.calculated_charge_current = 0;
-    
-  } else if (total_voltage < _ccu_data.max_pack_voltage) { //NOLINT - 510 is what the formula is calibrated to
+    _ccu_data.balancing_enabled = false;
+  } else { 
     _ccu_data.calculated_charge_current = _ccu_data.charger_current_max;
-
   } 
 
     // normalized_voltage = (total_voltage / _ccu_data.max_pack_voltage);

@@ -21,26 +21,35 @@ void DisplaySystem::display_data() {
     } else {
         Display.println("Not Charging");
     }
-    Display.println();
+    //Display.println();
 
     Display.print("Cell Voltage max: ");
     Display.println(ACUInterfaceInstance::instance().get_latest_data().high_voltage);
-    Display.println();
+
    
     Display.print("Cell Voltage min: ");
     Display.println(ACUInterfaceInstance::instance().get_latest_data().low_voltage);
-    Display.println();
+    //Display.println();
 
     Display.print("Cell Voltage average: ");
     Display.println(ACUInterfaceInstance::instance().get_latest_data().average_voltage);
-    Display.println();
+    //Display.println();
 
     Display.print("Cell Voltage delta: ");
     Display.println(ACUInterfaceInstance::instance().get_latest_data().high_voltage - ACUInterfaceInstance::instance().get_latest_data().low_voltage);
-    Display.println();
+    //Display.println();
 
     Display.print("Total pack voltage: ");
     Display.print(ACUInterfaceInstance::instance().get_latest_data().total_voltage);
+
+    Display.print("Cell temp max:  ");
+    Display.print(ACUInterfaceInstance::instance().get_latest_data().high_temp);
+
+    Display.print("Cell temp min:  ");
+    Display.print(ACUInterfaceInstance::instance().get_latest_data().low_temp);
+
+    Display.print("Cell temp avg:  ");
+    Display.print(ACUInterfaceInstance::instance().get_latest_data().average_temp);
 
 
 }

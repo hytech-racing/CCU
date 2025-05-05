@@ -11,13 +11,21 @@
 
 struct ACUInterfaceData_s 
 {
+    /* ACU Status Message */
     unsigned long last_recv_status_millis;
     uint16_t acu_state;
+    bool heartbeat_ok;
+
+    /* BMS Voltages */
     volt average_voltage;
     volt low_voltage;
     volt high_voltage;
     volt total_voltage;
-    bool heartbeat_ok;
+
+    /* BMS Onboard Temps */
+    float average_temp;
+    float low_temp;
+    float high_temp;
 };
 
 class ACUInterface
@@ -39,8 +47,9 @@ public:
     void reset_acu_heartbeat();
     
     void receive_status_message(const CAN_message_t& msg, unsigned long curr_millis);
-    void receive_voltages_message(const CAN_message_t& msg, unsigned long curr_millis);
-    void recieve_voltages_b_message(const CAN_message_t& msg, unsigned long curr_millis); //BMS detailed voltages - not sure what I do with this data
+    void receive_voltages_message(const CAN_message_t& msg, unsigned long curr_millis); //BMS_VOLTAGES and BMS_DETAILED_VOLTAGES
+    void receive_temps_message(const CAN_message_t& msg, unsigned long curr_millis);
+    
     
     ACUInterfaceData_s get_latest_data() {return _curr_data;};
 
