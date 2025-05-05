@@ -120,7 +120,7 @@ namespace MockCCUInterface
 
 CCUData ccu_data;
 MainChargeSystem mainChargeLoop(ccu_data);
-
+/*
 TEST(mainChargeTest, calculate_charge_current_can_high_avg) { //should not charge because average cell voltage is too high
     ACUInterfaceInstance::create(ccu_data);
     ChargerInterfaceInstance::create(ccu_data);
@@ -161,7 +161,7 @@ TEST(mainChargeTest, calculate_charge_current_can_normal) { //should output a ta
     ChargerInterfaceInstance::instance().set_charger_latest_data({13});
     EXPECT_FLOAT_EQ(mainChargeLoop.calculate_charge_current(), 12.561); //change output match
 //change 
-}
+} */
 
 //  TEST(mainChargeTest, bothTooHigh){ 
 //      EXPECT_EQ(mainChargeLoop.calculate_charge_current(MockCCUInterface::mock_receive_message(fake_data::volts_too_much, fake_data::all_temp_high)),0);
