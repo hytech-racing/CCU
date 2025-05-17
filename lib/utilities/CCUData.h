@@ -17,6 +17,7 @@ struct CCUData
   float max_cell_temp = 0;
   float min_cell_temp = 0; //value given for initialization
   static constexpr float balancing_voltage = 3.7; //voltage at which cells begin balancing
+  float max_board_temp;
 };
 
 

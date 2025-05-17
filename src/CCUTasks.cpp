@@ -137,10 +137,12 @@ HT_TASK::TaskResponse print_data(const unsigned long& sysMicros, const HT_TASK::
     Serial.println((ACUInterfaceInstance::instance().get_latest_data().high_voltage) - (ACUInterfaceInstance::instance().get_latest_data().low_voltage));
     Serial.print("Total pack voltage: ");
     Serial.println(ACUInterfaceInstance::instance().get_latest_data().total_voltage);
-    // Serial.print("Cell temp max: "); //maximum cell temperature that ACU says cells should have
-    // Serial.println();
-    // Serial.print("Current cell temp: "); 
-    // Serial.println();
+    Serial.print("Cell temp max: "); //maximum cell temperature that ACU says cells should have
+    Serial.println(ccu_data.max_cell_temp);
+    Serial.print("Cell temp min: "); 
+    Serial.println(ccu_data.min_cell_temp);
+    Serial.print("Max Board Temp: ");
+    Serial.println(ccu_data.max_board_temp);
     Serial.print("Charging current: "); //how much current the charger is supplying
     Serial.println(ChargerInterfaceInstance::instance().get_latest_charger_data().output_current_low);
 

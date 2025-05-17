@@ -17,11 +17,12 @@ void DisplaySystem::display_data() {
 
     Display.println("Charging Status: ");
     if (_ccu_data.balancing_enabled) {
-        Display.println("Charging");
+        Display.print("Charging at  ");
+        Display.println(_ccu_data.calculated_charge_current);
     } else {
         Display.println("Not Charging");
     }
-    //Display.println();
+    
 
     Display.print("Cell Voltage max: ");
     Display.println(ACUInterfaceInstance::instance().get_latest_data().high_voltage, 4);
@@ -44,10 +45,10 @@ void DisplaySystem::display_data() {
 
 
     Display.print("Max Board Temp:  ");
-    Display.println(ACUInterfaceInstance::instance().get_latest_data().max_board_temp);
+    Display.println(ACUInterfaceInstance::instance().get_latest_data().max_board_temp, 4);
 
 
-    //hard-coded method to find max cell temp
+    //hard-coded to find max and min cell temps based on BMS_DETAILED_TEMPS
     if (ACUInterfaceInstance::instance().get_latest_data().therm_id_0 > _ccu_data.max_cell_temp) {
         _ccu_data.max_cell_temp = ACUInterfaceInstance::instance().get_latest_data().therm_id_0;
     } 
@@ -60,6 +61,7 @@ void DisplaySystem::display_data() {
 
     Display.print("Max Cell Temp:  ");
     Display.println(_ccu_data.max_cell_temp, 4);
+
 
     _ccu_data.min_cell_temp = ACUInterfaceInstance::instance().get_latest_data().therm_id_0;
     if (ACUInterfaceInstance::instance().get_latest_data().therm_id_1 < _ccu_data.min_cell_temp) {

@@ -32,7 +32,7 @@ void MainChargeSystem::calculate_charge_current() {
 
 
   /* Stop charging if shutdown button is pressed or max cell voltage is too high */
-  if (digitalRead(_ccu_data.SHDN_E_READ) != HIGH || high_voltage >= _ccu_data.cutoff_voltage) {  //ACU will fault if there is a cell or board temp that is too high
+  if (digitalRead(_ccu_data.SHDN_E_READ) != HIGH || high_voltage >= _ccu_data.cutoff_voltage) {  //ACU will cause a BMS fault if there is a cell or board temp that is too high
     _ccu_data.calculated_charge_current = 0;
     _ccu_data.balancing_enabled = false;
   } else { 
@@ -43,7 +43,7 @@ void MainChargeSystem::calculate_charge_current() {
     }
   } 
 
-  
+
 
     // normalized_voltage = (total_voltage / _ccu_data.max_pack_voltage);
     // calculated_charge_current = std::round((_ccu_data.charger_current_max * (1 - pow(normalized_voltage, 0.5))*100)*1000.0) / 1000.0; //NOLINT - only optimized for values after 510
