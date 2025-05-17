@@ -28,11 +28,11 @@ void MainChargeSystem::calculate_charge_current() {
   low_voltage = ACUInterfaceInstance::instance().get_latest_data().low_voltage; //the lowest voltage in any of the cells
   high_voltage = ACUInterfaceInstance::instance().get_latest_data().high_voltage; //the highest voltage in any of the cells
   total_voltage = ACUInterfaceInstance::instance().get_latest_data().total_voltage; //the total voltage in the pack
-  max_temp = ACUInterfaceInstance::instance().get_latest_data().high_temp;
+  //max_temp = ACUInterfaceInstance::instance().get_latest_data().high_temp;
 
 
-  /* Stop charging if cell temperature gets too high, shutdown button is pressed, or max cell voltage is too high */
-  if (max_temp >= _ccu_data.max_allowable_cell_temperature || digitalRead(_ccu_data.SHDN_E_READ) != HIGH || high_voltage >= _ccu_data.cutoff_voltage) { //stop charging if one of the cells or the average, or the total voltage, is too high
+  /* Stop charging if shutdown button is pressed or max cell voltage is too high */
+  if (digitalRead(_ccu_data.SHDN_E_READ) != HIGH || high_voltage >= _ccu_data.cutoff_voltage) {  //ACU will fault if there is a cell or board temp that is too high
     _ccu_data.calculated_charge_current = 0;
     _ccu_data.balancing_enabled = false;
   } else { 

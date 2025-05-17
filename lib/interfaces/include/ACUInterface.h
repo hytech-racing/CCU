@@ -22,10 +22,24 @@ struct ACUInterfaceData_s
     volt high_voltage;
     volt total_voltage;
 
-    /* BMS Onboard Temps */
-    float average_temp;
-    float low_temp;
-    float high_temp;
+
+    /* BMS Onboard Temps Data */
+    float max_board_temp;
+
+
+    /* BMS Onboard Detailed Temps Data */
+    int ic_id;
+    float temp_0;
+    float temp_1;
+
+    /* BMS Detailed Temps Data */
+    int group_id;
+    int ic_detailed_id;
+    float therm_id_0;
+    float therm_id_1;
+    float therm_id_2;
+
+
 };
 
 class ACUInterface
@@ -41,6 +55,16 @@ public:
         _curr_data.low_voltage = 0;
         _curr_data.high_voltage = 0;
         _curr_data.total_voltage = 0;
+        _curr_data.max_board_temp = 0;
+        _curr_data.ic_id = 0;
+        _curr_data.temp_0 = 0;
+        _curr_data.temp_1 = 0;
+
+        _curr_data.group_id = 0;
+        _curr_data.ic_detailed_id = 0;
+        _curr_data.therm_id_0 = 0;
+        _curr_data.therm_id_1 = 0;
+        _curr_data.therm_id_2 = 0;
     };
 
     bool is_acu_heartbeat_not_ok() {return !_curr_data.heartbeat_ok; }

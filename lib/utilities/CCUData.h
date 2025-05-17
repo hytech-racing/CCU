@@ -8,12 +8,14 @@ struct CCUData
   bool balancing_enabled = false; //tells ACU whether balancing is allowed or not
   static constexpr float max_allowable_cell_temperature = 40; //need data for this
   static constexpr float cutoff_voltage = 4.2; //max voltage that cells can be at - if high = this, stop charging
-  static constexpr float charger_current_max = 50; //120 = 3.4 amps
+  static constexpr float charger_current_max = 20; //120 = 3.4 amps
   float calculated_charge_current = 0;
   float threshold_voltage = 4.0; //when to begin tapering charge current - based purely on cutoff_voltage so value subject to change
   static constexpr float min_pack_voltage = 403; //need to double check this number
   static constexpr float max_pack_voltage = 520; 
   static constexpr const int SHDN_E_READ = 4;
+
+  //cells begin balancing at 3.7 
 };
 
 
@@ -47,7 +49,7 @@ namespace CCUConstants
   constexpr unsigned long HT_SCHED_CAN_PERIOD = 100000;
 
   /* CAN Constants */
-  const uint32_t CAN_BAUDRATE = 500000; //CAN for ACU
+  const uint32_t CAN_BAUDRATE = 1000000; //CAN for ACU
   const uint32_t CHARGER_CAN_BAUDRATE = 500000; //CAN for charger
 
 }
