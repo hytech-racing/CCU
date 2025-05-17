@@ -36,8 +36,14 @@ void MainChargeSystem::calculate_charge_current() {
     _ccu_data.calculated_charge_current = 0;
     _ccu_data.balancing_enabled = false;
   } else { 
-    _ccu_data.calculated_charge_current = _ccu_data.charger_current_max;
+    if (low_voltage < _ccu_data.balancing_voltage) {
+      _ccu_data.calculated_charge_current = 15; //known safe charging current to be at if not balancing
+    } else {
+      _ccu_data.calculated_charge_current = _ccu_data.charger_current_max; //30 as of now
+    }
   } 
+
+  
 
     // normalized_voltage = (total_voltage / _ccu_data.max_pack_voltage);
     // calculated_charge_current = std::round((_ccu_data.charger_current_max * (1 - pow(normalized_voltage, 0.5))*100)*1000.0) / 1000.0; //NOLINT - only optimized for values after 510

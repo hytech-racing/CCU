@@ -24,29 +24,53 @@ void DisplaySystem::display_data() {
     //Display.println();
 
     Display.print("Cell Voltage max: ");
-    Display.print(ACUInterfaceInstance::instance().get_latest_data().high_voltage);
-    Display.println("  V");
+    Display.println(ACUInterfaceInstance::instance().get_latest_data().high_voltage, 4);
 
    
     Display.print("Cell Voltage min: ");
-    Display.println(ACUInterfaceInstance::instance().get_latest_data().low_voltage);
+    Display.println(ACUInterfaceInstance::instance().get_latest_data().low_voltage, 4);
  
 
     Display.print("Cell Voltage average: ");
-    Display.println(ACUInterfaceInstance::instance().get_latest_data().average_voltage);
+    Display.println(ACUInterfaceInstance::instance().get_latest_data().average_voltage, 4);
 
 
     Display.print("Cell Voltage delta: ");
-    Display.println(ACUInterfaceInstance::instance().get_latest_data().high_voltage - ACUInterfaceInstance::instance().get_latest_data().low_voltage);
+    Display.println(ACUInterfaceInstance::instance().get_latest_data().high_voltage - ACUInterfaceInstance::instance().get_latest_data().low_voltage, 4);
 
 
     Display.print("Total pack voltage: ");
-    Display.println(ACUInterfaceInstance::instance().get_latest_data().total_voltage);
+    Display.println(ACUInterfaceInstance::instance().get_latest_data().total_voltage, 4);
 
 
     Display.print("Max Board Temp:  ");
     Display.println(ACUInterfaceInstance::instance().get_latest_data().max_board_temp);
 
+
+    //hard-coded method to find max cell temp
+    if (ACUInterfaceInstance::instance().get_latest_data().therm_id_0 > _ccu_data.max_cell_temp) {
+        _ccu_data.max_cell_temp = ACUInterfaceInstance::instance().get_latest_data().therm_id_0;
+    } 
+    if (ACUInterfaceInstance::instance().get_latest_data().therm_id_1 > _ccu_data.max_cell_temp) {
+        _ccu_data.max_cell_temp = ACUInterfaceInstance::instance().get_latest_data().therm_id_1;
+    }
+    if (ACUInterfaceInstance::instance().get_latest_data().therm_id_2 > _ccu_data.max_cell_temp) {
+        _ccu_data.max_cell_temp = ACUInterfaceInstance::instance().get_latest_data().therm_id_2;
+    }
+
+    Display.print("Max Cell Temp:  ");
+    Display.println(_ccu_data.max_cell_temp, 4);
+
+    _ccu_data.min_cell_temp = ACUInterfaceInstance::instance().get_latest_data().therm_id_0;
+    if (ACUInterfaceInstance::instance().get_latest_data().therm_id_1 < _ccu_data.min_cell_temp) {
+        _ccu_data.min_cell_temp = ACUInterfaceInstance::instance().get_latest_data().therm_id_1;
+    }
+    if (ACUInterfaceInstance::instance().get_latest_data().therm_id_2 < _ccu_data.min_cell_temp) {
+        _ccu_data.min_cell_temp = ACUInterfaceInstance::instance().get_latest_data().therm_id_2;
+    }
+
+    Display.print("Min Cell Temp:  ");
+    Display.println(_ccu_data.min_cell_temp, 4);
 
 }
 
