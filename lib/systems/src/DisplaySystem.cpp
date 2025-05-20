@@ -17,8 +17,12 @@ void DisplaySystem::display_data() {
 
     Display.println("Charging Status: ");
     if (_ccu_data.balancing_enabled) {
-        Display.print("Charging at  ");
-        Display.println(_ccu_data.calculated_charge_current);
+        if (ACUInterfaceInstance::instance().get_latest_data().high_voltage >= _ccu_data.cutoff_voltage || ACUInterfaceInstance::instance().get_latest_data().total_voltage >= _ccu_data.max_pack_voltage) { //charging will automatically stop above cell max of 4.2V
+            Display.println("Done charging!");
+        } else {
+            Display.print("Charging at  ");
+            Display.println(_ccu_data.calculated_charge_current);
+        }
     } else {
         Display.println("Not Charging");
     }
