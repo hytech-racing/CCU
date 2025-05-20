@@ -55,7 +55,9 @@ public:
         _curr_data.low_voltage = 0;
         _curr_data.high_voltage = 0;
         _curr_data.total_voltage = 0;
+        
         _curr_data.max_board_temp = 0;
+
         _curr_data.ic_id = 0;
         _curr_data.temp_0 = 0;
         _curr_data.temp_1 = 0;
