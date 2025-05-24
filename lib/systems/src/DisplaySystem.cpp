@@ -63,7 +63,7 @@ void DisplaySystem::display_data() {
     // }
 
     Display.print("Max Cell Temp:  ");
-    Display.println(_ccu_data.max_cell_temp, 3);
+    Display.println(ACUInterfaceInstance::instance().get_latest_data().max_cell_temp, 3);
 
 
     // _ccu_data.min_cell_temp = ACUInterfaceInstance::instance().get_latest_data().therm_id_0;
@@ -75,7 +75,7 @@ void DisplaySystem::display_data() {
     // }
 
     Display.print("Min Cell Temp:  ");
-    Display.println(_ccu_data.min_cell_temp, 3);
+    Display.println(ACUInterfaceInstance::instance().get_latest_data().min_cell_temp, 3);
 
 }
 

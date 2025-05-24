@@ -24,7 +24,7 @@ struct ACUInterfaceData_s
 
 
     /* BMS Onboard Temps Data */
-    float max_board_temp;
+    celsius max_board_temp;
 
 
     /* BMS Onboard Detailed Temps Data */
@@ -35,9 +35,12 @@ struct ACUInterfaceData_s
     /* BMS Detailed Temps Data */
     int group_id;
     int ic_detailed_id;
-    float therm_id_0;
-    float therm_id_1;
-    float therm_id_2;
+    celsius therm_id_0;
+    celsius therm_id_1;
+    celsius therm_id_2;
+
+    celsius min_cell_temp;
+    celsius max_cell_temp;
 
 
 };
@@ -67,6 +70,9 @@ public:
         _curr_data.therm_id_0 = 0;
         _curr_data.therm_id_1 = 0;
         _curr_data.therm_id_2 = 0;
+
+        _curr_data.max_cell_temp = 0;
+        _curr_data.min_cell_temp = 100;
     };
 
     bool is_acu_heartbeat_not_ok() {return !_curr_data.heartbeat_ok; }
