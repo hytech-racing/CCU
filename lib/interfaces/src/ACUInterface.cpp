@@ -52,6 +52,17 @@ void ACUInterface::receive_temps_message(const CAN_message_t& msg, unsigned long
     _curr_data.therm_id_2 = HYTECH_thermistor_id_2_ro_fromS(static_cast<float>(detailed_temps.thermistor_id_2_ro));
 
 
+    float thermistor_temps[3] = {_curr_data.therm_id_0, _curr_data.therm_id_1, _curr_data.therm_id_2};
+    for (int i = 0; i < (sizeof(thermistor_temps) / sizeof(thermistor_temps[0])); i++) {
+        if (thermistor_temps[i] > _ccu_data.max_cell_temp) {
+            _ccu_data.max_cell_temp = thermistor_temps[i];
+        }
+        if (thermistor_temps[i] < _ccu_data.min_cell_temp) {
+            _ccu_data.min_cell_temp = thermistor_temps[i];
+        }
+    }
+
+
     BMS_ONBOARD_DETAILED_TEMPS_t onboard_detailed_temps{};
     Unpack_BMS_ONBOARD_DETAILED_TEMPS_hytech(&onboard_detailed_temps, &msg.buf[0], msg.len);
     _curr_data.ic_id = onboard_detailed_temps.ic_id;

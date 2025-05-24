@@ -15,7 +15,7 @@ struct CCUData
   static constexpr float max_pack_voltage = 520; 
   static constexpr const int SHDN_E_READ = 4;
   float max_cell_temp = 0;
-  float min_cell_temp = 0; //value given for initialization
+  float min_cell_temp = 100; //value given for initialization
   static constexpr float balancing_voltage = 3.8; //voltage at which cells begin balancing
   float max_board_temp;
 };
