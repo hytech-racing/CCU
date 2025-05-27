@@ -24,20 +24,28 @@ struct ACUInterfaceData_s
 
 
     /* BMS Onboard Temps Data */
-    float max_board_temp;
+    celsius max_board_temp;
 
 
     /* BMS Onboard Detailed Temps Data */
-    int ic_id;
+    size_t ic_id;
     float temp_0;
     float temp_1;
 
+
     /* BMS Detailed Temps Data */
-    int group_id;
-    int ic_detailed_id;
-    float therm_id_0;
-    float therm_id_1;
-    float therm_id_2;
+    size_t group_id;
+    size_t ic_detailed_id;
+    size_t therm_id_0;
+    size_t therm_id_1;
+    size_t therm_id_2;
+
+    celsius current_temp;
+
+    int16_t bms_detailed_temps[12][4]; //not sure about type
+
+    celsius acu_interface_max_cell_temp = 0; 
+    celsius acu_interface_min_cell_temp = 100;
 
 
 };
@@ -67,7 +75,10 @@ public:
         _curr_data.therm_id_0 = 0;
         _curr_data.therm_id_1 = 0;
         _curr_data.therm_id_2 = 0;
+
+        _curr_data.current_temp = 0;
     };
+
 
     bool is_acu_heartbeat_not_ok() {return !_curr_data.heartbeat_ok; }
     void reset_acu_heartbeat();
@@ -88,7 +99,7 @@ private:
 
     unsigned long _max_heartbeat_interval_ms;
     bool _first_received_message_heartbeat_init = false;
-    
+        
 };
 
 using ACUInterfaceInstance = etl::singleton<ACUInterface>;
