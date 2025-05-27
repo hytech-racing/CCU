@@ -2,7 +2,6 @@
 
 void DisplayInterface::init() {
     Display.begin();
-    //Display.fillScreen(ILI9341_WHITE);
     Display.setRotation(3);
     Display.setTextSize(2);
     Display.fillScreen(ILI9341_BLACK);
@@ -10,7 +9,6 @@ void DisplayInterface::init() {
 
 void DisplayInterface::display_data() {
 
-    //Adafruit_ILI9341 Display = Adafruit_ILI9341(DISPLAY_PINS::LCD_CS, DISPLAY_PINS::LCD_DC, DISPLAY_PINS::LCD_MOSI, DISPLAY_PINS::LCD_SCK, DISPLAY_PINS::LCD_RESET, DISPLAY_PINS::LCD_MISO);
     Display.setCursor(0,0);
     Display.setRotation(3);
     Display.setTextSize(2);
@@ -40,7 +38,7 @@ void DisplayInterface::display_data() {
 
 
     Display.print("Cell Voltage delta: ");
-    Display.println(ACUInterfaceInstance::instance().get_latest_data().high_voltage - ACUInterfaceInstance::instance().get_latest_data().low_voltage, 3);
+    Display.println((ACUInterfaceInstance::instance().get_latest_data().high_voltage - ACUInterfaceInstance::instance().get_latest_data().low_voltage), 3);
 
 
     Display.print("Total pack voltage: ");
