@@ -15,7 +15,7 @@
 #include "SystemTimeInterface.h"
 #include "CCUData.h"
 #include "MainChargeSystem.h"
-#include "DisplaySystem.h"
+#include "DisplayInterface.h"
 
 
 HT_TASK::TaskResponse intitialize_all_interfaces();

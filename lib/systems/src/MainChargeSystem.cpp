@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cmath>
 
+
 /* Constructor */
 //MainChargeSystem::MainChargeSystem(float target_volt, float max_allow_cell_temp) : _target_voltage_per_cell(target_volt), _max_allowable_cell_temperature(max_allow_cell_temp){} 
 

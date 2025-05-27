@@ -22,7 +22,7 @@ HT_TASK::TaskResponse intitialize_all_interfaces()
 
     /* These should be put in a CCU Systems Tasks but I put it here just to get CCU working asap */
     MainChargeSystemInstance::create(ccu_data); //NOLINT (necessary for passing ccu_data struct as a reference)
-    DisplaySystemInstance::create(ccu_data); //NOLINT (necessary for passing ccu_data struct as a reference)
+    DisplayInterfaceInstance::create(ccu_data); //NOLINT (necessary for passing ccu_data struct as a reference)
 
     return HT_TASK::TaskResponse::YIELD;
 
@@ -107,13 +107,13 @@ HT_TASK::TaskResponse calculate_charge_current(const unsigned long& sysMicros, c
 
 HT_TASK::TaskResponse init_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
 
-    DisplaySystemInstance::instance().init();
+    DisplayInterfaceInstance::instance().init();
     return HT_TASK::TaskResponse::YIELD;
 }
 
 HT_TASK::TaskResponse run_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
-    DisplaySystemInstance::instance().display_data();
-    DisplaySystemInstance::instance().refresh_display_data(sys_time::hal_millis());
+    DisplayInterfaceInstance::instance().display_data();
+    DisplayInterfaceInstance::instance().refresh_display_data(sys_time::hal_millis());
     return HT_TASK::TaskResponse::YIELD;
 }
 

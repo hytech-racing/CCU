@@ -40,8 +40,8 @@ struct ACUInterfaceData_s
     float therm_id_1;
     float therm_id_2;
 
-    size_t max_cell_temp;
-    size_t min_cell_temp;
+    float max_cell_temp;
+    float min_cell_temp;
 
 
 };

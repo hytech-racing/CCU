@@ -1,6 +1,6 @@
-#include "DisplaySystem.h"
+#include "DisplayInterface.h"
 
-void DisplaySystem::init() {
+void DisplayInterface::init() {
     Display.begin();
     //Display.fillScreen(ILI9341_WHITE);
     Display.setRotation(3);
@@ -8,7 +8,7 @@ void DisplaySystem::init() {
     Display.fillScreen(ILI9341_BLACK);
 }
 
-void DisplaySystem::display_data() {
+void DisplayInterface::display_data() {
 
     //Adafruit_ILI9341 Display = Adafruit_ILI9341(DISPLAY_PINS::LCD_CS, DISPLAY_PINS::LCD_DC, DISPLAY_PINS::LCD_MOSI, DISPLAY_PINS::LCD_SCK, DISPLAY_PINS::LCD_RESET, DISPLAY_PINS::LCD_MISO);
     Display.setCursor(0,0);
@@ -50,17 +50,19 @@ void DisplaySystem::display_data() {
     Display.print("Max Board Temp:  ");
     Display.println(ACUInterfaceInstance::instance().get_latest_data().max_board_temp, 3);
 
+    
     Display.print("Max Cell Temp:  ");
     //Display.println(_ccu_data.max_cell_temp, 3); 
-    Display.println(ACUInterfaceInstance::instance().get_latest_data().acu_interface_max_cell_temp, 3);
+    Display.println(ACUInterfaceInstance::instance().get_latest_data().max_cell_temp, 3);
+
 
     Display.print("Min Cell Temp:  ");
     //Display.println(_ccu_data.min_cell_temp, 3);
-    Display.println(ACUInterfaceInstance::instance().get_latest_data().acu_interface_min_cell_temp, 3);
+    Display.println(ACUInterfaceInstance::instance().get_latest_data().min_cell_temp, 3);
 
 }
 
-void DisplaySystem::refresh_display_data(unsigned long curr_millis) {
+void DisplayInterface::refresh_display_data(unsigned long curr_millis) {
 
     if ((curr_millis - display_time) >= display_update_interval) {
         Display.fillScreen(ILI9341_BLACK);

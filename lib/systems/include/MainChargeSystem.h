@@ -7,6 +7,15 @@
 
 #include "SharedFirmwareTypes.h"
 
+#ifdef TEENSY_OPT_SMALLEST_CODE
+#include <Arduino.h>
+#endif
+
+#ifdef TESTING_SYSTEMS
+#include "mockArduino.h"
+#endif
+
+
 class MainChargeSystem {
   public:
     /**

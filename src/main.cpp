@@ -14,7 +14,7 @@
 #include "CCUCANInterfaceImpl.h"
 #include "CCUTasks.h"
 #include "SystemTimeInterface.h"
-#include "DisplaySystem.h"
+#include "DisplayInterface.h"
 
 
 FlexCAN_Type<CAN2> CHARGER_CAN; //placed here after debugging

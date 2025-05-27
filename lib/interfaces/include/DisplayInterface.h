@@ -1,5 +1,5 @@
-#ifndef DISPLAYSYSTEM_H
-#define DISPLAYSYSTEM_H
+#ifndef DisplayInterface_H
+#define DisplayInterface_H
 
 #include <SPI.h>
 #include <DMAChannel.h>
@@ -23,11 +23,11 @@ namespace DISPLAY_PINS
     constexpr const pin LCD_DC = 41;
 }
 
-class DisplaySystem 
+class DisplayInterface 
 {
     public: 
 
-        DisplaySystem(CCUData &ccu_data) :
+        DisplayInterface(CCUData &ccu_data) :
             _ccu_data(ccu_data), 
             Display(DISPLAY_PINS::LCD_CS, DISPLAY_PINS::LCD_DC, DISPLAY_PINS::LCD_MOSI, DISPLAY_PINS::LCD_SCK, DISPLAY_PINS::LCD_RESET, DISPLAY_PINS::LCD_MISO), 
             display_time(0),
@@ -53,6 +53,6 @@ class DisplaySystem
 
 };
 
-using DisplaySystemInstance = etl::singleton<DisplaySystem>;
+using DisplayInterfaceInstance = etl::singleton<DisplayInterface>;
 
 #endif

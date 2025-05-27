@@ -77,12 +77,12 @@ void ACUInterface::receive_temps_message(const CAN_message_t& msg, unsigned long
 
 
    float thermistor_temps[3] = {_curr_data.therm_id_0, _curr_data.therm_id_1, _curr_data.therm_id_2};
-    for (int i = 0; i < 3; i++) { //NOLINT (size of thermistor temps will not change)
-        if (thermistor_temps[i] > _ccu_data.max_cell_temp) {
-            _curr_data.max_cell_temp = thermistor_temps[i];
+    for (auto temp : thermistor_temps) { //NOLINT (size of thermistor temps will not change)
+        if (temp > _ccu_data.max_cell_temp) {
+            _curr_data.max_cell_temp = temp;
         }
-        if (thermistor_temps[i] < _ccu_data.min_cell_temp) {
-            _curr_data.min_cell_temp = thermistor_temps[i];
+        if (temp < _ccu_data.min_cell_temp) {
+            _curr_data.min_cell_temp = temp;
         }
     }
 
