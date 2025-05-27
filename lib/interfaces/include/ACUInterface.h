@@ -34,18 +34,14 @@ struct ACUInterfaceData_s
 
 
     /* BMS Detailed Temps Data */
-    size_t group_id;
-    size_t ic_detailed_id;
-    size_t therm_id_0;
-    size_t therm_id_1;
-    size_t therm_id_2;
+    int group_id;
+    int ic_detailed_id;
+    float therm_id_0;
+    float therm_id_1;
+    float therm_id_2;
 
-    celsius current_temp;
-
-    int16_t bms_detailed_temps[12][4]; //not sure about type
-
-    celsius acu_interface_max_cell_temp = 0; 
-    celsius acu_interface_min_cell_temp = 100;
+    size_t max_cell_temp;
+    size_t min_cell_temp;
 
 
 };
@@ -76,7 +72,8 @@ public:
         _curr_data.therm_id_1 = 0;
         _curr_data.therm_id_2 = 0;
 
-        _curr_data.current_temp = 0;
+        _curr_data.max_cell_temp = 0;
+        _curr_data.min_cell_temp = 100;
     };
 
 
