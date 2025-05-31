@@ -8,7 +8,7 @@ void DisplayInterface::init() {
 }
 
 void DisplayInterface::display_data() {
-
+    Display.fillScreen(ILI9341_BLACK);
     Display.setCursor(0,0);
     Display.setRotation(3);
     Display.setTextSize(2);
@@ -63,7 +63,7 @@ void DisplayInterface::display_data() {
 void DisplayInterface::refresh_display_data(unsigned long curr_millis) {
 
     if ((curr_millis - display_time) >= display_update_interval) {
-        Display.fillScreen(ILI9341_BLACK);
+        // Display.fillScreen(ILI9341_BLACK);
         display_time = curr_millis;
     }
 }

@@ -53,7 +53,7 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
         }
 
     }
-
+    return _current_state;
 }
 
 void ChargerStateMachine::set_state(ChargerState_e new_state, unsigned long current_millis) 

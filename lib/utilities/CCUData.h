@@ -8,14 +8,14 @@ struct CCUData
   bool balancing_enabled = false; //tells ACU whether balancing is allowed or not
   static constexpr float max_allowable_cell_temperature = 40; //need data for this
   static constexpr float cutoff_voltage = 4.2; //max voltage that cells can be at - if high = this, stop charging
-  static constexpr float charger_current_max = 30; //120 = 3.4 amps
+  static constexpr float charger_current_max = 100; //120 = 3.4 amps
   static constexpr float safe_charging_current = 15;
   float calculated_charge_current = 0;
   static constexpr float min_pack_voltage = 403; //need to double check this number
   static constexpr float max_pack_voltage = 520; 
   static constexpr const int SHDN_E_READ = 4;
   float max_cell_temp = 0;
-  float min_cell_temp = 100; //value given for initialization
+  float min_cell_temp = 0; //value given for initialization
   static constexpr float balancing_voltage = 3.8; //voltage at which cells begin balancing
   float max_board_temp;
 };

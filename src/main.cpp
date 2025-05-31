@@ -54,7 +54,7 @@ HT_TASK::Task calculate_charge_current_task(HT_TASK::DUMMY_FUNCTION, calculate_c
 
 void setup() {
   SPI.begin();
-  SPI.beginTransaction(SPISettings(4000000, MSBFIRST, SPI_MODE0)); //NOLINT (spi settings)
+  SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0)); //NOLINT (spi settings)
  
   qn::Ethernet.begin(); //begins QNEthernet
 
