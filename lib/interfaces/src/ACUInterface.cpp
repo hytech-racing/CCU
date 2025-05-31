@@ -38,9 +38,9 @@ void ACUInterface::receive_voltages_message(const CAN_message_t& msg, unsigned l
 
 void ACUInterface::receive_temps_message(const CAN_message_t& msg, unsigned long curr_millis) 
 {
-    BMS_ONBOARD_TEMPS_t board_temps{};
+    BMS_ONBOARD_TEMPS_t board_temps = {};
     Unpack_BMS_ONBOARD_TEMPS_hytech(&board_temps, &msg.buf[0], msg.len);
-    _curr_data.max_board_temp = HYTECH_high_temp_ro_fromS(static_cast<float>(board_temps.high_temp_ro)); //Only being sent the max board temp
+    _curr_data.max_board_temp = HYTECH_high_temp_ro_fromS(board_temps.high_temp_ro); //Only being sent the max board temp
     _ccu_data.max_board_temp = _curr_data.max_board_temp;
     
 
