@@ -1,4 +1,6 @@
 #include "DisplayInterface.h"
+#include "CCUData.h"
+#include "EMInterface.h"
 
 void DisplayInterface::init() {
     Display.begin();
@@ -15,10 +17,10 @@ void DisplayInterface::display_data() {
 
     Display.println("Charging Status: ");
 
-    if (_ccu_data.balancing_enabled) {
+    if (_ccu_data.charging_state == ChargingState_e::CHARGING) {
         Display.print("Charging at  ");
         Display.println(_ccu_data.calculated_charge_current);
-    } else if (ACUInterfaceInstance::instance().get_latest_data().high_voltage >= _ccu_data.cutoff_voltage || ACUInterfaceInstance::instance().get_latest_data().total_voltage >= _ccu_data.max_pack_voltage) {
+    } else if (_ccu_data.charging_state == ChargingState_e::DONE_CHARGING) {
         Display.println("Done charging!");
     } else {
         Display.println("Not Charging");
@@ -55,8 +57,12 @@ void DisplayInterface::display_data() {
 
 
     Display.print("Min Cell Temp (C): ");
-    //Display.println(_ccu_data.min_cell_temp, 3);
+    
     Display.println(ACUInterfaceInstance::instance().get_latest_data().min_cell_temp, 3);
+
+    Display.print("EM current (A): ");
+    Display.println(EnergyMeterInterfaceInstance::instance().get_latest_em_data().current_amps, 3);
+    
 
 }
 

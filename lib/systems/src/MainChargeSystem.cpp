@@ -20,13 +20,25 @@ void MainChargeSystem::calculate_charge_current() {
   high_voltage = ACUInterfaceInstance::instance().get_latest_data().high_voltage; //the highest voltage in any of the cells
   total_voltage = ACUInterfaceInstance::instance().get_latest_data().total_voltage; //the total voltage in the pack
 
-
+  bool shutdown_low = (digitalRead(_ccu_data.SHDN_E_READ) != HIGH);
+  
+  bool voltage_reached = (high_voltage >= _ccu_data.cutoff_voltage) || (ACUInterfaceInstance::instance().get_latest_data().total_voltage > _ccu_data.max_pack_voltage);
+  if (shutdown_low)
+  {
+    _ccu_data.charging_state = ChargingState_e::NOT_CHARGING;
+  } else if(voltage_reached)
+  {
+    _ccu_data.charging_state = ChargingState_e::DONE_CHARGING;
+  } else {
+    _ccu_data.charging_state = ChargingState_e::CHARGING;
+  }
+  
 
   /* Tells the charger to stop charging if the shutdown button is pressed or one of the cell voltags is too high */
-  if (digitalRead(_ccu_data.SHDN_E_READ) != HIGH || high_voltage >= _ccu_data.cutoff_voltage) {  //ACU will cause a BMS fault if there is a cell or board temp that is too high
+  if (voltage_reached || shutdown_low) {  //ACU will cause a BMS fault if there is a cell or board temp that is too high
     _ccu_data.calculated_charge_current = 0;
     _ccu_data.balancing_enabled = false;
-  } else { 
+  } else {
     if (low_voltage < _ccu_data.balancing_voltage) {
       _ccu_data.calculated_charge_current = _ccu_data.safe_charging_current; //15 - safe charging current to be at if not cell balancing
     } else {

@@ -71,7 +71,11 @@ void ccu_CAN_recv(CANInterfaces &interfaces, const CAN_message_t &msg, unsigned 
         interfaces.acu_interface.receive_temps_message(msg, millis);
         break;
     }
-    
+    case EM_MEASUREMENT_CANID:
+    {
+        interfaces.em_interface.receive_energy_meter_message(msg, millis);
+        break;
+    }
     default:
     {
         break;
