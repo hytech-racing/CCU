@@ -7,13 +7,10 @@
 
 struct ACUInterfaceData_s 
 {
-    //unsigned long last_recv_status_millis;
-    //uint16_t acu_state;
     volt average_voltage = 0;
     volt low_voltage = 0;
     volt high_voltage = 0;
     volt total_voltage = 0;
-    //bool heartbeat_ok;
 };
 
 class ACUInterface

@@ -21,3 +21,9 @@ bool WatchdogInterface::get_watchdog_state(unsigned long curr_millis) {
 
 }
 
+void WatchdogInterface::check_AMS_comms_heartbeat(unsigned long curr_millis) {
+    if ((curr_millis - ACUInterfaceInstance::instance().get_latest_data().last_recv_status_millis) > ACUInterfaceInstance::instance().get_latest_data()._max_heartbeat_interval_ms) {
+        ACUInterfaceInstance::instance().acu_heartbeat_not_ok();
+    }
+}
+

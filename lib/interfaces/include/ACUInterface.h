@@ -16,6 +16,8 @@ struct ACUInterfaceData_s
     uint16_t acu_state;
     bool heartbeat_ok;
 
+    unsigned long _max_heartbeat_interval_ms;
+
     /* BMS Voltages */
     volt average_voltage;
     volt low_voltage;
@@ -50,11 +52,14 @@ class ACUInterface
 {
 public:
 
-    ACUInterface(unsigned long init_millis, unsigned long max_heartbeat_interval_ms, CCUData &ccu_data) : _max_heartbeat_interval_ms(max_heartbeat_interval_ms), _ccu_data(ccu_data)
+    ACUInterface(unsigned long init_millis, unsigned long max_heartbeat_interval_ms, CCUData &ccu_data) : _ccu_data(ccu_data)
     {
         _curr_data.last_recv_status_millis = 0;
         _curr_data.heartbeat_ok = false; // start out false
         _curr_data.acu_state = 0;
+
+        _curr_data._max_heartbeat_interval_ms = max_heartbeat_interval_ms;
+
         _curr_data.average_voltage = 0;
         _curr_data.low_voltage = 0;
         _curr_data.high_voltage = 0;
@@ -77,7 +82,7 @@ public:
     };
 
 
-    bool is_acu_heartbeat_not_ok() {return !_curr_data.heartbeat_ok; }
+    void acu_heartbeat_not_ok() {_curr_data.heartbeat_ok = !_curr_data.heartbeat_ok; }
     void reset_acu_heartbeat();
     
     void receive_status_message(const CAN_message_t& msg, unsigned long curr_millis);
@@ -94,7 +99,6 @@ private:
     ACUInterfaceData_s _curr_data;
     CCUData &_ccu_data;
 
-    unsigned long _max_heartbeat_interval_ms;
     bool _first_received_message_heartbeat_init = false;
         
 };

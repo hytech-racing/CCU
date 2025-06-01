@@ -3,6 +3,7 @@
 
 #include <etl/singleton.h>
 #include <Arduino.h>
+#include "ACUInterface.h"
 
 using pin = size_t;
 
@@ -49,6 +50,9 @@ public:
 
     /* Get and update watchdog state */
     bool get_watchdog_state(unsigned long curr_millis);
+
+    /* Check if CCU is communicating with AMS */
+    void check_AMS_comms_heartbeat(unsigned long curr_millis);
 
 };
 

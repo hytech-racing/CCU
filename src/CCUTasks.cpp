@@ -22,7 +22,7 @@ HT_TASK::TaskResponse intitialize_all_interfaces()
 
     /* These should be put in a CCU Systems Tasks but I put it here just to get CCU working asap */
     MainChargeSystemInstance::create(ccu_data); //NOLINT (necessary for passing ccu_data struct as a reference)
-    DisplayInterfaceInstance::create(ccu_data); //NOLINT (necessary for passing ccu_data struct as a reference)
+    DisplayInterfaceInstance::create(ccu_data); //NOLINT 
 
     return HT_TASK::TaskResponse::YIELD;
 

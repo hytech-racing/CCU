@@ -8,7 +8,6 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
     {
         case ChargerState_e::INITIAL:
         {
-            //pinMode(_ccu_data.SHDN_E_READ, OUTPUT);
 
             if (_ccu_data.balancing_enabled) {
                 set_state(ChargerState_e::CHARGING_WITH_BALANCING, current_millis);
@@ -71,7 +70,6 @@ void ChargerStateMachine::handle_exit_logic(ChargerState_e prev_state, unsigned 
     {
         case ChargerState_e::INITIAL:
         {
-            //pinMode(_ccu_data.SHDN_E_READ, OUTPUT);
             break;
         }
         case ChargerState_e::CHARGING_NO_BALANCING:
@@ -96,7 +94,6 @@ void ChargerStateMachine::handle_entry_logic(ChargerState_e new_state, unsigned 
     {
         case ChargerState_e::INITIAL:
         {
-           // pinMode(_ccu_data.SHDN_E_READ, OUTPUT);
             break;
         }
         case ChargerState_e::CHARGING_NO_BALANCING:
