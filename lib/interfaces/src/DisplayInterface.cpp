@@ -41,7 +41,7 @@ void DisplayInterface::display_data() {
     Display.println((ACUInterfaceInstance::instance().get_latest_data().high_voltage - ACUInterfaceInstance::instance().get_latest_data().low_voltage), 3);
 
 
-    Display.print("Total pack V: ");
+    Display.print("Total pack Volts: ");
     Display.println(ACUInterfaceInstance::instance().get_latest_data().total_voltage, 3);
 
 
