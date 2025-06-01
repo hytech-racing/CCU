@@ -8,7 +8,7 @@ struct CCUData
   bool balancing_enabled = false; //tells ACU whether balancing is allowed or not
   static constexpr float max_allowable_cell_temperature = 40; //need data for this
   static constexpr float cutoff_voltage = 4.2; //max voltage that cells can be at - if high = this, stop charging
-  static constexpr float charger_current_max = 30; //120 = 3.4 amps
+  static constexpr float charger_current_max = 120; //120 = 3.4 amps
   static constexpr float safe_charging_current = 15;
   float calculated_charge_current = 0;
   static constexpr float min_pack_voltage = 403; //need to double check this number
@@ -39,17 +39,19 @@ namespace CCUConstants
   constexpr unsigned long ENQUEUE_CHARGER_CAN_DATA_PRIORITY = 5;
   constexpr unsigned long ENQUEUE_CHARGER_CAN_DATA_PERIOD = 100000;
 
-  constexpr unsigned long DIAL_PERIOD_US = 20000;
-  constexpr unsigned long ETHERNET_PERIOD_US = 20000;
   constexpr unsigned long UPDATE_DISPLAY_PRIORITY = 11;
   constexpr unsigned long UPDATE_DISPLAY_PERIOD = 100000;
-  constexpr unsigned long REFRESH_DISPLAY_PRIORITY = 13;
+
   constexpr unsigned long READ_DIAL_PRIORITY = 10;
+  constexpr unsigned long DIAL_PERIOD_US = 20000;
+
+  constexpr unsigned long ETHERNET_PERIOD_US = 20000;
   constexpr unsigned long SEND_ETHERNET_PRIORITY = 8;
   constexpr unsigned long RECIEVE_ETHERNET_PRIORITY = 7;
+
   constexpr unsigned long SEND_ALL_DATA_PRIORITY = 6;
   constexpr unsigned long SEND_ALL_DATA_PERIOD = 1000;
-  constexpr unsigned long HT_SCHED_CAN_PERIOD = 100000;
+
 
   /* CAN Constants */
   const uint32_t CAN_BAUDRATE = 1000000; //CAN for ACU
