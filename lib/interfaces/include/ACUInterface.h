@@ -45,6 +45,13 @@ struct ACUInterfaceData_s
     float max_cell_temp;
     float min_cell_temp;
 
+    float bms_detailed_temps[12][3];
+
+    float cell_voltages[12][12];
+
+    size_t volts_group_id;
+    size_t volts_ic_detailed_id;
+
 
 };
 
@@ -88,6 +95,7 @@ public:
     void receive_status_message(const CAN_message_t& msg, unsigned long curr_millis);
     void receive_voltages_message(const CAN_message_t& msg, unsigned long curr_millis); //BMS_VOLTAGES and BMS_DETAILED_VOLTAGES
     void receive_temps_message(const CAN_message_t& msg, unsigned long curr_millis);
+    void detailed_volts(const CAN_message_t& msg, unsigned long curr_millis);
     
     
     ACUInterfaceData_s get_latest_data() {return _curr_data;};

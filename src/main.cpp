@@ -67,7 +67,7 @@ void setup() {
   //scheduler.schedule(send_ethernet); 
   //scheduler.schedule(receive_ethernet);
   scheduler.schedule(send_all_data);
-  //scheduler.schedule(debug_print_task); //uncomment if display is not updating values, otherwise no need for serial monitor
+  scheduler.schedule(debug_print_task); //uncomment if display is not updating values, otherwise no need for serial monitor
   scheduler.schedule(run_sample_can_data);
   scheduler.schedule(kick_watchdog_task); 
   //scheduler.schedule(tick_state_machine_task); //this task times out watchdog for some reason (state machine would be nice to have but isn't a priority for CCU to work)

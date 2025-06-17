@@ -123,32 +123,54 @@ HT_TASK::TaskResponse print_data(const unsigned long& sysMicros, const HT_TASK::
     Serial.print("Charge enable: ");
     Serial.println(ccu_data.balancing_enabled);
     Serial.print("Charging Status: ");
-    Serial.println(static_cast<int>(ChargerStateMachineInstance::instance().get_state()));
-    Serial.print("BMS Status: ");
-    Serial.println(static_cast<int>(ACUInterfaceInstance::instance().get_latest_data().acu_state));
-    Serial.print("Cell Voltage max: ");
-    Serial.println(ACUInterfaceInstance::instance().get_latest_data().high_voltage);
-    Serial.print("Cell voltage min: ");
-    Serial.println(ACUInterfaceInstance::instance().get_latest_data().low_voltage);
-    Serial.print("Cell voltage average: ");
-    Serial.println(ACUInterfaceInstance::instance().get_latest_data().average_voltage);
-    Serial.print("Cell voltage max and min delta: ");
-    Serial.println((ACUInterfaceInstance::instance().get_latest_data().high_voltage) - (ACUInterfaceInstance::instance().get_latest_data().low_voltage));
-    Serial.print("Total pack voltage: ");
-    Serial.println(ACUInterfaceInstance::instance().get_latest_data().total_voltage);
-    Serial.print("Cell temp max: "); //maximum cell temperature that ACU says cells should have
-    Serial.println(ccu_data.max_cell_temp);
-    Serial.print("Cell temp min: "); 
-    Serial.println(ccu_data.min_cell_temp);
-    Serial.print("Max Board Temp: ");
-    Serial.println(ccu_data.max_board_temp);
-    Serial.print("Charging current: "); //how much current the charger is supplying
-    Serial.println(ChargerInterfaceInstance::instance().get_latest_charger_data().output_current_low);
+    // Serial.println(static_cast<int>(ChargerStateMachineInstance::instance().get_state()));
+    // Serial.print("BMS Status: ");
+    // Serial.println(static_cast<int>(ACUInterfaceInstance::instance().get_latest_data().acu_state));
+    // Serial.print("Cell Voltage max: ");
+    // Serial.println(ACUInterfaceInstance::instance().get_latest_data().high_voltage);
+    // Serial.print("Cell voltage min: ");
+    // Serial.println(ACUInterfaceInstance::instance().get_latest_data().low_voltage);
+    // Serial.print("Cell voltage average: ");
+    // Serial.println(ACUInterfaceInstance::instance().get_latest_data().average_voltage);
+    // Serial.print("Cell voltage max and min delta: ");
+    // Serial.println((ACUInterfaceInstance::instance().get_latest_data().high_voltage) - (ACUInterfaceInstance::instance().get_latest_data().low_voltage));
+    // Serial.print("Total pack voltage: ");
+    // Serial.println(ACUInterfaceInstance::instance().get_latest_data().total_voltage);
+    // Serial.print("Cell temp max: "); //maximum cell temperature that ACU says cells should have
+    // Serial.println(ccu_data.max_cell_temp);
+    // Serial.print("Cell temp min: "); 
+    // Serial.println(ccu_data.min_cell_temp);
+    // Serial.print("Max Board Temp: ");
+    // Serial.println(ccu_data.max_board_temp);
+    // Serial.print("Charging current: "); //how much current the charger is supplying
+    // Serial.println(ChargerInterfaceInstance::instance().get_latest_charger_data().output_current_low);
 
-    Serial.print("Calculated charge current: ");
-    Serial.println(ccu_data.calculated_charge_current);
+    // Serial.print("Calculated charge current: ");
+    // Serial.println(ccu_data.calculated_charge_current);
+
+     Serial.print("cell temps");
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 12; j++) {
+           
+            Serial.print(ACUInterfaceInstance::instance().get_latest_data().bms_detailed_temps[j][i]);
+            Serial.print(",");
+        }
+        Serial.println("");
+    }
    // Serial.print("SHDN_E high: ");
    // Serial.println(digitalRead(ccu_data.SHDN_E_READ) == HIGH);
+
+   Serial.print("cell voltages");
+   for (int chip = 0; chip < 12; chip++) {
+    Serial.print("cell ");
+    Serial.print(chip);
+    Serial.print("voltages: ");
+    for (int cell = 0; cell < 12; cell++) {
+        Serial.print(ACUInterfaceInstance::instance().get_latest_data().cell_voltages[chip][cell]);
+        Serial.print(" ");
+    }
+    Serial.println("");
+   }
 
    return HT_TASK::TaskResponse::YIELD;
 }

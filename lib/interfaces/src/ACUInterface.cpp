@@ -32,6 +32,22 @@ void ACUInterface::receive_voltages_message(const CAN_message_t& msg, unsigned l
     _curr_data.high_voltage = HYTECH_high_voltage_ro_fromS(static_cast<float>(voltages_msg.high_voltage_ro));
     _curr_data.total_voltage = HYTECH_total_voltage_ro_fromS(static_cast<float>(voltages_msg.total_voltage_ro));
 
+
+
+
+
+}
+
+void ACUInterface::detailed_volts(const CAN_message_t& msg, unsigned long curr_millis){
+     BMS_DETAILED_VOLTAGES_t detailed_voltages;
+     _curr_data.volts_group_id = detailed_voltages.group_id; //size of uint8_t
+    _curr_data.volts_ic_detailed_id = detailed_voltages.ic_id;
+
+    Unpack_BMS_DETAILED_VOLTAGES_hytech(&detailed_voltages, &msg.buf[0], msg.len);
+    _curr_data.cell_voltages[detailed_voltages.ic_id][(detailed_voltages.group_id*3)] = HYTECH_voltage_0_ro_fromS(detailed_voltages.voltage_0_ro);
+    _curr_data.cell_voltages[detailed_voltages.ic_id][(detailed_voltages.group_id*3)+1] = HYTECH_voltage_1_ro_fromS(detailed_voltages.voltage_1_ro);
+    _curr_data.cell_voltages[detailed_voltages.ic_id][(detailed_voltages.group_id*3)+2] = HYTECH_voltage_2_ro_fromS(detailed_voltages.voltage_2_ro);
+
 }
 
 void ACUInterface::receive_temps_message(const CAN_message_t& msg, unsigned long curr_millis) 
@@ -53,15 +69,17 @@ void ACUInterface::receive_temps_message(const CAN_message_t& msg, unsigned long
 
 
     /* To read every cell temp (only data from three thermistors) */
-    // uint8_t ic = _curr_data.ic_detailed_id; //will update based on the ic_id that is sent in the CAN message
-    // for (int therm = 0; therm < 4; therm++) { //no data for thermistor_id_3
-    //     switch (therm) {
-    //         case 0: _curr_data.bms_detailed_temps[ic][therm] = _curr_data.therm_id_0; break;
-    //         case 1: _curr_data.bms_detailed_temps[ic][therm] = _curr_data.therm_id_1; break;
-    //         case 2: _curr_data.bms_detailed_temps[ic][therm] = _curr_data.therm_id_2; break;
-    //         case 3: _curr_data.bms_detailed_temps[ic][therm] = 0; break; 
-    //         default: _curr_data.bms_detailed_temps[ic][therm] = 0;
-    //     };
+    uint8_t ic = _curr_data.ic_detailed_id; //will update based on the ic_id that is sent in the CAN message
+    for (int therm = 0; therm < 3; therm++) { //no data for thermistor_id_3
+        switch (therm) {
+            case 0: _curr_data.bms_detailed_temps[ic][therm] = _curr_data.therm_id_0; break;
+            case 1: _curr_data.bms_detailed_temps[ic][therm] = _curr_data.therm_id_1; break;
+            case 2: _curr_data.bms_detailed_temps[ic][therm] = _curr_data.therm_id_2; break;
+            // case 3: _curr_data.bms_detailed_temps[ic][therm] = 0; break; 
+            default: _curr_data.bms_detailed_temps[ic][therm] = 0;
+        }
+
+     }
 
     /* Uncomment if using BMS_DETAILED_TEMPS message data, otherwise min/max cell temps will overwrite each other */
     // float thermistor_temps[3] = {_curr_data.therm_id_0, _curr_data.therm_id_1, _curr_data.therm_id_2};

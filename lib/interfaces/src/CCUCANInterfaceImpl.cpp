@@ -48,6 +48,20 @@ void ccu_CAN_recv(CANInterfaces &interfaces, const CAN_message_t &msg, unsigned 
         interfaces.acu_interface.receive_temps_message(msg, millis);
         break;
     }
+
+    case BMS_DETAILED_TEMPS_CANID: 
+    {
+                interfaces.acu_interface.receive_temps_message(msg, millis);
+
+                break;
+    }
+
+    case BMS_DETAILED_VOLTAGES_CANID:
+    {
+                interfaces.acu_interface.detailed_volts(msg, millis);
+                break;
+
+    }
     
     default:
     {
