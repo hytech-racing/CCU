@@ -57,8 +57,10 @@ void DisplayInterface::display_data() {
 
 
     Display.print("Min Cell Temp (C): ");
-    
     Display.println(ACUInterfaceInstance::instance().get_latest_data().min_cell_temp, 3);
+
+    Display.print("Avg Cell Temp (C): ");
+    Display.println((ACUInterfaceInstance::instance().get_latest_data().max_cell_temp + ACUInterfaceInstance::instance().get_latest_data().min_cell_temp)/2, 3);
 
     Display.print("EM current (A): ");
     Display.println(EnergyMeterInterfaceInstance::instance().get_latest_em_data().current_amps, 3);

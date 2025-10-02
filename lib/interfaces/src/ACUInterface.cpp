@@ -37,7 +37,7 @@ void ACUInterface::receive_voltages_message(const CAN_message_t& msg, unsigned l
 
 }
 
-void ACUInterface::receive_temps_message(const CAN_message_t& msg, unsigned long curr_millis) 
+void ACUInterface::receive_onboard_temps_message(const CAN_message_t& msg, unsigned long curr_millis) 
 {
     BMS_ONBOARD_TEMPS_t board_temps = {};
     Unpack_BMS_ONBOARD_TEMPS_hytech(&board_temps, &msg.buf[0], msg.len);
@@ -49,26 +49,27 @@ void ACUInterface::receive_temps_message(const CAN_message_t& msg, unsigned long
     _ccu_data.max_board_temp = _curr_data.max_board_temp;
     _ccu_data.min_cell_temp = _curr_data.min_cell_temp;
     _ccu_data.max_cell_temp = _curr_data.max_cell_temp;
-    
+}
 
+void ACUInterface::receive_detailed_temps_message(const CAN_message_t& msg, unsigned long curr_millis)
+{
     BMS_DETAILED_TEMPS_t detailed_temps{};
     Unpack_BMS_DETAILED_TEMPS_hytech(&detailed_temps, &msg.buf[0], msg.len);
     _curr_data.group_id = detailed_temps.group_id; //size of uint8_t
     _curr_data.ic_detailed_id = detailed_temps.ic_id; //size of uint8_t
     _curr_data.therm_id_0 = HYTECH_thermistor_id_0_ro_fromS(static_cast<float>(detailed_temps.thermistor_id_0_ro));
     _curr_data.therm_id_1 = HYTECH_thermistor_id_1_ro_fromS(static_cast<float>(detailed_temps.thermistor_id_1_ro));
-    _curr_data.therm_id_2 = HYTECH_thermistor_id_2_ro_fromS(static_cast<float>(detailed_temps.thermistor_id_2_ro));
+    _curr_data.therm_id_2 = HYTECH_thermistor_id_2_ro_fromS(static_cast<float>(detailed_temps.thermistor_id_2_ro));    
 
-    
+}
 
-
+void ACUInterface::receive_onboard_detailed_temps(const CAN_message_t& msg, unsigned long curr_millis)
+{
     BMS_ONBOARD_DETAILED_TEMPS_t onboard_detailed_temps{};
     Unpack_BMS_ONBOARD_DETAILED_TEMPS_hytech(&onboard_detailed_temps, &msg.buf[0], msg.len);
     _curr_data.ic_id = onboard_detailed_temps.ic_id;
     _curr_data.temp_0 = HYTECH_temp_0_ro_fromS(static_cast<float>(onboard_detailed_temps.temp_0_ro));
     _curr_data.temp_1 = HYTECH_temp_1_ro_fromS(static_cast<float>(onboard_detailed_temps.temp_1_ro));
-
-
 }
 
 void ACUInterface::enqueue_ccu_status_data()
