@@ -21,9 +21,9 @@ void MainChargeSystem::calculate_charge_current() {
   /** acu_state comes from the bms_status message. If shutdown is low on ACU (HVP is unplugged), acu_state = 1.
    *  If acu_state = 2, we should/are safe to be charging
    */
-  bool acu_shutdown_low = ACUInterfaceInstance::instance().get_latest_data().acu_state == 1; 
+  bool acu_shutdown_low = ACUInterfaceInstance::instance().get_latest_data().acu_state == 1; //NOLINT
   
-  bool voltage_reached = (high_voltage >= _ccu_data.cutoff_voltage) || (ACUInterfaceInstance::instance().get_latest_data().total_voltage > _ccu_data.max_pack_voltage);
+  bool voltage_reached = (high_voltage >= _ccu_data.cutoff_voltage) || (ACUInterfaceInstance::instance().get_latest_data().total_voltage > _ccu_data.max_pack_voltage); //NOLINT
   if (shutdown_low || acu_shutdown_low)
   {
     _ccu_data.charging_state = ChargingState_e::NOT_CHARGING;
