@@ -29,12 +29,11 @@ void ChargerInterface::enqueue_charging_data()
     // So, we want 530V to be max charge voltage
     // We want the high/low bytes of the 16-bit int to be 5300 (decimal), which is 0x14B4 (hex)
 
-    // NOTE: The "high" and "low" values are not max and min-- rather, they are the "high" and "low"
-    // bytes of a 16-bit integer.
+    // NOTE: The "high" and "low" values are not max and min-- rather, they are the "high" and "low" bytes of a 16-bit integer.
     CHARGER_CONTROL_t charger_control = {};
-    charger_control.max_charging_voltage_high = 0x14; //NOLINT (see comment) - need to change this in PCAN library... but how?
+    charger_control.max_charging_voltage_high = 0x14; //NOLINT (see comment) - need to change this in PCAN library
     charger_control.max_charging_voltage_low = 0xB4; //NOLINT (see comment)
-    charger_control.max_charging_current_high = 0; //charging current reads from function
+    charger_control.max_charging_current_high = 0; // only "low" is being used/harnessed in
     charger_control.max_charging_current_low = _ccu_data.calculated_charge_current; //NOLINT (this works)  
     CAN_util::enqueue_msg(&charger_control, &Pack_CHARGER_CONTROL_hytech, CCUCANInterfaceImpl::charger_can_tx_buffer);
 }

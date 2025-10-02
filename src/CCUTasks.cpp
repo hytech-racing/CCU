@@ -1,4 +1,6 @@
 #include "CCUTasks.h"
+#include "EMInterface.h"
+
 
 
 CCUData ccu_data; //NOLINT (necessary for passing ccu_data struct as a reference)
@@ -11,12 +13,13 @@ HT_TASK::TaskResponse intitialize_all_interfaces()
     /* Charger Interface */
     ChargerInterfaceInstance::create(ccu_data); //NOLINT (necessary for passing ccu_data struct as a reference)
 
-    ChargerStateMachineInstance::create(ccu_data); //NOLINT (necessary for passing ccu_data struct as a reference)
+    EnergyMeterInterfaceInstance::create();
+
 
     WatchdogInstance::create();
     WatchdogInstance::instance().init(); 
 
-    CANInterfacesInstance::create(ACUInterfaceInstance::instance(), ChargerInterfaceInstance::instance());
+    CANInterfacesInstance::create(ACUInterfaceInstance::instance(), ChargerInterfaceInstance::instance(), EnergyMeterInterfaceInstance::instance());
 
     pinMode(ccu_data.SHDN_E_READ, INPUT);
 

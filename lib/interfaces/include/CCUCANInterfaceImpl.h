@@ -6,6 +6,7 @@
 #include "ACUInterface.h"
 #include "ChargerInterface.h"
 
+#include "EMInterface.h"
 #include "etl/singleton.h"
 #include <etl/delegate.h>
 #include "FlexCAN_T4.h"
@@ -19,12 +20,14 @@ template <CAN_DEV_TABLE CAN_DEV> using FlexCAN_Type = FlexCAN_T4<CAN_DEV, RX_SIZ
 
 struct CANInterfaces
 {
-    explicit CANInterfaces(ACUInterface &acu_int, ChargerInterface &charger_int) :
+    explicit CANInterfaces(ACUInterface &acu_int, ChargerInterface &charger_int, EnergyMeterInterface & em_int) :
         acu_interface(acu_int), 
-        charger_interface(charger_int) {}
+        charger_interface(charger_int),
+        em_interface(em_int) {}
 
     ACUInterface & acu_interface;
     ChargerInterface & charger_interface;
+    EnergyMeterInterface & em_interface;
 };
 
 using CANInterfacesInstance = etl::singleton<CANInterfaces>;
