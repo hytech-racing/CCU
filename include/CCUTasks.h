@@ -48,6 +48,9 @@ HT_TASK::TaskResponse calculate_charge_current(const unsigned long& sysMicros, c
 
 HT_TASK::TaskResponse print_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
+HT_TASK::TaskResponse init_data_logging(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+
+HT_TASK::TaskResponse run_data_logging(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
 
 #endif

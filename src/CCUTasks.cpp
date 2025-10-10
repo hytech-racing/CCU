@@ -1,6 +1,6 @@
 #include "CCUTasks.h"
 #include "EMInterface.h"
-
+#include <SD.h>
 
 
 CCUData ccu_data; //NOLINT (necessary for passing ccu_data struct as a reference)
@@ -120,8 +120,6 @@ HT_TASK::TaskResponse run_update_display_task(const unsigned long& sysMicros, co
     return HT_TASK::TaskResponse::YIELD;
 }
 
-
-
 HT_TASK::TaskResponse print_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
     
     Serial.print("Charge enable: ");
@@ -155,4 +153,24 @@ HT_TASK::TaskResponse print_data(const unsigned long& sysMicros, const HT_TASK::
    // Serial.println(digitalRead(ccu_data.SHDN_E_READ) == HIGH);
 
    return HT_TASK::TaskResponse::YIELD;
+}
+
+HT_TASK::TaskResponse init_data_logging(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+    if (!SD.begin(BUILTIN_SDCARD)) {
+        return HT_TASK::TaskResponse::YIELD;
+    }
+
+    File dataFile = SD.open("charge_log.csv", FILE_WRITE);
+    if (!dataFile) {
+        return HT_TASK::TaskResponse::YIELD;
+    }
+
+    dataFile.println("timestamp,pack_current,pack_voltage,cell_voltage_avg,cell_voltage_min,cell_voltage_max,cell_temp_avg,cell_temp_min,cell_temp_max,board_temp_max,soc_estimated,charging_state");
+    dataFile.close();
+    
+    return HT_TASK::TaskResponse::YIELD;
+}
+
+HT_TASK::TaskResponse run_data_logging(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+    return HT_TASK::TaskResponse::YIELD;
 }
