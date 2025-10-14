@@ -168,7 +168,7 @@ HT_TASK::TaskResponse init_data_logging(const unsigned long& sysMicros, const HT
     }
 
     dataFile.println("timestamp,pack_current,pack_voltage,cell_voltage_avg,cell_voltage_min,cell_voltage_max,cell_temp_min,cell_temp_max,board_temp_max,charging_state");
-    dataFile.flush();
+    dataFile.close();
     
     return HT_TASK::TaskResponse::YIELD;
 }
@@ -199,6 +199,8 @@ HT_TASK::TaskResponse run_data_logging(const unsigned long& sysMicros, const HT_
         dataFile.print(acu_data.max_board_temp);
         dataFile.print(",");
         dataFile.print(static_cast<int>(ChargerStateMachineInstance::instance().get_state()));
+        dataFile.println();
+        dataFile.close();
     }
     
     return HT_TASK::TaskResponse::YIELD;
