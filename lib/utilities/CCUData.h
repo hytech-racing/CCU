@@ -47,6 +47,9 @@ namespace CCUConstants
   constexpr unsigned long ENQUEUE_CHARGER_CAN_DATA_PRIORITY = 5;
   constexpr unsigned long ENQUEUE_CHARGER_CAN_DATA_PERIOD = 100000;
 
+  constexpr unsigned long DATA_LOGGING_PRIORITY = 14;
+  constexpr unsigned long DATA_LOGGING_PERIOD = 1000;
+
   constexpr unsigned long DIAL_PERIOD_US = 20000;
   constexpr unsigned long ETHERNET_PERIOD_US = 20000;
   constexpr unsigned long UPDATE_DISPLAY_PRIORITY = 11;

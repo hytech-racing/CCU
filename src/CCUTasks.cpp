@@ -156,7 +156,9 @@ HT_TASK::TaskResponse print_data(const unsigned long& sysMicros, const HT_TASK::
 }
 
 HT_TASK::TaskResponse init_data_logging(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
-    if (!SD.begin(BUILTIN_SDCARD)) {
+    bool spi_ok = SD.begin(BUILTIN_SDCARD);
+
+    while (!spi_ok) {
         return HT_TASK::TaskResponse::YIELD;
     }
 
@@ -165,12 +167,39 @@ HT_TASK::TaskResponse init_data_logging(const unsigned long& sysMicros, const HT
         return HT_TASK::TaskResponse::YIELD;
     }
 
-    dataFile.println("timestamp,pack_current,pack_voltage,cell_voltage_avg,cell_voltage_min,cell_voltage_max,cell_temp_avg,cell_temp_min,cell_temp_max,board_temp_max,soc_estimated,charging_state");
-    dataFile.close();
+    dataFile.println("timestamp,pack_current,pack_voltage,cell_voltage_avg,cell_voltage_min,cell_voltage_max,cell_temp_min,cell_temp_max,board_temp_max,charging_state");
+    dataFile.flush();
     
     return HT_TASK::TaskResponse::YIELD;
 }
 
 HT_TASK::TaskResponse run_data_logging(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+    auto acu_data = ACUInterfaceInstance::instance().get_latest_data();
+    auto charge_data = ChargerInterfaceInstance::instance().get_latest_charger_data();
+    auto em_data = EnergyMeterInterfaceInstance::instance().get_latest_em_data();
+
+    File dataFile = SD.open("charge_log.csv", FILE_WRITE);
+    if (dataFile) {
+        dataFile.print(sys_time::hal_millis());
+        dataFile.print(",");
+        dataFile.print(em_data.current_amps);
+        dataFile.print(",");
+        dataFile.print(acu_data.total_voltage);
+        dataFile.print(",");
+        dataFile.print(acu_data.average_voltage);
+        dataFile.print(",");
+        dataFile.print(acu_data.low_voltage);
+        dataFile.print(",");
+        dataFile.print(acu_data.high_voltage);
+        dataFile.print(",");
+        dataFile.print(acu_data.min_cell_temp);
+        dataFile.print(",");
+        dataFile.print(acu_data.max_cell_temp);
+        dataFile.print(",");
+        dataFile.print(acu_data.max_board_temp);
+        dataFile.print(",");
+        dataFile.print(static_cast<int>(ChargerStateMachineInstance::instance().get_state()));
+    }
+    
     return HT_TASK::TaskResponse::YIELD;
 }
