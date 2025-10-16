@@ -2,11 +2,23 @@
 #include "CCUData.h"
 #include "EMInterface.h"
 
+//unsigned long buttonState = digitalRead(17);
+
+//void loop() {
+//    buttonState = digitalRead(17);
+
+//}
+
+extern int button_state = 0;
+extern int last_button_state = 0;
+extern int clicks = 0;
+
 void DisplayInterface::init() {
     Display.begin();
     Display.setRotation(3);
     Display.setTextSize(2);
     Display.fillScreen(ILI9341_BLACK);
+    //pinMode(17, INPUT_PULLDOWN);
 }
 
 void DisplayInterface::display_data() {
@@ -75,3 +87,54 @@ void DisplayInterface::refresh_display_data(unsigned long curr_millis) {
         display_time = curr_millis;
     }
 }
+
+void DisplayInterface::toggle_display_data() 
+{
+    //button_state = digitalRead(17);
+    //button_state = digitalRead(17);
+    Display.fillScreen(ILI9341_BLACK);
+    Display.setCursor(0,0);
+
+    if (button_state != last_button_state)
+    {
+
+        if (button_state == HIGH) 
+        {
+            clicks += 1;
+        }
+
+        //if (clicks > 20) 
+        //{
+        //    clicks = 0;
+        //}
+    }
+    last_button_state = button_state;
+
+    switch (clicks)
+    {
+        default:
+            //print critical charging data
+            Display.fillScreen(ILI9341_BLACK);
+            Display.setCursor(0,0);
+            Display.setRotation(3);
+            Display.setTextSize(2);
+            Display.println(clicks);
+            break;
+       /*case -1:            
+            Display.setCursor(0,0);
+            Display.setRotation(3);
+            Display.setTextSize(2);
+            Display.fillScreen(ILI9341_BLACK);
+            Display.println("Cell Temps");
+            break;
+        case -2:
+            Display.fillScreen(ILI9341_BLACK);
+            Display.setCursor(0,0);
+            Display.setRotation(3);
+            Display.setTextSize(2);
+            Display.println("Cell Voltages");
+            break;*/
+        
+    }
+}
+

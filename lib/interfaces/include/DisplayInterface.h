@@ -10,6 +10,7 @@
 #include "SharedFirmwareTypes.h"
 #include "ACUInterface.h"
 
+extern int button_state;
 
 using pin = size_t;
 
@@ -36,6 +37,7 @@ class DisplayInterface
         void init();
         void display_data();
         void refresh_display_data(unsigned long curr_millis);
+        void toggle_display_data();
 
         Adafruit_ILI9341 Display;
 
@@ -44,7 +46,6 @@ class DisplayInterface
         CCUData &_ccu_data;
         unsigned long display_time;
         unsigned long display_update_interval;
-
         // DMAChannel dma_spi;
         // uint8_t txBuffer [256];
         // uint8_t rxBuffer [256];

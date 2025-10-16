@@ -52,6 +52,8 @@ namespace CCUConstants
   constexpr unsigned long UPDATE_DISPLAY_PRIORITY = 11;
   constexpr unsigned long UPDATE_DISPLAY_PERIOD = 100000;
   constexpr unsigned long REFRESH_DISPLAY_PRIORITY = 13;
+  constexpr unsigned long TOGGLE_DISPLAY_PERIOD = 100;
+  constexpr unsigned long TOGGLE_DISPLAY_PRIORITY = 14;
   constexpr unsigned long READ_DIAL_PRIORITY = 10;
   constexpr unsigned long SEND_ETHERNET_PRIORITY = 8;
   constexpr unsigned long RECIEVE_ETHERNET_PRIORITY = 7;

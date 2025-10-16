@@ -38,6 +38,7 @@ HT_SCHED::Scheduler& scheduler = HT_SCHED::Scheduler::getInstance();
 /* Task Declarations */
 /* read_dial, send_ethernet, and receieve_ethernet are not being used */
 HT_TASK::Task update_display_task(init_update_display_task, run_update_display_task, CCUConstants::UPDATE_DISPLAY_PRIORITY, CCUConstants::UPDATE_DISPLAY_PERIOD);
+HT_TASK::Task toggle_display_task(HT_TASK::DUMMY_FUNCTION, run_toggle_display_task, CCUConstants::TOGGLE_DISPLAY_PRIORITY, CCUConstants::TOGGLE_DISPLAY_PERIOD);
 HT_TASK::Task read_dial_task(HT_TASK::DUMMY_FUNCTION, run_read_dial_task, CCUConstants::READ_DIAL_PRIORITY, CCUConstants::DIAL_PERIOD_US);
 HT_TASK::Task queue_ACU_CAN(HT_TASK::DUMMY_FUNCTION, handle_enqueue_acu_can_data, CCUConstants::ENQUEUE_ACU_CAN_DATA_PRIORITY, CCUConstants::ENQUEUE_ACU_CAN_DATA_PERIOD);
 HT_TASK::Task queue_Charger_CAN(HT_TASK::DUMMY_FUNCTION, handle_enqueue_charger_can_data, CCUConstants::ENQUEUE_CHARGER_CAN_DATA_PRIORITY, CCUConstants::ENQUEUE_CHARGER_CAN_DATA_PERIOD);
@@ -56,8 +57,9 @@ void setup() {
   SPI.begin();
   SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0)); //NOLINT (spi settings)
  
-  qn::Ethernet.begin(); //begins QNEthernet
 
+  qn::Ethernet.begin(); //begins QNEthernet
+  pinMode(17, INPUT_PULLDOWN); // edit
   intitialize_all_interfaces();
 
   scheduler.setTimingFunction(micros);
@@ -78,7 +80,15 @@ void setup() {
   handle_CAN_setup(CHARGER_CAN, CCUConstants::CHARGER_CAN_BAUDRATE, &CCUCANInterfaceImpl::on_charger_can_receive);
 }
 
-
 void loop() {
   scheduler.run();
+  //tests
+  button_state = digitalRead(17);
+  digitalWrite(17, HIGH);
+  button_state = digitalRead(17);
+  digitalWrite(17, LOW);
+  button_state = digitalRead(17);
+  digitalWrite(17, HIGH);
+  button_state = digitalRead(17);
+  digitalWrite(17, LOW);
 }
