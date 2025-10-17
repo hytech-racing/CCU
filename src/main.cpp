@@ -84,12 +84,12 @@ void setup() {
 void loop() {
   scheduler.run();
   //tests
-  button_state = digitalRead(17);
-  digitalWrite(17, HIGH);
-  button_state = digitalRead(17);
-  digitalWrite(17, LOW);
-  button_state = digitalRead(17);
-  digitalWrite(17, HIGH);
-  button_state = digitalRead(17);
-  digitalWrite(17, LOW);
+  button_state = digitalRead(A3);
+  digitalWrite(A3, HIGH);
+  button_state = digitalRead(A3);
+  digitalWrite(A3, LOW);
+  button_state = digitalRead(A3);
+  digitalWrite(A3, HIGH);
+  button_state = digitalRead(A3);
+  digitalWrite(A3, LOW);
 }

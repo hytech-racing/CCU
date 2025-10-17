@@ -90,8 +90,6 @@ void DisplayInterface::refresh_display_data(unsigned long curr_millis) {
 
 void DisplayInterface::toggle_display_data() 
 {
-    //button_state = digitalRead(17);
-    //button_state = digitalRead(17);
     Display.fillScreen(ILI9341_BLACK);
     Display.setCursor(0,0);
 
