@@ -59,7 +59,7 @@ void setup() {
  
 
   qn::Ethernet.begin(); //begins QNEthernet
-  pinMode(17, INPUT_PULLDOWN); // edit
+  pinMode(A2, INPUT_PULLDOWN); // edit
   intitialize_all_interfaces();
 
   scheduler.setTimingFunction(micros);
