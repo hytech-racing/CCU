@@ -10,7 +10,9 @@
 #include "SharedFirmwareTypes.h"
 #include "ACUInterface.h"
 
-extern int button_state;
+extern unsigned long button_state;
+extern unsigned long last_button_state;
+extern unsigned long clicks;
 
 using pin = size_t;
 

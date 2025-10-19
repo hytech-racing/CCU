@@ -16,6 +16,8 @@
 #include "SystemTimeInterface.h"
 #include "DisplayInterface.h"
 
+const unsigned long debounceTime = 50;  // milliseconds
+unsigned long switchPressTime;
 
 FlexCAN_Type<CAN2> CHARGER_CAN; //placed here after debugging
 FlexCAN_Type<CAN1> ACU_CAN;
@@ -38,7 +40,7 @@ HT_SCHED::Scheduler& scheduler = HT_SCHED::Scheduler::getInstance();
 /* Task Declarations */
 /* read_dial, send_ethernet, and receieve_ethernet are not being used */
 HT_TASK::Task update_display_task(init_update_display_task, run_update_display_task, CCUConstants::UPDATE_DISPLAY_PRIORITY, CCUConstants::UPDATE_DISPLAY_PERIOD);
-HT_TASK::Task toggle_display_task(HT_TASK::DUMMY_FUNCTION, run_toggle_display_task, CCUConstants::TOGGLE_DISPLAY_PRIORITY, CCUConstants::TOGGLE_DISPLAY_PERIOD);
+HT_TASK::Task toggle_display_task(init_update_display_task, run_toggle_display_task, CCUConstants::TOGGLE_DISPLAY_PRIORITY, CCUConstants::TOGGLE_DISPLAY_PERIOD);
 HT_TASK::Task read_dial_task(HT_TASK::DUMMY_FUNCTION, run_read_dial_task, CCUConstants::READ_DIAL_PRIORITY, CCUConstants::DIAL_PERIOD_US);
 HT_TASK::Task queue_ACU_CAN(HT_TASK::DUMMY_FUNCTION, handle_enqueue_acu_can_data, CCUConstants::ENQUEUE_ACU_CAN_DATA_PRIORITY, CCUConstants::ENQUEUE_ACU_CAN_DATA_PERIOD);
 HT_TASK::Task queue_Charger_CAN(HT_TASK::DUMMY_FUNCTION, handle_enqueue_charger_can_data, CCUConstants::ENQUEUE_CHARGER_CAN_DATA_PRIORITY, CCUConstants::ENQUEUE_CHARGER_CAN_DATA_PERIOD);
@@ -51,6 +53,18 @@ HT_TASK::Task debug_print_task(HT_TASK::DUMMY_FUNCTION, print_data, CCUConstants
 HT_TASK::Task tick_state_machine_task(HT_TASK::DUMMY_FUNCTION, tick_state_machine, CCUConstants::TICK_STATE_MACHINE_PRIORITY, CCUConstants::TICK_STATE_MACHINE_PERIOD);
 HT_TASK::Task calculate_charge_current_task(HT_TASK::DUMMY_FUNCTION, calculate_charge_current, CCUConstants::TICK_STATE_MACHINE_PRIORITY, CCUConstants::TICK_STATE_MACHINE_PERIOD);
 
+void PressedButton () 
+{
+    clicks += 1;
+}
+
+void debounce () 
+{ 
+    if (millis () - switchPressTime >= debounceTime)
+      PressedButton();
+      switchPressTime = millis (); 
+}
+
 
 
 void setup() {
@@ -59,8 +73,10 @@ void setup() {
  
 
   qn::Ethernet.begin(); //begins QNEthernet
-  pinMode(A2, INPUT_PULLDOWN); // edit
+  pinMode(A15, INPUT_PULLUP); // edit
+
   intitialize_all_interfaces();
+  attachInterrupt(digitalPinToInterrupt(A15), debounce, FALLING);
 
   scheduler.setTimingFunction(micros);
   scheduler.schedule(read_dial_task);
@@ -74,22 +90,21 @@ void setup() {
   scheduler.schedule(kick_watchdog_task); 
   //scheduler.schedule(tick_state_machine_task); //this task times out watchdog for some reason (state machine would be nice to have but isn't a priority for CCU to work)
   scheduler.schedule(calculate_charge_current_task);
-  scheduler.schedule(update_display_task);
+  //scheduler.schedule(update_display_task);
   scheduler.schedule(toggle_display_task);
 
   handle_CAN_setup(ACU_CAN, CCUConstants::CAN_BAUDRATE, &CCUCANInterfaceImpl::on_acu_can_receive);
   handle_CAN_setup(CHARGER_CAN, CCUConstants::CHARGER_CAN_BAUDRATE, &CCUCANInterfaceImpl::on_charger_can_receive);
 }
 
-void loop() {
+
+
+void loop() 
+{
+  button_state = digitalRead(A15);
   scheduler.run();
-  //tests
-  button_state = digitalRead(A3);
-  digitalWrite(A3, HIGH);
-  button_state = digitalRead(A3);
-  digitalWrite(A3, LOW);
-  button_state = digitalRead(A3);
-  digitalWrite(A3, HIGH);
-  button_state = digitalRead(A3);
-  digitalWrite(A3, LOW);
+  // remove delay for future. bad practice wrt arduino
+  //delay(100);
+
 }
+
