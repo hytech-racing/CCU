@@ -16,8 +16,8 @@
 #include "SystemTimeInterface.h"
 #include "DisplayInterface.h"
 
-const unsigned long debounceTime = 50;  // milliseconds
-unsigned long switchPressTime;
+const unsigned long debounce_time = 50;  // milliseconds
+unsigned long switch_press_time;
 
 FlexCAN_Type<CAN2> CHARGER_CAN; //placed here after debugging
 FlexCAN_Type<CAN1> ACU_CAN;
@@ -53,16 +53,19 @@ HT_TASK::Task debug_print_task(HT_TASK::DUMMY_FUNCTION, print_data, CCUConstants
 HT_TASK::Task tick_state_machine_task(HT_TASK::DUMMY_FUNCTION, tick_state_machine, CCUConstants::TICK_STATE_MACHINE_PRIORITY, CCUConstants::TICK_STATE_MACHINE_PERIOD);
 HT_TASK::Task calculate_charge_current_task(HT_TASK::DUMMY_FUNCTION, calculate_charge_current, CCUConstants::TICK_STATE_MACHINE_PRIORITY, CCUConstants::TICK_STATE_MACHINE_PERIOD);
 
-void PressedButton () 
+void button_press() 
 {
     clicks += 1;
 }
 
-void debounce () 
+void debounce() 
 { 
-    if (millis () - switchPressTime >= debounceTime)
-      PressedButton();
-      switchPressTime = millis (); 
+    
+    if (millis() - switch_press_time >= debounce_time) 
+    {
+      button_press();
+      switch_press_time = millis(); 
+    }
 }
 
 

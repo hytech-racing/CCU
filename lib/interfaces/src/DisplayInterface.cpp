@@ -85,27 +85,12 @@ void DisplayInterface::toggle_display_data()
 {
 
     Display.setCursor(0,0);
-
-    /*if (button_state != last_button_state)
-    {
-        
-        delay(10); // make debounce constant. this is to test
-        if (button_state == HIGH) 
-        {
-            clicks += 1;
-            delay(10);
-        }
-
-
-    }
-    last_button_state = button_state;*/
     
     if (clicks > 2) 
     {
         clicks = 0;
     }
     
-
     switch (clicks)
     {
         default:
