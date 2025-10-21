@@ -49,8 +49,7 @@ HT_TASK::Task kick_watchdog_task(init_kick_watchdog, run_kick_watchdog, CCUConst
 HT_TASK::Task debug_print_task(HT_TASK::DUMMY_FUNCTION, print_data, CCUConstants::UPDATE_DISPLAY_PRIORITY, CCUConstants::UPDATE_DISPLAY_PERIOD); 
 HT_TASK::Task tick_state_machine_task(HT_TASK::DUMMY_FUNCTION, tick_state_machine, CCUConstants::TICK_STATE_MACHINE_PRIORITY, CCUConstants::TICK_STATE_MACHINE_PERIOD);
 HT_TASK::Task calculate_charge_current_task(HT_TASK::DUMMY_FUNCTION, calculate_charge_current, CCUConstants::TICK_STATE_MACHINE_PRIORITY, CCUConstants::TICK_STATE_MACHINE_PERIOD);
-HT_TASK::Task data_logging_task(init_data_logging, run_data_logging, CCUConstants::DATA_LOGGING_PRIORITY, CCUConstants::DATA_LOGGING_PRIORITY);
-
+HT_TASK::Task data_logging_task(init_data_logging, run_data_logging, CCUConstants::DATA_LOGGING_PRIORITY, CCUConstants::DATA_LOGGING_PERIOD);
 
 void setup() {
   SPI.begin();
