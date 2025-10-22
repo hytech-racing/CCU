@@ -165,6 +165,7 @@ HT_TASK::TaskResponse init_data_logging(const unsigned long& sysMicros, const HT
 
     File dataFile = SD.open("charge_log.csv", FILE_WRITE);
     if (!dataFile) {
+        // no file so we don't run the task
         return HT_TASK::TaskResponse::EXIT;
     }
 
