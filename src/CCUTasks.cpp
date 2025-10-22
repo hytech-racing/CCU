@@ -159,12 +159,13 @@ HT_TASK::TaskResponse init_data_logging(const unsigned long& sysMicros, const HT
     bool spi_ok = SD.begin(BUILTIN_SDCARD);
 
     while (!spi_ok) {
-        return HT_TASK::TaskResponse::YIELD;
+        // sd card not detected so we don't run data logging task
+        return HT_TASK::TaskResponse::EXIT;
     }
 
     File dataFile = SD.open("charge_log.csv", FILE_WRITE);
     if (!dataFile) {
-        return HT_TASK::TaskResponse::YIELD;
+        return HT_TASK::TaskResponse::EXIT;
     }
 
     dataFile.println("timestamp,pack_current,pack_voltage,cell_voltage_avg,cell_voltage_min,cell_voltage_max,cell_temp_min,cell_temp_max,board_temp_max,charging_state");
