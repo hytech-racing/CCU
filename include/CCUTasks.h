@@ -16,6 +16,7 @@
 #include "CCUData.h"
 #include "MainChargeSystem.h"
 #include "DisplayInterface.h"
+#include "DataLoggingInterface.h"
 
 
 HT_TASK::TaskResponse intitialize_all_interfaces();
