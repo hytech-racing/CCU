@@ -6,18 +6,24 @@
 
 bool DataLoggingInterface::init() {
     if (!SD.begin(BUILTIN_SDCARD)) {
+        Serial.println("could not init psd card");
         return false;
     }
+    Serial.println("sd card init success");
 
     data_file = SD.open(file_name, FILE_WRITE);
     if (!data_file) {
+        Serial.println("cant open data file");
         return false;
     }
+    Serial.println("data file opened");
     if (data_file.size() == 0) {
         data_file.println("timestamp,pack_current,pack_voltage,cell_voltage_avg,cell_voltage_min,cell_voltage_max,cell_temp_min,cell_temp_max,board_temp_max,charging_state");
+        Serial.println("data file header written");
     }
 
     data_file.close();
+    Serial.println("data file closed");
 
     return true;
 }
