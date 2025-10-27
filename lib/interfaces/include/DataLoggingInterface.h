@@ -4,6 +4,8 @@
 #include <etl/singleton.h>
 #include <Arduino.h>
 #include "SD.h"
+#include <EEPROM.h>
+#include <string>
 
 class DataLoggingInterface
 {
@@ -15,7 +17,12 @@ public:
 
 private:
     File data_file;
-    const char* file_name = "charge_log.csv";
+    std::string file_name;
+
+    static const int eeprom_counter_address = 0;
+    static const int eeprom_magic_address = 4;
+    static const uint32_t magic_number = 0x12345678;
+
 };
 
 using DataLoggingInterfaceInstance = etl::singleton<DataLoggingInterface>;

@@ -4,26 +4,41 @@
 #include "SystemTimeInterface.h"
 #include "ChargerStateMachine.h"
 
+const int DataLoggingInterface::eeprom_counter_address;
+const int DataLoggingInterface::eeprom_magic_address;
+const uint32_t DataLoggingInterface::magic_number;
+
 bool DataLoggingInterface::init() {
     if (!SD.begin(BUILTIN_SDCARD)) {
-        Serial.println("could not init psd card");
         return false;
     }
-    Serial.println("sd card init success");
 
-    data_file = SD.open(file_name, FILE_WRITE);
+    uint32_t file_counter = 0;
+    uint32_t magic_check = 0;
+
+    EEPROM.get(eeprom_magic_address, magic_check);
+    if (magic_check != magic_number) {
+        file_counter = 0;
+        EEPROM.put(eeprom_magic_address, magic_number);
+        EEPROM.put(eeprom_counter_address, file_counter);
+    } else {
+        EEPROM.get(eeprom_counter_address, file_counter);
+    }
+
+    file_name = "charge_log_" + std::to_string(file_counter) + ".csv";
+    
+    data_file = SD.open(file_name.c_str(), FILE_WRITE);
     if (!data_file) {
-        Serial.println("cant open data file");
         return false;
     }
-    Serial.println("data file opened");
     if (data_file.size() == 0) {
         data_file.println("timestamp,pack_current,pack_voltage,cell_voltage_avg,cell_voltage_min,cell_voltage_max,cell_temp_min,cell_temp_max,board_temp_max,charging_state");
-        Serial.println("data file header written");
     }
 
     data_file.close();
-    Serial.println("data file closed");
+
+    uint32_t next_counter = file_counter + 1;
+    EEPROM.put(eeprom_counter_address, next_counter);
 
     return true;
 }
@@ -32,7 +47,7 @@ void DataLoggingInterface::log_data() {
     auto acu_data = ACUInterfaceInstance::instance().get_latest_data();
     auto em_data = EnergyMeterInterfaceInstance::instance().get_latest_em_data();
 
-    data_file = SD.open(file_name, FILE_WRITE);
+    data_file = SD.open(file_name.c_str(), FILE_WRITE);
     if (!data_file) {
         return;
     }
