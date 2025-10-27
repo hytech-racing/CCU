@@ -148,10 +148,6 @@ MainChargeSystem mainChargeLoop(ccu_data);
 
 TEST(mainChargeTest, EStopShutsDownCharge) // Not charging b/c SHDN_E_READ = LOW
 {
-    ccu_data.cutoff_voltage = 4.2f;
-    ccu_data.max_pack_voltage = 600.0f;
-    ccu_data.charger_current_max = 120.0f;
-
     ACUInterfaceInstance::instance().set_latest_data({
         2,                                 // acu_state
         3.9f,                              // average_voltage
