@@ -25,7 +25,7 @@ bool DataLoggingInterface::init() {
         EEPROM.get(eeprom_counter_address, file_counter);
     }
 
-    file_name = "charge_log_" + std::to_string(file_counter) + ".csv";
+    file_name = std::string("charge_log_") + std::to_string(file_counter) + std::string(".csv");
     
     data_file = SD.open(file_name.c_str(), FILE_WRITE);
     if (!data_file) {
