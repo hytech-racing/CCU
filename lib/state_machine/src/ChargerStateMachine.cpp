@@ -10,7 +10,7 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
         {
             //pinMode(_ccu_data.SHDN_E_READ, OUTPUT);
 
-            if (_ccu_data.balancing_enabled) {
+            if (_ccu_data.charging_enabled) {
                 set_state(ChargerState_e::CHARGING_WITH_BALANCING, current_millis);
                 break;
             }
@@ -23,7 +23,7 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
 
         case ChargerState_e::CHARGING_WITH_BALANCING:
         {
-            if (!(_ccu_data.balancing_enabled)) {
+            if (!(_ccu_data.charging_enabled)) {
                 set_state(ChargerState_e::CHARGING_NO_BALANCING, current_millis);
                 break;
             } 
@@ -35,7 +35,7 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
 
         case ChargerState_e::CHARGING_NO_BALANCING:
         {
-            if (_ccu_data.balancing_enabled) {
+            if (_ccu_data.charging_enabled) {
                 set_state(ChargerState_e::CHARGING_WITH_BALANCING, current_millis);
                 break;
 
