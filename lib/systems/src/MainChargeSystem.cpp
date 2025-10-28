@@ -14,7 +14,7 @@ void MainChargeSystem::calculate_charge_current() {
   bool shutdown_low = (digitalRead(_ccu_data.SHDN_E_READ) != HIGH); //e-stop on charge cart
 
   /** acu_state comes from the bms_status message. If shutdown is low on ACU (HVP is unplugged), acu_state = 1.
-   *  If acu_state = 2, we should/are safe to be charging
+   *  If acu_state = 1, we are in acu_shutdown_low state. If acu_state = 2, we should/are safe to be charging
    */
   bool acu_shutdown_low = ACUInterfaceInstance::instance().get_latest_data().acu_state == 1; //NOLINT
   
@@ -32,7 +32,7 @@ void MainChargeSystem::calculate_charge_current() {
   /* Tells the charger to stop charging if the shutdown button is pressed or one of the cell voltags is too high */
   if (voltage_reached || shutdown_low || acu_shutdown_low) {  //ACU will cause a BMS fault if there is a cell or board temp that is too high
     _ccu_data.calculated_charge_current = 0;
-    _ccu_data.balancing_enabled = false;
+    _ccu_data.charging_enabled = false;
   } else {
     _ccu_data.calculated_charge_current = _ccu_data.charger_current_max; // 120 = 3.4 amps
   } 

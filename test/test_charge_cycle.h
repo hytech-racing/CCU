@@ -10,7 +10,7 @@
 CCUData ccu_data;
 MainChargeSystem mainChargeLoop(ccu_data);
 
-TEST(mainChargeTest, ACUShutsDownCharge) // Not Charging b/c acu_state = 1
+TEST(mainChargeTest, NotChargingACUShutdown) // ChargingState = NOT_CHARGING b/c acu_state = 1
 {
     ACUInterfaceInstance::instance().set_latest_data({
         1,                                 // acu_state
@@ -24,10 +24,10 @@ TEST(mainChargeTest, ACUShutsDownCharge) // Not Charging b/c acu_state = 1
 
     EXPECT_EQ(ccu_data.charging_state, ChargingState_e::NOT_CHARGING);
     EXPECT_FLOAT_EQ(ccu_data.calculated_charge_current, 0.0f);
-    EXPECT_EQ(ccu_data.balancing_enabled, false);
+    EXPECT_EQ(ccu_data.charging_enabled, false);
 }
 
-TEST(mainChargeTest, DoneChargingAtHighVoltage) // Done charging b/c Current Voltage = High Voltage
+TEST(mainChargeTest, DoneChargingAtHighVoltage) // ChargingState = DONE_CHARGING b/c Current Voltage = High Voltage
 {
     ACUInterfaceInstance::instance().set_latest_data({
         2,                                 // acu_state
@@ -41,10 +41,10 @@ TEST(mainChargeTest, DoneChargingAtHighVoltage) // Done charging b/c Current Vol
 
     EXPECT_EQ(ccu_data.charging_state, ChargingState_e::DONE_CHARGING);
     EXPECT_FLOAT_EQ(ccu_data.calculated_charge_current, 0.0f);
-    EXPECT_EQ(ccu_data.balancing_enabled, false);
+    EXPECT_EQ(ccu_data.charging_enabled, false);
 }
 
-TEST(mainChargeTest, DoneChargingOverHighVoltage) // Done charging b/c Current Voltage > High Voltage
+TEST(mainChargeTest, DoneChargingOverHighVoltage) // ChargingState = DONE_CHARGING b/c Current Voltage > High Voltage
 {
     ACUInterfaceInstance::instance().set_latest_data({
         2,                                 // acu_state
@@ -58,10 +58,10 @@ TEST(mainChargeTest, DoneChargingOverHighVoltage) // Done charging b/c Current V
 
     EXPECT_EQ(ccu_data.charging_state, ChargingState_e::DONE_CHARGING);
     EXPECT_FLOAT_EQ(ccu_data.calculated_charge_current, 0.0f);
-    EXPECT_EQ(ccu_data.balancing_enabled, false);
+    EXPECT_EQ(ccu_data.charging_enabled, false);
 }
 
-TEST(mainChargeTest, ContinuesChargingUnderHighVoltage) // Continues Charging b/c Current Voltage < High Voltage
+TEST(mainChargeTest, ChargingUnderHighVoltage) // ChargingState = CHARGING b/c Current Voltage < High Voltage
 {
     ACUInterfaceInstance::instance().set_latest_data({
         2,                                 // acu_state
@@ -77,7 +77,7 @@ TEST(mainChargeTest, ContinuesChargingUnderHighVoltage) // Continues Charging b/
     EXPECT_FLOAT_EQ(ccu_data.calculated_charge_current, CCUData::charger_current_max);
 }
 
-TEST(MainChargeTest, DoneChargingOverMaxPackVoltage) // Done charging b/c total_voltage > max_pack_voltage
+TEST(MainChargeTest, DoneChargingOverMaxPackVoltage) // ChargingState = DONE_CHARGING b/c total_voltage > max_pack_voltage
 {
     ACUInterfaceInstance::instance().set_latest_data({
         2,                                 // acu_state
@@ -91,10 +91,10 @@ TEST(MainChargeTest, DoneChargingOverMaxPackVoltage) // Done charging b/c total_
 
     EXPECT_EQ(ccu_data.charging_state, ChargingState_e::DONE_CHARGING);
     EXPECT_FLOAT_EQ(ccu_data.calculated_charge_current, 0.0f);
-    EXPECT_EQ(ccu_data.balancing_enabled, false);
+    EXPECT_EQ(ccu_data.charging_enabled, false);
 }
 
-TEST(MainChargeTest, ContinuesChargingAtMaxPackVoltage) // Continues charging b/c total_voltage = max_pack_voltage
+TEST(MainChargeTest, ChargingAtMaxPackVoltage) // ChargingState = CHARGING charging b/c total_voltage = max_pack_voltage
 {
     ACUInterfaceInstance::instance().set_latest_data({
         2,                                 // acu_state
@@ -110,7 +110,7 @@ TEST(MainChargeTest, ContinuesChargingAtMaxPackVoltage) // Continues charging b/
     EXPECT_FLOAT_EQ(ccu_data.calculated_charge_current, CCUData::charger_current_max);
 }
 
-TEST(MainChargeTest, RegularCharging) // Continues charging b/c within legal bounds
+TEST(MainChargeTest, Charging) // ChargingState = CHARGING b/c within legal bounds
 {
     ACUInterfaceInstance::instance().set_latest_data({
         2,                                 // acu_state
