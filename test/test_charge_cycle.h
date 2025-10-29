@@ -13,7 +13,7 @@ MainChargeSystem mainChargeLoop(ccu_data);
 TEST(mainChargeTest, NotChargingACUShutdown) // ChargingState = NOT_CHARGING b/c acu_state = 1
 {
     ACUInterfaceInstance::instance().set_latest_data({
-        1,                                 // acu_state
+        1,                                 // acu_state = 1 --> acu_shutdown low
         3.9f,                              // average_voltage
         3.8f,                              // low_voltage
         CCUData::cutoff_voltage - 0.1f,    // high_voltage
@@ -30,7 +30,7 @@ TEST(mainChargeTest, NotChargingACUShutdown) // ChargingState = NOT_CHARGING b/c
 TEST(mainChargeTest, DoneChargingAtHighVoltage) // ChargingState = DONE_CHARGING b/c Current Voltage = High Voltage
 {
     ACUInterfaceInstance::instance().set_latest_data({
-        2,                                 // acu_state
+        2,                                 // acu_state = 2 --> acu_shutdown high
         3.9f,                              // average_voltage
         3.8f,                              // low_voltage
         CCUData::cutoff_voltage,           // high_voltage
@@ -47,7 +47,7 @@ TEST(mainChargeTest, DoneChargingAtHighVoltage) // ChargingState = DONE_CHARGING
 TEST(mainChargeTest, DoneChargingOverHighVoltage) // ChargingState = DONE_CHARGING b/c Current Voltage > High Voltage
 {
     ACUInterfaceInstance::instance().set_latest_data({
-        2,                                 // acu_state
+        2,                                 // acu_state = 2 --> acu_shutdown high
         3.9f,                              // average_voltage
         3.8f,                              // low_voltage
         CCUData::cutoff_voltage + 0.5f,    // high_voltage
@@ -64,7 +64,7 @@ TEST(mainChargeTest, DoneChargingOverHighVoltage) // ChargingState = DONE_CHARGI
 TEST(mainChargeTest, ChargingUnderHighVoltage) // ChargingState = CHARGING b/c Current Voltage < High Voltage
 {
     ACUInterfaceInstance::instance().set_latest_data({
-        2,                                 // acu_state
+        2,                                 // acu_state = 2 --> acu_shutdown high
         3.9f,                              // average_voltage
         3.8f,                              // low_voltage
         CCUData::cutoff_voltage - 0.001f,  // high_voltage
@@ -80,7 +80,7 @@ TEST(mainChargeTest, ChargingUnderHighVoltage) // ChargingState = CHARGING b/c C
 TEST(MainChargeTest, DoneChargingOverMaxPackVoltage) // ChargingState = DONE_CHARGING b/c total_voltage > max_pack_voltage
 {
     ACUInterfaceInstance::instance().set_latest_data({
-        2,                                 // acu_state
+        2,                                 // acu_state = 2 --> acu_shutdown high
         3.9f,                              // average_voltage
         3.8f,                              // low_voltage
         CCUData::cutoff_voltage - 0.1f,    // high_voltage
@@ -97,7 +97,7 @@ TEST(MainChargeTest, DoneChargingOverMaxPackVoltage) // ChargingState = DONE_CHA
 TEST(MainChargeTest, ChargingAtMaxPackVoltage) // ChargingState = CHARGING charging b/c total_voltage = max_pack_voltage
 {
     ACUInterfaceInstance::instance().set_latest_data({
-        2,                                 // acu_state
+        2,                                 // acu_state = 2 --> acu_shutdown high
         3.9f,                              // average_voltage
         3.8f,                              // low_voltage
         CCUData::cutoff_voltage - 0.1f,    // high_voltage
@@ -113,7 +113,7 @@ TEST(MainChargeTest, ChargingAtMaxPackVoltage) // ChargingState = CHARGING charg
 TEST(MainChargeTest, Charging) // ChargingState = CHARGING b/c within legal bounds
 {
     ACUInterfaceInstance::instance().set_latest_data({
-        2,                                 // acu_state
+        2,                                 // acu_state = 2 --> acu_shutdown high
         3.9f,                              // average_voltage
         3.8f,                              // low_voltage
         CCUData::cutoff_voltage - 0.1f,    // high_voltage
