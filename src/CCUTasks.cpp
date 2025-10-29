@@ -125,7 +125,7 @@ HT_TASK::TaskResponse run_update_display_task(const unsigned long& sysMicros, co
 HT_TASK::TaskResponse print_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
     
     Serial.print("Charge enable: ");
-    Serial.println(ccu_data.balancing_enabled);
+    Serial.println(ccu_data.charging_enabled);
     Serial.print("Charging Status: ");
     Serial.println(static_cast<int>(ChargerStateMachineInstance::instance().get_state()));
     Serial.print("BMS Status: ");

@@ -14,12 +14,12 @@ void ChargerInterface::receive_charger_data_message(const CAN_message_t& msg, un
     charger_data.flags = charger_data_msg.flags;
     charger_data.input_ac_voltage_high = charger_data_msg.input_ac_voltage_high;
     charger_data.input_ac_voltage_low = charger_data_msg.input_ac_voltage_low;
-    _ccu_data.balancing_enabled = true; //if a charger message is received, we are ready to start charging
+    _ccu_data.charging_enabled = true; //if a charger message is received, we are ready to start charging
     //Serial.println("receieved charger message");
 
-    /* Redundancy to avoid flipping between true and false for balancing (charging) enabled */
+    /* Redundancy to avoid flipping between true and false for charging enabled */
     if (ACUInterfaceInstance::instance().get_latest_data().total_voltage >= _ccu_data.max_pack_voltage || ACUInterfaceInstance::instance().get_latest_data().high_voltage >= _ccu_data.cutoff_voltage) {
-        _ccu_data.balancing_enabled = false;
+        _ccu_data.charging_enabled = false;
     } 
 }
 

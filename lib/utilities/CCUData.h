@@ -12,7 +12,7 @@ enum class ChargingState_e
 
 struct CCUData
 {
-  bool balancing_enabled = false; //tells ACU whether balancing is allowed or not
+  bool charging_enabled = false; //tells ACU whether charging is allowed or not
   ChargingState_e charging_state = ChargingState_e::NOT_CHARGING;
   static constexpr float max_allowable_cell_temperature = 40; //need data for this
   static constexpr float cutoff_voltage = 4.2; //max voltage that cells can be at - if high = this, stop charging
