@@ -13,10 +13,10 @@
 
 struct rotary_encoder_s {
     volatile bool state = false;
-    volatile int encoder_value = 0;
+    volatile float encoder_value = 0;
     unsigned long last_button_press = 0;
-    const int max_value = 120;
-    const int min_value = 0;
+    const float max_value = 120;
+    const float min_value = 0;
 };
 
 class RotaryEncoderInterface 
@@ -30,7 +30,7 @@ public:
     static void isr1();
     void set_enc_value(int dt_value);
 
-    bool isButtonPressed() const { return _encoder_data.state; };
+    rotary_encoder_s isButtonPressed() const { return _encoder_data; };
 
 private:
     rotary_encoder_s _encoder_data;

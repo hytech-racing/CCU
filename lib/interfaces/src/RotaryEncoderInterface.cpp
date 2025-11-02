@@ -1,9 +1,9 @@
 #include "RotaryEncoderInterface.h"
 #include "CCUData.h"
 
+const int bounce_delay = 50;
 
-
-static void RotaryEncoderInterface::isr1() {
+void RotaryEncoderInterface::isr1() {
     int dt_value = digitalRead(DT);
     RotaryEncoderInterfaceInstance::instance().set_enc_value(dt_value);
 }
@@ -11,11 +11,11 @@ static void RotaryEncoderInterface::isr1() {
 void RotaryEncoderInterface::set_enc_value(int dt_value) {
     if (dt_value == HIGH) {
       if (_encoder_data.encoder_value < _encoder_data.max_value) {
-        _encoder_data.encoder_value++;
+        _encoder_data.encoder_value += 1.0;
       }
     } else {
       if (_encoder_data.encoder_value > _encoder_data.min_value) {
-        _encoder_data.encoder_value--;
+        _encoder_data.encoder_value -= 1.0;
       }
     }
 }
@@ -23,7 +23,6 @@ void RotaryEncoderInterface::set_enc_value(int dt_value) {
 void RotaryEncoderInterface::setupEncoder() {
     _encoder_data.encoder_value = 0;
     _encoder_data.state = false;
-    Serial.begin(9600);
     pinMode(CLK, INPUT_PULLUP);
     pinMode(DT, INPUT_PULLUP);
     pinMode(SW, INPUT_PULLUP);
@@ -32,12 +31,12 @@ void RotaryEncoderInterface::setupEncoder() {
 }
 
 void RotaryEncoderInterface::updateEncoder() {
-    static int prev_value = -1;
+    static float prev_value = -1;
 
     int btn_state = digitalRead(SW);
 
     noInterrupts();
-    int current_value = _encoder_data.encoder_value;
+    float current_value = _encoder_data.encoder_value;
     _ccu_data.encoder_value = current_value;
     interrupts();
 
@@ -47,7 +46,7 @@ void RotaryEncoderInterface::updateEncoder() {
     prev_value = current_value;
 
     if (btn_state == LOW) {
-        if (millis() - _encoder_data.last_button_press > 50) {
+        if (millis() - _encoder_data.last_button_press > bounce_delay) {
             _encoder_data.state = true; //or = !_encoder_data.state
             Serial.println("Button pressed");
         }
