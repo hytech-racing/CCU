@@ -5,6 +5,8 @@
 
 #include "ACUInterface.h"
 
+#include "RotaryEncoderInterface.h"
+
 #include "SharedFirmwareTypes.h"
 
 #ifdef TEENSY_OPT_SMALLEST_CODE

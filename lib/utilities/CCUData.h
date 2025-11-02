@@ -7,8 +7,8 @@ enum class ChargingState_e
 {
     NOT_CHARGING = 0,
     CHARGING =1,
-    DONE_CHARGING =2
-    MANUAL_CHARGING =3;
+    DONE_CHARGING =2,
+    MANUAL_CHARGING =3
 };
 
 struct CCUData

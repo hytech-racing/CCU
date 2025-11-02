@@ -15,23 +15,28 @@ struct rotary_encoder_s {
     volatile bool state = false;
     volatile int encoder_value = 0;
     unsigned long last_button_press = 0;
-    constexpr int max_value = 120;
-    constexpr int min_value = 0;
+    const int max_value = 120;
+    const int min_value = 0;
 };
 
 class RotaryEncoderInterface 
 {
 public:
-    void setupEncoder();
-    void updateEncoder(CCUData &_ccu_data);
-    void isr1();
+    RotaryEncoderInterface(CCUData &ccu_data) :
+    _ccu_data(ccu_data) {};
 
-    bool isButtonPressed() const { return _encoder_data.state; }
+    void setupEncoder();
+    void updateEncoder();
+    static void isr1();
+    void set_enc_value(int dt_value);
+
+    bool isButtonPressed() const { return _encoder_data.state; };
+
 private:
     rotary_encoder_s _encoder_data;
-    CCU_Data &_ccu_data;
-}
+    CCUData &_ccu_data;
+};
 
-using RotaryEncoderInterface = etl::singleton<RotaryEncoderInterface>;
+using RotaryEncoderInterfaceInstance = etl::singleton<RotaryEncoderInterface>;
 
 #endif
