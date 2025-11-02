@@ -30,7 +30,7 @@ public:
     static void isr1();
     void set_enc_value(int dt_value);
 
-    rotary_encoder_s isButtonPressed() const { return _encoder_data; };
+    bool isButtonPressed() const { return _encoder_data.state; };
 
 private:
     rotary_encoder_s _encoder_data;

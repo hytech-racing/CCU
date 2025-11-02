@@ -23,7 +23,7 @@ void MainChargeSystem::calculate_charge_current() {
    */
   bool acu_shutdown_low = ACUInterfaceInstance::instance().get_latest_data().acu_state == 1; //NOLINT
   bool rotary_state = false;
-  rotary_state = RotaryEncoderInterfaceInstance::instance().isButtonPressed().state;
+  rotary_state = RotaryEncoderInterfaceInstance::instance().isButtonPressed();
   
   bool voltage_reached = (high_voltage >= _ccu_data.cutoff_voltage) || (ACUInterfaceInstance::instance().get_latest_data().total_voltage > _ccu_data.max_pack_voltage); //NOLINT
   if (shutdown_low || acu_shutdown_low)
