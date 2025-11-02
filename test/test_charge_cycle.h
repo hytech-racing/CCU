@@ -3,6 +3,7 @@
 
 #include "MainChargeSystem.h"
 #include "ACUInterface.h"
+#include "RotaryEncoderInterface.h"
 #include "ChargerInterface.h"
 #include <gtest/gtest.h>
 #include <iostream>
