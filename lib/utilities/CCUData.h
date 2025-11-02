@@ -8,6 +8,7 @@ enum class ChargingState_e
     NOT_CHARGING = 0,
     CHARGING =1,
     DONE_CHARGING =2
+    MANUAL_CHARGING =3;
 };
 
 struct CCUData
@@ -19,6 +20,7 @@ struct CCUData
   static constexpr float charger_current_max = 120; //120 = 3.4 amps
   static constexpr float safe_charging_current = 15;
   float calculated_charge_current = 0;
+  float encoder_value = 0;
   static constexpr float min_pack_voltage = 403; //need to double check this number
   static constexpr float max_pack_voltage = 530; 
   static constexpr const int SHDN_E_READ = 4;
