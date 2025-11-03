@@ -28,11 +28,11 @@ void DisplayInterface::display_data() {
     
 
     Display.print("Cell Voltage max: ");
-    Display.println(ACUInterfaceInstance::instance().get_latest_data().high_voltage, 3);
+    Display.println(ACUInterfaceInstance::instance().get_latest_data().max_cell_voltage, 3);
 
    
     Display.print("Cell Voltage min: ");
-    Display.println(ACUInterfaceInstance::instance().get_latest_data().low_voltage, 3);
+    Display.println(ACUInterfaceInstance::instance().get_latest_data().min_cell_voltage, 3);
  
 
     Display.print("Cell Voltage avg: ");
@@ -40,7 +40,7 @@ void DisplayInterface::display_data() {
 
 
     Display.print("Cell Voltage delta: ");
-    Display.println((ACUInterfaceInstance::instance().get_latest_data().high_voltage - ACUInterfaceInstance::instance().get_latest_data().low_voltage), 3);
+    Display.println((ACUInterfaceInstance::instance().get_latest_data().max_cell_voltage - ACUInterfaceInstance::instance().get_latest_data().min_cell_voltage), 3);
 
 
     Display.print("Total pack Volts: ");

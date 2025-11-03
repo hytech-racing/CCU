@@ -71,14 +71,14 @@ void ccu_CAN_recv(CANInterfaces &interfaces, const CAN_message_t &msg, unsigned 
         interfaces.acu_interface.receive_onboard_temps_message(msg, millis);
         break;
     }
-    case BMS_DETAILED_TEMPS_CANID:
+    case BMS_CHIP_TEMPS_CANID:
     {
-        interfaces.acu_interface.receive_detailed_temps_message(msg, millis);
+        interfaces.acu_interface.receive_current_temps_message(msg, millis);
         break;
     }
-    case BMS_ONBOARD_DETAILED_TEMPS_CANID:
+    case BMS_ONBOARD_CURRENT_TEMP_CANID:
     {
-        interfaces.acu_interface.receive_onboard_detailed_temps(msg, millis);
+        interfaces.acu_interface.receive_onboard_current_temps(msg, millis);
         break;
     }
     case EM_MEASUREMENT_CANID:

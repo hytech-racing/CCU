@@ -131,13 +131,13 @@ HT_TASK::TaskResponse print_data(const unsigned long& sysMicros, const HT_TASK::
     Serial.print("BMS Status: ");
     Serial.println(static_cast<int>(ACUInterfaceInstance::instance().get_latest_data().acu_state));
     Serial.print("Cell Voltage max: ");
-    Serial.println(ACUInterfaceInstance::instance().get_latest_data().high_voltage);
+    Serial.println(ACUInterfaceInstance::instance().get_latest_data().max_cell_voltage);
     Serial.print("Cell voltage min: ");
-    Serial.println(ACUInterfaceInstance::instance().get_latest_data().low_voltage);
+    Serial.println(ACUInterfaceInstance::instance().get_latest_data().min_cell_voltage);
     Serial.print("Cell voltage average: ");
     Serial.println(ACUInterfaceInstance::instance().get_latest_data().average_voltage);
     Serial.print("Cell voltage max and min delta: ");
-    Serial.println((ACUInterfaceInstance::instance().get_latest_data().high_voltage) - (ACUInterfaceInstance::instance().get_latest_data().low_voltage));
+    Serial.println((ACUInterfaceInstance::instance().get_latest_data().max_cell_voltage) - (ACUInterfaceInstance::instance().get_latest_data().min_cell_voltage));
     Serial.print("Total pack voltage: ");
     Serial.println(ACUInterfaceInstance::instance().get_latest_data().total_voltage);
     Serial.print("Cell temp max: "); //maximum cell temperature that ACU says cells should have

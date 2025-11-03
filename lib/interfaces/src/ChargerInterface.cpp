@@ -18,7 +18,7 @@ void ChargerInterface::receive_charger_data_message(const CAN_message_t& msg, un
     //Serial.println("receieved charger message");
 
     /* Redundancy to avoid flipping between true and false for balancing (charging) enabled */
-    if (ACUInterfaceInstance::instance().get_latest_data().total_voltage >= _ccu_data.max_pack_voltage || ACUInterfaceInstance::instance().get_latest_data().high_voltage >= _ccu_data.cutoff_voltage) {
+    if (ACUInterfaceInstance::instance().get_latest_data().total_voltage >= _ccu_data.max_pack_voltage || ACUInterfaceInstance::instance().get_latest_data().max_cell_voltage >= _ccu_data.cutoff_voltage) {
         _ccu_data.balancing_enabled = false;
     } 
 }

@@ -22,7 +22,7 @@ FlexCAN_Type<CAN1> ACU_CAN;
 
 
 /* Parameters */
-ACUAllData_s acu_all_data;
+ACUAllDataType_s acu_all_data;
 
 
 /* Systems */
