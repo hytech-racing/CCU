@@ -2,6 +2,7 @@
 #define MAINCHARGE_H
 
 #include "CCUData.h"
+#include "ACUData.h"
 
 #include "ACUInterface.h"
 
@@ -31,6 +32,7 @@ class MainChargeSystem {
     void calculate_charge_current(); 
 
   private:
+  
     const float _MAXIMUM_NEVER_EXCEED_CURRENT = 25; //25 is a tentative amp value based on 6kw at 240 volts, may need to be adjusted depending on voltage
     float _target_voltage_per_cell; //final voltage that we should charge to
     float _max_allowable_cell_temperature;

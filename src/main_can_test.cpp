@@ -1,6 +1,6 @@
 #include <Arduino.h>
 
-#include "CCUCANInterfaceImpl.h"
+#include "CCUCANInterface.h"
 
 FlexCAN_T4<CAN1> MAIN_CAN;
 

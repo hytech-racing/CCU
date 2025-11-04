@@ -12,7 +12,7 @@
 #include "ht_sched.hpp"
 #include "ht_task.hpp"
 #include "ChargerStateMachine.h"
-#include "CCUCANInterfaceImpl.h"
+#include "CCUCANInterface.h"
 #include "CCUTasks.h"
 
 FlexCAN_Type<CAN2> CHARGER_CAN; // gets defined in main as of right now
@@ -33,7 +33,7 @@ qn::EthernetUDP udp; //setup of qn namespace
 /* Scheduler Setup */
 HT_SCHED::Scheduler& scheduler = HT_SCHED::Scheduler::getInstance();
 
-etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)> main_can_recv = etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)>::create<CCUCANInterfaceImpl::ccu_CAN_recv>();
+etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)> main_can_recv = etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)>::create<CCUCANInterface::ccu_CAN_recv>();
 
 
 
@@ -69,8 +69,8 @@ void setup() {
   scheduler.schedule(send_all_data);
   //Serial.println("setup ok");
 
-  handle_CAN_setup(ACU_CAN, CCUConstants::CAN_BAUDRATE, &CCUCANInterfaceImpl::on_acu_can_receive);
-  handle_CAN_setup(CHARGER_CAN, CCUConstants::CAN_BAUDRATE, &CCUCANInterfaceImpl::on_charger_can_receive);
+  handle_CAN_setup(ACU_CAN, CCUConstants::CAN_BAUDRATE, &CCUCANInterface::on_acu_can_receive);
+  handle_CAN_setup(CHARGER_CAN, CCUConstants::CAN_BAUDRATE, &CCUCANInterface::on_charger_can_receive);
 
 }
 

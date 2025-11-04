@@ -3,27 +3,28 @@
 #include <cmath>
 
 
+using ACUInterfaceInstance_t = ACUInterfaceInstance<ACUConstants::NUM_CELLS, ACUConstants::NUM_CELLTEMPS, ACUConstants::NUM_CHIPS>;
 void MainChargeSystem::calculate_charge_current() {
 
   float average_voltage = 0;
-  float low_voltage = 0;
-  float high_voltage = 0;
+  float min_cell_voltage = 0;
+  float max_cell_voltage = 0;
   float total_voltage = 0;
   float calculated_charge_current = 0; 
 
-  average_voltage = ACUInterfaceInstance::instance().get_latest_data().average_voltage; //average voltage across the cells
-  low_voltage = ACUInterfaceInstance::instance().get_latest_data().min_cell_voltage; //the lowest voltage in any of the cells
-  high_voltage = ACUInterfaceInstance::instance().get_latest_data().max_cell_voltage; //the highest voltage in any of the cells
-  total_voltage = ACUInterfaceInstance::instance().get_latest_data().total_voltage; //the total voltage in the pack
+  average_voltage = ACUInterfaceInstance_t::instance().get_latest_data().average_voltage; //average voltage across the cells
+  min_cell_voltage =  ACUInterfaceInstance_t::instance().get_latest_data().min_cell_voltage; //the lowest voltage in any of the cells
+  max_cell_voltage = ACUInterfaceInstance_t::instance().get_latest_data().max_cell_voltage; //the highest voltage in any of the cells
+  total_voltage = ACUInterfaceInstance_t::instance().get_latest_data().total_voltage; //the total voltage in the pack
 
   bool shutdown_low = (digitalRead(_ccu_data.SHDN_E_READ) != HIGH); //e-stop on charge cart
 
-  /** acu_state comes from the bms_status message. If shutdown is low on ACU (HVP is unplugged), acu_state = 1.
-   *  If acu_state = 2, we should/are safe to be charging
+  /** acu_state comes from the bms_status message. If shutdown is low on ACU (HVP is unplugged), acu_state = 0.
+   *  If acu_state = 1, we should/are safe to be charging
    */
-  bool acu_shutdown_low = ACUInterfaceInstance::instance().get_latest_data().acu_state == 1; //NOLINT
+  bool acu_shutdown_low = !ACUInterfaceInstance_t::instance().get_latest_data().bms_charging_state; //NOLINT
   
-  bool voltage_reached = (high_voltage >= _ccu_data.cutoff_voltage) || (ACUInterfaceInstance::instance().get_latest_data().total_voltage > _ccu_data.max_pack_voltage); //NOLINT
+  bool voltage_reached = (max_cell_voltage >= _ccu_data.cutoff_voltage) || (ACUInterfaceInstance_t::instance().get_latest_data().total_voltage > _ccu_data.max_pack_voltage); //NOLINT
   if (shutdown_low || acu_shutdown_low)
   {
     _ccu_data.charging_state = ChargingState_e::NOT_CHARGING;

@@ -1,5 +1,5 @@
 #include "ChargerInterface.h"
-#include "CCUCANInterfaceImpl.h"
+#include "CCUCANBuffers.h"
 
 //MainChargeSystem main_charge_system(ccu_params.target_voltage_per_cell, ccu_params.max_allowable_cell_temperature); //initializing a MainChargeSystem object to access the calculate_charge_current function
 
@@ -18,9 +18,9 @@ void ChargerInterface::receive_charger_data_message(const CAN_message_t& msg, un
     //Serial.println("receieved charger message");
 
     /* Redundancy to avoid flipping between true and false for balancing (charging) enabled */
-    if (ACUInterfaceInstance::instance().get_latest_data().total_voltage >= _ccu_data.max_pack_voltage || ACUInterfaceInstance::instance().get_latest_data().max_cell_voltage >= _ccu_data.cutoff_voltage) {
-        _ccu_data.balancing_enabled = false;
-    } 
+    // if (ACUInterfaceInstance::instance().get_latest_data().total_voltage >= _ccu_data.max_pack_voltage || ACUInterfaceInstance::instance().get_latest_data().max_cell_voltage >= _ccu_data.cutoff_voltage) {
+    //     _ccu_data.balancing_enabled = false;
+    // } 
 }
 
 void ChargerInterface::enqueue_charging_data()
@@ -35,5 +35,5 @@ void ChargerInterface::enqueue_charging_data()
     charger_control.max_charging_voltage_low = 0xB4; //NOLINT (see comment)
     charger_control.max_charging_current_high = 0; // only "low" is being used/harnessed in
     charger_control.max_charging_current_low = _ccu_data.calculated_charge_current; //NOLINT (this works)  
-    CAN_util::enqueue_msg(&charger_control, &Pack_CHARGER_CONTROL_hytech, CCUCANInterfaceImpl::charger_can_tx_buffer);
+    CAN_util::enqueue_msg(&charger_control, &Pack_CHARGER_CONTROL_hytech, CCUCANInterface::charger_can_tx_buffer);
 }

@@ -101,17 +101,17 @@ namespace fake_data
 
 namespace MockCCUInterface
 {
-    ACUAllData_s mock_receive_message(float volt_array[126], float temp_array[48]){
+    ACUAllDataType_s mock_receive_message(float volt_array[126], float temp_array[48]){
         
-        ACUAllData_s out;
+        ACUAllDataType_s out;
 
         for (int i = 0; i < 126; i++)
         {
-            out.voltages[i] = volt_array[i];
+            out.cell_voltages[i] = volt_array[i];
         }
         for (int i = 0; i < 48; i++)
         {
-            out.cell_temperatures[i] = temp_array[i];
+            out.cell_temps[i] = temp_array[i];
         }
         return out;
     }

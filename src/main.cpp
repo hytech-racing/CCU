@@ -11,7 +11,7 @@
 #include "ht_sched.hpp"
 #include "ht_task.hpp"
 #include "ChargerStateMachine.h"
-#include "CCUCANInterfaceImpl.h"
+#include "CCUCANInterface.h"
 #include "CCUTasks.h"
 #include "SystemTimeInterface.h"
 #include "DisplayInterface.h"
@@ -74,8 +74,8 @@ void setup() {
   scheduler.schedule(calculate_charge_current_task);
   scheduler.schedule(update_display_task);
 
-  handle_CAN_setup(ACU_CAN, CCUConstants::CAN_BAUDRATE, &CCUCANInterfaceImpl::on_acu_can_receive);
-  handle_CAN_setup(CHARGER_CAN, CCUConstants::CHARGER_CAN_BAUDRATE, &CCUCANInterfaceImpl::on_charger_can_receive);
+  handle_CAN_setup(ACU_CAN, CCUConstants::CAN_BAUDRATE, &CCUCANInterface::on_acu_can_receive);
+  handle_CAN_setup(CHARGER_CAN, CCUConstants::CHARGER_CAN_BAUDRATE, &CCUCANInterface::on_charger_can_receive);
 }
 
 
