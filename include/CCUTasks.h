@@ -17,9 +17,6 @@
 #include "MainChargeSystem.h"
 #include "DisplayInterface.h"
 
-using ACUInterfaceInstance_t = ACUInterfaceInstance<ACUConstants::NUM_CELLS, ACUConstants::NUM_CELLTEMPS, ACUConstants::NUM_CHIPS>;
-using CANInterfacesInstance_t = CANInterfacesInstance<ACUConstants::NUM_CELLS, ACUConstants::NUM_CELLTEMPS, ACUConstants::NUM_CHIPS>;
-using CANInterfaces_t = CANInterfaces<ACUConstants::NUM_CELLS, ACUConstants::NUM_CELLTEMPS, ACUConstants::NUM_CHIPS>;
 HT_TASK::TaskResponse intitialize_all_interfaces();
 
 HT_TASK::TaskResponse init_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);

@@ -8,24 +8,9 @@
 #include <etl/delegate.h>
 #include "CANInterface.h"
 #include "ACUData.h"
+#include "CCUData.h"
 
-namespace acu_interface_defaults {
-    constexpr const size_t VOLTAGE_CELLS_PER_GROUP = 3;
-    constexpr const size_t VOLTAGE_CELL_GROUPS_PER_IC_EVEN = 4;
-    constexpr const size_t VOLTAGE_CELL_GROUPS_PER_IC_ODD = 3;
-    constexpr const size_t TEMP_CELL_GROUPS_PER_IC = 2;
-    constexpr const size_t TEMP_CELLS_PER_GROUP = 2;
-};
 
-struct ACUInterfaceParams_s {
-    size_t voltage_cell_groups_per_ic_even;
-    size_t voltage_cell_groups_per_ic_odd;
-    size_t temp_cell_groups_per_ic;
-    size_t voltage_cells_per_group;
-    size_t temp_cells_per_group;
-};
-
-template<size_t num_cells, size_t num_celltemps, size_t num_chips>
 struct ACUInterfaceData_s 
 {
     /* ACU Status Message */
@@ -45,25 +30,26 @@ struct ACUInterfaceData_s
     celsius min_cell_temp;
 
     /* BMS Detailed Data for Comp */
-    std::array<volt, num_cells> cell_voltages;
-    std::array<celsius, num_celltemps> cell_group_temps;
-    std::array<celsius, num_chips> board_temps;
+
+    size_t cell_voltage_current_chip;
+    volt cell_voltage_1;
+    volt cell_voltage_2;
+    volt cell_voltage_3;
+
+    size_t cell_group_temp_current_chip;
+    celsius cell_group_temp_1;
+    celsius cell_group_temp_2;
+
+    size_t board_temp_current_chip;
+    celsius board_temp;
 
 };
 
-template<size_t num_cells, size_t num_celltemps, size_t num_chips>
 class ACUInterface
 {
 public:
-    using ACUInterfaceData_t = ACUInterfaceData_s<num_cells, num_celltemps, num_chips>;
 
-    ACUInterface(unsigned long init_millis, unsigned long max_heartbeat_interval_ms, CCUData &ccu_data, ACUInterfaceParams_s params = {
-                    .voltage_cell_groups_per_ic_even = acu_interface_defaults::VOLTAGE_CELL_GROUPS_PER_IC_EVEN,
-                    .voltage_cell_groups_per_ic_odd = acu_interface_defaults::VOLTAGE_CELL_GROUPS_PER_IC_ODD,
-                    .temp_cell_groups_per_ic = acu_interface_defaults::TEMP_CELL_GROUPS_PER_IC,
-                    .voltage_cells_per_group = acu_interface_defaults::VOLTAGE_CELLS_PER_GROUP,
-                    .temp_cells_per_group = acu_interface_defaults::TEMP_CELLS_PER_GROUP
-                }) : _max_heartbeat_interval_ms(max_heartbeat_interval_ms), _ccu_data(ccu_data), _acu_params(params)
+    ACUInterface(unsigned long init_millis, unsigned long max_heartbeat_interval_ms, CCUData &ccu_data) : _max_heartbeat_interval_ms(max_heartbeat_interval_ms), _ccu_data(ccu_data)
     {
         _curr_data.last_recv_status_millis = 0;
         _curr_data.heartbeat_ok = false; // start out false
@@ -92,13 +78,12 @@ public:
     void receive_board_temps(const CAN_message_t& msg, unsigned long curr_millis);
 
 
-    ACUInterfaceData_t get_latest_data() {return _curr_data;};
+    ACUInterfaceData_s get_latest_data() {return _curr_data;};
 
     void enqueue_ccu_status_data();
 
 private:
-    ACUInterfaceParams_s _acu_params;
-    ACUInterfaceData_t _curr_data;
+    ACUInterfaceData_s _curr_data;
     CCUData &_ccu_data;
 
     unsigned long _max_heartbeat_interval_ms;
@@ -106,10 +91,6 @@ private:
         
 };
 
-template<size_t num_cells, size_t num_celltemps, size_t num_chips>
-using ACUInterfaceInstance = etl::singleton<ACUInterface<num_cells, num_celltemps, num_chips>>;
+using ACUInterfaceInstance = etl::singleton<ACUInterface>;
 
-using ACUInterfaceInstance_t = ACUInterfaceInstance<ACUConstants::NUM_CELLS, ACUConstants::NUM_CELLTEMPS, ACUConstants::NUM_CHIPS>;
-
-#include "ACUInterface.tpp"
 #endif /* ACUINTERFACE_H */
