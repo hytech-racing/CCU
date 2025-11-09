@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "test_charge_cycle.h"
+#include "test_rotary_encoder.h"
 
 
 
