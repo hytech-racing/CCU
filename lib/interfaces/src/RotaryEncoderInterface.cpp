@@ -31,8 +31,6 @@ void RotaryEncoderInterface::setupEncoder() {
 }
 
 void RotaryEncoderInterface::updateEncoder() {
-    static float prev_value = -1;
-
     int btn_state = digitalRead(SW);
 
     noInterrupts();
@@ -40,15 +38,9 @@ void RotaryEncoderInterface::updateEncoder() {
     _ccu_data.encoder_value = current_value;
     interrupts();
 
-    if (current_value != prev_value) {
-         Serial.println(current_value);
-    }
-    prev_value = current_value;
-
     if (btn_state == LOW) {
         if (millis() - _encoder_data.last_button_press > bounce_delay) {
-            _encoder_data.state = true; //or = !_encoder_data.state
-            Serial.println("Button pressed");
+            _encoder_data.state = !_encoder_data.state;
         }
         _encoder_data.last_button_press = millis();
     }

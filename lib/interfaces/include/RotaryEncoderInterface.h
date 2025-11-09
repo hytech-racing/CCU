@@ -1,6 +1,7 @@
 #ifndef ROTARYENCODERINTERFACE_H
 #define ROTARYENCODERINTERFACE_H
 
+#include <Arduino.h>
 #include <Encoder.h> //LOOK INTO INCLUDE MORE
 #include "CCUData.h"
 
