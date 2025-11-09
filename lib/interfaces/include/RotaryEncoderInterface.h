@@ -2,15 +2,15 @@
 #define ROTARYENCODERINTERFACE_H
 
 #include <Arduino.h>
-#include <Encoder.h> //LOOK INTO INCLUDE MORE
+#include <Encoder.h>
 #include "CCUData.h"
 
 #include "etl/singleton.h"
 #include <etl/delegate.h>
 
-#define CLK 2 //change based on actual pin used
-#define DT 3 //change based on actual pin used
-#define SW 4 //change based on actual pin used
+#define CLK 21 //change based on actual pin used
+#define DT 20 //change based on actual pin used
+#define SW 19 //change based on actual pin used
 
 struct rotary_encoder_s {
     volatile bool state = false;
@@ -24,7 +24,7 @@ class RotaryEncoderInterface
 {
 public:
     RotaryEncoderInterface(CCUData &ccu_data) :
-    _ccu_data(ccu_data) {};
+    _ccu_data(ccu_data) {Serial.begin(9600);};
 
     void setupEncoder();
     void updateEncoder();
