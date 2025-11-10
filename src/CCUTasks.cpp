@@ -129,7 +129,7 @@ HT_TASK::TaskResponse print_data(const unsigned long& sysMicros, const HT_TASK::
     Serial.print("Charging Status: ");
     Serial.println(static_cast<int>(ChargerStateMachineInstance::instance().get_state()));
     Serial.print("BMS Status: ");
-    Serial.println(static_cast<int>(ACUInterfaceInstance::instance().get_latest_data().bms_charging_state));
+    Serial.println(static_cast<int>(ACUInterfaceInstance::instance().get_latest_data().acu_shdn_out_voltage_high));
     Serial.print("Cell Voltage max: ");
     Serial.println(ACUInterfaceInstance::instance().get_latest_data().max_cell_voltage);
     Serial.print("Cell voltage min: ");

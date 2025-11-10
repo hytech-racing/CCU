@@ -11,7 +11,7 @@ void ACUInterface::reset_acu_heartbeat()
 void ACUInterface::receive_status_message(const CAN_message_t &msg, unsigned long curr_millis) {
     BMS_STATUS_t bms_status_msg;
     Unpack_BMS_STATUS_hytech(&bms_status_msg, &msg.buf[0], msg.len);
-    _curr_data.bms_charging_state = bms_status_msg.charging_state;
+    _curr_data.acu_shdn_out_voltage_high = bms_status_msg.shdn_out_voltage_state;
 
     // As long as we're using millis() function, loop overrun not a concern
     
