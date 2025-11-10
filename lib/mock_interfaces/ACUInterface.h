@@ -9,7 +9,7 @@ struct ACUInterfaceData_s
 {
     // Mock shape; include aliases to match production field names used by app code
     uint16_t acu_state = 0;                 // for legacy tests
-    bool bms_charging_state = true;         // production expects this boolean
+    bool acu_shdn_out_voltage_high = true;         // production expects this boolean
 
     volt average_voltage = 0;
     volt total_voltage = 0;
@@ -39,7 +39,7 @@ public:
         if (data.max_cell_voltage == 0) data.max_cell_voltage = data.high_voltage;
         if (data.low_voltage == 0)      data.low_voltage      = data.min_cell_voltage;
         if (data.high_voltage == 0)     data.high_voltage     = data.max_cell_voltage;
-        // Default bms_charging_state based on legacy acu_state if not explicitly set by tests
+        // Default acu_shdn_out_voltage_high based on legacy acu_state if not explicitly set by tests
         // acu_state==1 means "ok to charge" in comments; interpret non-zero as charging ok
         _curr_data = data;
     }
