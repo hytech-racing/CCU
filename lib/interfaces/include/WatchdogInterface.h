@@ -23,7 +23,7 @@ public:
     WatchdogInterface(
         pin sw_ok_pin = WATCHDOG_PARAMS::SOFTWARE_OK_PIN,
         pin wd_kick_pin = WATCHDOG_PARAMS::WATCHDOG_PIN,
-        const unsigned long kick_interval_ms = 10UL) : 
+        const unsigned long kick_interval_ms = WATCHDOG_PARAMS::WATCHDOG_KICK_INTERVAL_MS) : 
             teensy_wd_pin(wd_kick_pin),
             teensy_sw_pin(sw_ok_pin),
             _watchdog_time(0), 
