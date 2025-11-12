@@ -34,7 +34,7 @@ class ChargerStateMachine
 
         CCUData &_ccu_data;
 
-        
+
 };
 
 using ChargerStateMachineInstance = etl::singleton<ChargerStateMachine>;

@@ -11,7 +11,7 @@ ChargingState_e ChargerStateMachine::tick_state_machine(unsigned long current_mi
             //pinMode(_ccu_data.SHDN_E_READ, OUTPUT);
 
             if (_ccu_data.balancing_enabled) {
-                set_state(ChargingState_e::CHARGING_WITH_BALANCING, current_millis);
+                set_state(ChargingState_e::CHARGING, current_millis);
                 break;
             }
 
@@ -21,30 +21,27 @@ ChargingState_e ChargerStateMachine::tick_state_machine(unsigned long current_mi
 
         }
 
-        case ChargingState_e::CHARGING_WITH_BALANCING:
+        case ChargingState_e::CHARGING:
         {
             if (!(_ccu_data.balancing_enabled)) {
-                set_state(ChargingState_e::CHARGING_NO_BALANCING, current_millis);
+                set_state(ChargingState_e::DONE_CHARGING, current_millis);
                 break;
             } 
 
-            // Code that must run in CHARGING_WITH_BALANCING state (sending CAN messages, checking for exit condition, etc)
+            // Code that must run in CHARGING state (sending CAN messages, checking for exit condition, etc)
 
             break;
         }
 
-        case ChargingState_e::CHARGING_NO_BALANCING:
+        case ChargingState_e::DONE_CHARGING:
         {
             if (_ccu_data.balancing_enabled) {
-                set_state(ChargingState_e::CHARGING_WITH_BALANCING, current_millis);
+                set_state(ChargingState_e::CHARGING, current_millis);
                 break;
 
-            } else {
-                set_state(ChargingState_e::CHARGING_NO_BALANCING, current_millis);
-                break;
             }
-
-            // Code that must run in CHARGING_NO_BALANCING state
+            
+            // Code that must run in DONE_CHARGING state
 
         }
         default: // Should never occur
@@ -74,11 +71,11 @@ void ChargerStateMachine::handle_exit_logic(ChargingState_e prev_state, unsigned
             //pinMode(_ccu_data.SHDN_E_READ, OUTPUT);
             break;
         }
-        case ChargingState_e::CHARGING_NO_BALANCING:
+        case ChargingState_e::DONE_CHARGING:
         {
             break;
         }
-        case ChargingState_e::CHARGING_WITH_BALANCING:
+        case ChargingState_e::CHARGING:
         {
             break;
         }
@@ -99,11 +96,11 @@ void ChargerStateMachine::handle_entry_logic(ChargingState_e new_state, unsigned
            // pinMode(_ccu_data.SHDN_E_READ, OUTPUT);
             break;
         }
-        case ChargingState_e::CHARGING_NO_BALANCING:
+        case ChargingState_e::DONE_CHARGING:
         {
             break;
         }
-        case ChargingState_e::CHARGING_WITH_BALANCING:
+        case ChargingState_e::CHARGING:
         {
             break;
         }
