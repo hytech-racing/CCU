@@ -10,7 +10,7 @@ ChargingState_e ChargerStateMachine::tick_state_machine(unsigned long current_mi
         {
             //pinMode(_ccu_data.SHDN_E_READ, OUTPUT);
 
-            if (_ccu_data.balancing_enabled) {
+            if (_ccu_data.charging_enabled) {
                 set_state(ChargingState_e::CHARGING, current_millis);
                 break;
             }
@@ -23,7 +23,7 @@ ChargingState_e ChargerStateMachine::tick_state_machine(unsigned long current_mi
 
         case ChargingState_e::CHARGING:
         {
-            if (!(_ccu_data.balancing_enabled)) {
+            if (!(_ccu_data.charging_enabled)) {
                 set_state(ChargingState_e::DONE_CHARGING, current_millis);
                 break;
             } 
@@ -35,12 +35,12 @@ ChargingState_e ChargerStateMachine::tick_state_machine(unsigned long current_mi
 
         case ChargingState_e::DONE_CHARGING:
         {
-            if (_ccu_data.balancing_enabled) {
+            if (_ccu_data.charging_enabled) {
                 set_state(ChargingState_e::CHARGING, current_millis);
                 break;
 
             }
-            
+
             // Code that must run in DONE_CHARGING state
 
         }

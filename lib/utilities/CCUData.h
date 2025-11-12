@@ -5,7 +5,7 @@
 #include "ChargerStateMachine.h"
 struct CCUData
 {
-  bool balancing_enabled = false; //tells ACU whether balancing is allowed or not
+  bool charging_enabled = false; //tells ACU whether charging is allowed or not
   ChargingState_e charging_state = ChargingState_e::NOT_CHARGING;
   static constexpr float max_allowable_cell_temperature = 40; //need data for this
   static constexpr float cutoff_voltage = 4.2; //max voltage that cells can be at - if high = this, stop charging
@@ -17,7 +17,7 @@ struct CCUData
   static constexpr const int SHDN_E_READ = 4;
   float max_cell_temp = 0;
   float min_cell_temp = 0; //value given for initialization
-  static constexpr float balancing_voltage = 3.8; //voltage at which cells begin balancing
+  static constexpr float charging_voltage = 3.8; //voltage at which cells begin charging
   float max_board_temp;
 };
 

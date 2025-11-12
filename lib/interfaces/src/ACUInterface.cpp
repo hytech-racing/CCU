@@ -75,6 +75,6 @@ void ACUInterface::receive_onboard_detailed_temps(const CAN_message_t& msg, unsi
 void ACUInterface::enqueue_ccu_status_data()
 {
     CCU_STATUS_t ccu_status = {};
-    ccu_status.charger_enabled = _ccu_data.balancing_enabled; // Treat this as a balancing_enabled boolean
+    ccu_status.charger_enabled = _ccu_data.charging_enabled; // Treat this as a charging_enabled boolean
     CAN_util::enqueue_msg(&ccu_status, &Pack_CCU_STATUS_hytech, CCUCANInterfaceImpl::acu_can_tx_buffer);
 }
