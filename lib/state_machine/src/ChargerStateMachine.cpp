@@ -5,11 +5,13 @@ constexpr const int SHUTDOWN_LOW = 1;
 //logic for changing states - still need to account for dial_position
 ChargingState_e ChargerStateMachine::tick_state_machine(unsigned long current_millis) 
 {
-    const float high_voltage = ACUInterfaceInstance::instance().get_latest_data().high_voltage; //NOLINT
-    const float total_voltage = ACUInterfaceInstance::instance().get_latest_data().total_voltage; //NOLINT
+    const auto& latest_data = ACUInterfaceInstance::instance().get_latest_data();
+
+    const float high_voltage = latest_data.high_voltage; //NOLINT
+    const float total_voltage = latest_data.total_voltage; //NOLINT
 
     // acu_state comes from bms_status. If shutdown is low on ACU (HVP unplugged), acu_state = 1. Else if acu_state = 2, safe to charge.
-    const bool acu_shutdown_low = ACUInterfaceInstance::instance().get_latest_data().acu_state == SHUTDOWN_LOW;
+    const bool acu_shutdown_low = latest_data.acu_state == SHUTDOWN_LOW;
     const bool shutdown_low = (digitalRead(_ccu_data.SHDN_E_READ) != HIGH); //e-stop on charge cart
     const bool voltage_reached = (high_voltage >= _ccu_data.cutoff_voltage) || (ACUInterfaceInstance::instance().get_latest_data().total_voltage > _ccu_data.max_pack_voltage); //NOLINT
 
