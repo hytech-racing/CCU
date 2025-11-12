@@ -35,7 +35,7 @@ void MainChargeSystem::calculate_charge_current() {
   }
   
 
-  /* Tells the charger to stop charging if the shutdown button is pressed or one of the cell voltags is too high */
+  /* Tells the charger to stop charging if the shutdown button is pressed or one of the cell voltages is too high */
   if (voltage_reached || shutdown_low || acu_shutdown_low) {  //ACU will cause a BMS fault if there is a cell or board temp that is too high
     _ccu_data.calculated_charge_current = 0;
     _ccu_data.balancing_enabled = false;

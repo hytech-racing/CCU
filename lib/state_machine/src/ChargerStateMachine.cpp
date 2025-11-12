@@ -2,29 +2,29 @@
 
 
 //logic for changing states - still need to account for dial_position
-ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_millis) 
+ChargingState_e ChargerStateMachine::tick_state_machine(unsigned long current_millis) 
 {
     switch (_current_state) //takes in the _current_state variables and matches it to each case
     {
-        case ChargerState_e::INITIAL:
+        case ChargingState_e::NOT_CHARGING:
         {
             //pinMode(_ccu_data.SHDN_E_READ, OUTPUT);
 
             if (_ccu_data.balancing_enabled) {
-                set_state(ChargerState_e::CHARGING_WITH_BALANCING, current_millis);
+                set_state(ChargingState_e::CHARGING_WITH_BALANCING, current_millis);
                 break;
             }
 
-            // Code that must run in INITIAL state (sending CAN messages, checking exit conditions)
+            // Code that must run in NOT_CHARGING state (sending CAN messages, checking exit conditions)
 
             break;
 
         }
 
-        case ChargerState_e::CHARGING_WITH_BALANCING:
+        case ChargingState_e::CHARGING_WITH_BALANCING:
         {
             if (!(_ccu_data.balancing_enabled)) {
-                set_state(ChargerState_e::CHARGING_NO_BALANCING, current_millis);
+                set_state(ChargingState_e::CHARGING_NO_BALANCING, current_millis);
                 break;
             } 
 
@@ -33,14 +33,14 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
             break;
         }
 
-        case ChargerState_e::CHARGING_NO_BALANCING:
+        case ChargingState_e::CHARGING_NO_BALANCING:
         {
             if (_ccu_data.balancing_enabled) {
-                set_state(ChargerState_e::CHARGING_WITH_BALANCING, current_millis);
+                set_state(ChargingState_e::CHARGING_WITH_BALANCING, current_millis);
                 break;
 
             } else {
-                set_state(ChargerState_e::CHARGING_NO_BALANCING, current_millis);
+                set_state(ChargingState_e::CHARGING_NO_BALANCING, current_millis);
                 break;
             }
 
@@ -56,7 +56,7 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
     return _current_state;
 }
 
-void ChargerStateMachine::set_state(ChargerState_e new_state, unsigned long current_millis) 
+void ChargerStateMachine::set_state(ChargingState_e new_state, unsigned long current_millis) 
 {
     handle_exit_logic(_current_state, current_millis);
     _current_state = new_state;
@@ -65,20 +65,20 @@ void ChargerStateMachine::set_state(ChargerState_e new_state, unsigned long curr
 }
 
 //reset each state as you leave it
-void ChargerStateMachine::handle_exit_logic(ChargerState_e prev_state, unsigned long current_millis)
+void ChargerStateMachine::handle_exit_logic(ChargingState_e prev_state, unsigned long current_millis)
 {
     switch(prev_state)
     {
-        case ChargerState_e::INITIAL:
+        case ChargingState_e::NOT_CHARGING:
         {
             //pinMode(_ccu_data.SHDN_E_READ, OUTPUT);
             break;
         }
-        case ChargerState_e::CHARGING_NO_BALANCING:
+        case ChargingState_e::CHARGING_NO_BALANCING:
         {
             break;
         }
-        case ChargerState_e::CHARGING_WITH_BALANCING:
+        case ChargingState_e::CHARGING_WITH_BALANCING:
         {
             break;
         }
@@ -90,20 +90,20 @@ void ChargerStateMachine::handle_exit_logic(ChargerState_e prev_state, unsigned 
 }
 
 //make sure each state is reset before you enter it
-void ChargerStateMachine::handle_entry_logic(ChargerState_e new_state, unsigned long current_millis)
+void ChargerStateMachine::handle_entry_logic(ChargingState_e new_state, unsigned long current_millis)
 {
     switch(new_state)
     {
-        case ChargerState_e::INITIAL:
+        case ChargingState_e::NOT_CHARGING:
         {
            // pinMode(_ccu_data.SHDN_E_READ, OUTPUT);
             break;
         }
-        case ChargerState_e::CHARGING_NO_BALANCING:
+        case ChargingState_e::CHARGING_NO_BALANCING:
         {
             break;
         }
-        case ChargerState_e::CHARGING_WITH_BALANCING:
+        case ChargingState_e::CHARGING_WITH_BALANCING:
         {
             break;
         }

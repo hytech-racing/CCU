@@ -2,14 +2,7 @@
 #define CCUDATA_H
 
 #include <cstdint>
-
-enum class ChargingState_e
-{
-    NOT_CHARGING = 0,
-    CHARGING =1,
-    DONE_CHARGING =2
-};
-
+#include "ChargerStateMachine.h"
 struct CCUData
 {
   bool balancing_enabled = false; //tells ACU whether balancing is allowed or not
