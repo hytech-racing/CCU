@@ -9,7 +9,6 @@ ChargingState_e ChargerStateMachine::tick_state_machine(unsigned long current_mi
 
     const float high_voltage = latest_data.high_voltage; //NOLINT
     const float total_voltage = latest_data.total_voltage; //NOLINT
-
     // acu_state comes from bms_status. If shutdown is low on ACU (HVP unplugged), acu_state = 1. Else if acu_state = 2, safe to charge.
     const bool acu_shutdown_low = latest_data.acu_state == SHUTDOWN_LOW;
     const bool shutdown_low = (digitalRead(_ccu_data.SHDN_E_READ) != HIGH); //e-stop on charge cart

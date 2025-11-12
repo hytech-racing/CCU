@@ -16,7 +16,7 @@ class ChargerStateMachine
 {
     public:
 
-        ChargerStateMachine(CCUData &ccu_data) :  _ccu_data(ccu_data) {};
+        ChargerStateMachine(CCUData &ccu_data) :  _ccu_data(ccu_data), _current_state(ChargingState_e::NOT_CHARGING) {};
 
         ChargingState_e tick_state_machine(unsigned long current_millis); //need to put these parameters in a struct?
         ChargingState_e get_state() {return _current_state;}
