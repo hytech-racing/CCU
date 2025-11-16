@@ -121,9 +121,17 @@ namespace MockCCUInterface
 
 
 CCUData ccu_data;
-MainChargeSystem mainChargeLoop(ccu_data);
 
-TEST(chargerStateMachineTest, )
+
+TEST(chargerStateMachineTest, notChargingToCharging) {
+    ccu_data.charging_enabled = true;
+    ACUInterfaceInstance::create(millis(), 1000, ccu_data); //init_millis, max_heartbeat_interval_ms, ccu_data
+    ACUInterfaceInstance::instance().set_latest_data({2, 3.8, 3.7, 3.9, 500}) //acu_state, average, low, high, total voltage
+    digitalWrite(CCUData::SHDN_E_READ, HIGH);
+    ChargerStateMachine charger(ccu_data);
+
+    EXPECT_EQ(machine.get_state(), ChargingState_e::NOT_CHARGING);
+}
 
 // TEST(mainChargeTest, calculate_charge_current_can_high_avg) { //should not charge because average cell voltage is too high
 //     ACUInterfaceInstance::create(ccu_data);
@@ -134,7 +142,7 @@ TEST(chargerStateMachineTest, )
 // }
 
 
-//  TEST(mainChargeTest, bothTooHigh){ 
+// TEST(mainChargeTest, bothTooHigh){ 
 //      EXPECT_EQ(mainChargeLoop.calculate_charge_current(MockCCUInterface::mock_receive_message(fake_data::volts_too_much, fake_data::all_temp_high)),0);
 //  };
 
@@ -144,7 +152,7 @@ TEST(chargerStateMachineTest, )
 
 // TEST(mainChargeTest, VoltsTooHigh){  
 //     EXPECT_EQ(mainChargeLoop.calculate_charge_current(MockCCUInterface::mock_receive_message(fake_data::more_volts_too_much, fake_data::good_temp)),0);
-// };x
+// };
 
 // TEST(mainChargeTest, shouldBeTrue){  
 //     EXPECT_NE(mainChargeLoop.calculate_charge_current(MockCCUInterface::mock_receive_message(fake_data::good_volts_high, fake_data::good_temp)),0);
