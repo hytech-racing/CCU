@@ -101,23 +101,23 @@ namespace fake_data
  
 } // namespace fake_ACUAllData_s
 
-namespace MockCCUInterface
-{
-    ACUAllData_s mock_receive_message(float volt_array[126], float temp_array[48]){
+// namespace MockCCUInterface
+// {
+//     ACUAllData_s mock_receive_message(float volt_array[126], float temp_array[48]){
         
-        ACUAllData_s out;
+//         ACUAllData_s out;
 
-        for (int i = 0; i < 126; i++)
-        {
-            out.voltages[i] = volt_array[i];
-        }
-        for (int i = 0; i < 48; i++)
-        {
-            out.cell_temperatures[i] = temp_array[i];
-        }
-        return out;
-    }
-}
+//         for (int i = 0; i < 126; i++)
+//         {
+//             out.voltages[i] = volt_array[i];
+//         }
+//         for (int i = 0; i < 48; i++)
+//         {
+//             out.cell_temperatures[i] = temp_array[i];
+//         }
+//         return out;
+//     }
+// }
 
 
 CCUData ccu_data;
@@ -125,12 +125,12 @@ CCUData ccu_data;
 
 TEST(chargerStateMachineTest, notChargingToCharging) {
     ccu_data.charging_enabled = true;
-    ACUInterfaceInstance::create(millis(), 1000, ccu_data); //init_millis, max_heartbeat_interval_ms, ccu_data
-    ACUInterfaceInstance::instance().set_latest_data({2, 3.8, 3.7, 3.9, 500}) //acu_state, average, low, high, total voltage
+    ACUInterfaceInstance::create(ccu_data); //init_millis, max_heartbeat_interval_ms, ccu_data
+    ACUInterfaceInstance::instance().set_latest_data({2, 3.8, 3.7, 3.9, 500}); //acu_state, average, low, high, total voltage
     digitalWrite(CCUData::SHDN_E_READ, HIGH);
     ChargerStateMachine charger(ccu_data);
 
-    EXPECT_EQ(machine.get_state(), ChargingState_e::NOT_CHARGING);
+    EXPECT_EQ(charger.get_state(), ChargingState_e::NOT_CHARGING);
 }
 
 // TEST(mainChargeTest, calculate_charge_current_can_high_avg) { //should not charge because average cell voltage is too high
@@ -160,3 +160,4 @@ TEST(chargerStateMachineTest, notChargingToCharging) {
 
 
 #endif
+

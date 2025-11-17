@@ -2,7 +2,8 @@
 #define CCUDATA_H
 
 #include <cstdint>
-#include "ChargerStateMachine.h"
+#include "ChargerStates.h"
+
 struct CCUData
 {
   bool charging_enabled = false; //tells ACU whether charging is allowed or not

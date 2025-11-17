@@ -5,13 +5,8 @@
 #include "CCUData.h"
 #include "ACUInterface.h"
 #include "ChargerInterface.h"
-
-enum class ChargingState_e { //NOLINT
-    NOT_CHARGING = 0, //not charging
-    CHARGING = 1, //charging
-    DONE_CHARGING = 2, //done charging
-};
-
+#include "mockArduino.h"
+#include "ChargerStates.h"
 class ChargerStateMachine
 {
     public:

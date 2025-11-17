@@ -1,4 +1,5 @@
 #include "ChargerStateMachine.h"
+#include "mockArduino.h"
 
 constexpr const int SHUTDOWN_LOW = 1;
 
