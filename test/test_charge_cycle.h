@@ -2,8 +2,8 @@
 #define CHARGECYCLE_T
 
 #include "MainChargeSystem.h"
-#include "ACUInterface.h"
-#include "ChargerInterface.h"
+#include "mockACUInterface.h" // MODIFIED
+#include "mockChargerInterface.h" // MODIFIED
 #include "ChargerStateMachine.h"
 #include "CCUData.h"
 #include <gtest/gtest.h>

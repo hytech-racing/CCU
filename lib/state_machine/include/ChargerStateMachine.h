@@ -3,9 +3,9 @@
 
 #include <etl/delegate.h>
 #include "CCUData.h"
-#include "ACUInterface.h"
-#include "ChargerInterface.h"
-#include "mockArduino.h"
+#include "mockACUInterface.h" // MODIFIED
+#include "mockChargerInterface.h" // MODIFIED
+#include "mockArduino.h" // MODIFIED
 #include "ChargerStates.h"
 class ChargerStateMachine
 {
