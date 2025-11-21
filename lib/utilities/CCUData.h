@@ -61,6 +61,10 @@ namespace CCUConstants
   constexpr unsigned long SEND_ALL_DATA_PERIOD = 1000;
   constexpr unsigned long HT_SCHED_CAN_PERIOD = 100000;
 
+  constexpr unsigned long ROTARY_ENC_PERIOD = 100000;
+  constexpr unsigned long ROTARY_ENC_PRIORITY = 14;
+
+
   /* CAN Constants */
   const uint32_t CAN_BAUDRATE = 1000000; //CAN for ACU
   const uint32_t CHARGER_CAN_BAUDRATE = 500000; //CAN for charger

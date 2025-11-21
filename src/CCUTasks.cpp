@@ -15,6 +15,8 @@ HT_TASK::TaskResponse intitialize_all_interfaces()
 
     EnergyMeterInterfaceInstance::create();
 
+    RotaryEncoderInterfaceInstance::create(ccu_data); //NOLINT (necessary for passing ccu_data struct as a reference)
+
 
     WatchdogInstance::create();
     WatchdogInstance::instance().init(); 
@@ -31,6 +33,11 @@ HT_TASK::TaskResponse intitialize_all_interfaces()
 
 }
 
+// MOVE IN FUTURE IF NECESSARY
+HT_TASK::TaskResponse update_encoder(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+    RotaryEncoderInterfaceInstance::instance().updateEncoder();
+    return HT_TASK::TaskResponse::YIELD;
+}
 
 HT_TASK::TaskResponse run_read_dial_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
 

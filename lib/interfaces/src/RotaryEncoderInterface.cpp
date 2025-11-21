@@ -1,6 +1,7 @@
 #include "RotaryEncoderInterface.h"
 #include "CCUData.h"
 
+
 const int bounce_delay = 50; //Found based on research, subject to change
 
 void RotaryEncoderInterface::isr1() {
@@ -27,7 +28,7 @@ void RotaryEncoderInterface::setupEncoder() {
     pinMode(DT, INPUT_PULLUP);
     pinMode(SW, INPUT_PULLUP);
 
-    attachInterrupt(digitalPinToInterrupt(2), RotaryEncoderInterface::isr1, FALLING);
+    attachInterrupt(digitalPinToInterrupt(DT), RotaryEncoderInterface::isr1, FALLING);
 }
 
 void RotaryEncoderInterface::updateEncoder() {
