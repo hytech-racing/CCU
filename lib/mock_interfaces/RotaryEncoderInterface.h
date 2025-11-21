@@ -35,10 +35,6 @@ public:
         _ccu_data.encoder_value = _encoder_data.encoder_value;
     }
 
-    static inline void isr1() {
-        // Mock implementation - no-op
-    }
-
     inline void set_enc_value(int dt_value) {
         if (dt_value == HIGH) {
             if (_encoder_data.encoder_value < _encoder_data.max_value) {
