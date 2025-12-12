@@ -8,9 +8,9 @@
 #include "etl/singleton.h"
 #include <etl/delegate.h>
 
-#define CLK 21 //change based on actual pin used
-#define DT 20 //change based on actual pin used
-#define SW 19 //change based on actual pin used
+#define CLK 21 
+#define DT 20 
+#define SW 19 
 
 struct rotary_encoder_s {
     volatile bool state = false;

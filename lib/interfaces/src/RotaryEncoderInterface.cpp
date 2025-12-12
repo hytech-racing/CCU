@@ -2,11 +2,17 @@
 #include "CCUData.h"
 
 
-const int bounce_delay = 50; //Found based on research, subject to change
+const int bounce_delay = 200; //Worked best during testing to minimize switch bouncing
+volatile unsigned long last_interrupt_time = 0;
 
 void RotaryEncoderInterface::isr1() {
-    int enc_b_value = digitalRead(DT); 
-    RotaryEncoderInterfaceInstance::instance().set_enc_value(enc_b_value);
+    unsigned long current_time = millis();
+    if (current_time - last_interrupt_time > bounce_delay) {
+      int enc_b_value = digitalRead(DT); 
+      RotaryEncoderInterfaceInstance::instance().set_enc_value(enc_b_value);
+      last_interrupt_time = current_time;
+    }
+    
 }
 
 void RotaryEncoderInterface::set_enc_value(int enc_b_value) {
@@ -27,8 +33,7 @@ void RotaryEncoderInterface::setupEncoder() {
     pinMode(CLK, INPUT_PULLUP);
     pinMode(DT, INPUT_PULLUP);
     pinMode(SW, INPUT_PULLUP);
-
-    attachInterrupt(digitalPinToInterrupt(DT), RotaryEncoderInterface::isr1, FALLING);
+    attachInterrupt(digitalPinToInterrupt(CLK), RotaryEncoderInterface::isr1, FALLING);
 }
 
 void RotaryEncoderInterface::updateEncoder() {
