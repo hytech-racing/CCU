@@ -17,7 +17,7 @@
 #include "DisplayInterface.h"
 
 
-FlexCAN_Type<CAN2> CHARGER_CAN; //placed here after debugging
+FlexCAN_Type<CAN3> CHARGER_CAN; //placed here after debugging
 FlexCAN_Type<CAN1> ACU_CAN;
 
 
