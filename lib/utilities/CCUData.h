@@ -7,6 +7,7 @@ enum class ChargingState_e
 {
     NOT_CHARGING = 0,
     CHARGING =1,
+    FAST_CHARGING=3,
     DONE_CHARGING =2
 };
 

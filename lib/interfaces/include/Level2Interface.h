@@ -1,5 +1,7 @@
-#ifndef Level2Interface
-#define Level2Interface
+#ifndef LEVEL2INTERFACE_H
+#define LEVEL2INTERFACE_H
+//this is the interface for "240V" charging
+//called level 2 because that is what SAE defines it as
 
 #include <etl/singleton.h>
 #include <Arduino.h>
@@ -27,11 +29,20 @@ private:
     bool enabled;
     pin teensy_start_charge;
 
-    constexpr float ADC_REF_VOLTAGE = 3.3f;
-    constexpr float ADC_MAX_COUNT   = 4095.0f;
+    uint16_t cp_v_raw;
+    uint16_t cp_pwm_raw;
+    uint16_t pp_v_raw;
+    float cp_v_voltage;
+    float cp_pwm_voltage;
+    float pp_v_voltage;
+    static constexpr float ADC_REF_VOLTAGE = 3.3f;
+    static constexpr float ADC_MAX_COUNT   = 4095.0f;
+
+    CCUData &_ccu_data;
 
 public:
     Level2Interface(
+        CCUData &_ccu_data,
         pin cp_v = LEVEL2_PARAMS::CONTROL_V_SENSE,
         pin cp_pwm = LEVEL2_PARAMS::CONTROL_PWM_SENSE,
         pin pp_v = LEVEL2_PARAMS::PROXIMITY_SENSE,
@@ -39,13 +50,17 @@ public:
             teensy_cp_v(cp_v),
             teensy_cp_pwm(cp_pwm),
             teensy_pp_v(pp_v),
-            enabled(CCUData.level_2_enabled),
+            enabled(_ccu_data.level_2_enabled),
             teensy_start_charge(sc)
     {};
     
     void init();
     void toggle_240_charging();
     void check_charge_condition();
+    void read_pin_vals();
+    float readPeakVoltage(pin p, uint32_t window_us = 3000);
 
 
-}
+};
+
+#endif
