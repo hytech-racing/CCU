@@ -2,10 +2,13 @@
 #define LEVEL2INTERFACE_H
 //this is the interface for "240V" charging
 //called level 2 because that is what SAE defines it as
+//however you will see 240V naming convention used interchangably
 
 #include <etl/singleton.h>
 #include <Arduino.h>
 #include "CCUData.h"
+#include <cstddef>
+#include <cstdint>
 
 using pin = size_t;
 
@@ -56,11 +59,13 @@ public:
     
     void init();
     void toggle_240_charging();
-    void check_charge_condition();
+    void check_240_charge_condition();
     void read_pin_vals();
     float readPeakVoltage(pin p, uint32_t window_us = 3000);
 
 
 };
+
+using Level2InterfaceInstance = etl::singleton<Level2Interface>;
 
 #endif

@@ -5,7 +5,7 @@
 
 #include "ACUInterface.h"
 
-#include "Level2Interface.h"
+#include "interfaces/include/Level2Interface.h"
 
 #include "SharedFirmwareTypes.h"
 

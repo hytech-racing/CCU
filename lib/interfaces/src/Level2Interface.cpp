@@ -20,11 +20,11 @@ void toggle_240_charging() {
     }
 }
 
-bool check_charge_condition() {
+bool check_240_charge_condition() {
     read_pin_vals();
 
     //lets check if we are in 240V mode
-    _ccu_data.level_2_enabled = !(cp_v_voltage <= 0.1); //not in 240V mode
+    _ccu_data.level_2_enabled = (cp_v_voltage > 0.1); //not in 240V mode
     enabled = _ccu_data.level_2_enabled;
     if (enabled) {
         cp_v_voltage = readPeakVoltage(teensy_cp_v, 3000); // 3 ms window
@@ -34,8 +34,6 @@ bool check_charge_condition() {
         } else {
             return false;
         }
-    } else {
-        return true;
     }
 
 }
