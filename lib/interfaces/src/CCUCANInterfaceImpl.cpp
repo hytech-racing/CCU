@@ -56,6 +56,12 @@ void ccu_CAN_recv(CANInterfaces &interfaces, const CAN_message_t &msg, unsigned 
         interfaces.acu_interface.receive_voltages_message(msg, millis);
         break;
     }
+    case BMS_DETAILED_VOLTAGES_CANID:
+    {
+        interfaces.acu_interface.receive_detailed_voltages_message(msg, millis);
+        break;
+    }
+
     case BMS_STATUS_CANID:
     {
         interfaces.acu_interface.receive_status_message(msg, millis);

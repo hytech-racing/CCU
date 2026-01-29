@@ -72,6 +72,50 @@ void DisplayInterface::display_data() {
     
 
 }
+// function that dsiplays cell temsp from BMS
+//this needs to be changed to loop through all the ICs and get the values
+
+void DisplayInterface::display_data_temps() {
+    Display.fillScreen(ILI9341_BLACK);
+    Display.setCursor(0,0);
+    Display.setRotation(3);
+    Display.setTextSize(2);
+    Display.print("IC: ");
+    Display.println(ACUInterfaceInstance::instance().get_latest_data().ic_detailed_id);
+
+    Display.print("Therm 0: ");
+    Display.println(ACUInterfaceInstance::instance().get_latest_data().therm_id_0);
+
+    Display.print("Therm 1: ");
+    Display.println(ACUInterfaceInstance::instance().get_latest_data().therm_id_1);
+
+    Display.print("Therm 2: ");
+    Display.println(ACUInterfaceInstance::instance().get_latest_data().therm_id_2);
+
+}
+
+//function that displays voltage values
+void DisplayInterface::display_data_v(){
+    Display.fillScreen(ILI9341_BLACK);
+    Display.setCursor(0,0);
+    Display.setRotation(3);
+    Display.setTextSize(2);
+
+    //this needs to be changed to loop through all the ICs and get the values
+    Display.print("IC: ");
+    Display.println(ACUInterfaceInstance::instance().get_latest_data().voltage_ic_id);
+
+    Display.print("voltage 0: ");
+    Display.println(ACUInterfaceInstance::instance().get_latest_data().voltage_0);
+
+    Display.print("Voltage 1: ");
+    Display.println(ACUInterfaceInstance::instance().get_latest_data().voltage_1);
+
+    Display.print("Voltage 2: ");
+    Display.println(ACUInterfaceInstance::instance().get_latest_data().voltage_2);
+
+
+}
 
 void DisplayInterface::refresh_display_data(unsigned long curr_millis) {
 
@@ -86,7 +130,7 @@ void DisplayInterface::toggle_display_data()
 
     Display.setCursor(0,0);
     
-    if (clicks > 2) 
+    if (clicks > 4) 
     {
         clicks = 0;
     }
@@ -156,7 +200,11 @@ void DisplayInterface::toggle_display_data()
 
             Display.print("Total pack Volts: ");
             Display.println(ACUInterfaceInstance::instance().get_latest_data().total_voltage, 3);
-        
+            
+        case 3: 
+            display_data_temps();
+        case 4:
+            display_data_v();
     }
 }
 

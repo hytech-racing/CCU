@@ -38,6 +38,8 @@ class DisplayInterface
 
         void init();
         void display_data();
+        void display_data_temps();
+        void display_data_v();
         void refresh_display_data(unsigned long curr_millis);
         void toggle_display_data();
 

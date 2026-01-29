@@ -37,6 +37,18 @@ void ACUInterface::receive_voltages_message(const CAN_message_t& msg, unsigned l
 
 }
 
+void ACUInterface::receive_detailed_voltages_message(const CAN_message_t& msg, unsigned long curr_millis)
+{
+    BMS_DETAILED_VOLTAGES_t detailed_voltages_msg;
+    Unpack_BMS_DETAILED_VOLTAGES_hytech(&detailed_voltages_msg, &msg.buf[0], msg.len);
+    _curr_data.voltage_group_id = detailed_voltages_msg.group_id;
+    _curr_data.voltage_ic_id = detailed_voltages_msg.ic_id;
+    _curr_data.voltage_0 = HYTECH_voltage_0_ro_fromS(static_cast<float>(detailed_voltages_msg.voltage_0_ro));
+    _curr_data.voltage_1 = HYTECH_voltage_1_ro_fromS(static_cast<float>(detailed_voltages_msg.voltage_1_ro));
+    _curr_data.voltage_2 = HYTECH_voltage_2_ro_fromS(static_cast<float>(detailed_voltages_msg.voltage_2_ro));
+
+}
+
 void ACUInterface::receive_onboard_temps_message(const CAN_message_t& msg, unsigned long curr_millis) 
 {
     BMS_ONBOARD_TEMPS_t board_temps = {};

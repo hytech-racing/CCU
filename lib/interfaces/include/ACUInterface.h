@@ -45,6 +45,12 @@ struct ACUInterfaceData_s
     float avg_cell_temp;
     float cell_temps[12][3];
 
+    /* BMS detailed voltages data*/
+    int voltage_group_id;
+    int voltage_ic_id;
+    volt voltage_0;
+    volt voltage_1;
+    volt voltage_2;
 
 };
 
@@ -84,7 +90,8 @@ public:
     void reset_acu_heartbeat();
     
     void receive_status_message(const CAN_message_t& msg, unsigned long curr_millis);
-    void receive_voltages_message(const CAN_message_t& msg, unsigned long curr_millis); //BMS_VOLTAGES and BMS_DETAILED_VOLTAGES
+    void receive_voltages_message(const CAN_message_t& msg, unsigned long curr_millis); //BMS_VOLTAGES 
+    void receive_detailed_voltages_message(const CAN_message_t& msg, unsigned long curr_millis); //BMS detailed voltages
     void receive_onboard_temps_message(const CAN_message_t& msg, unsigned long curr_millis);
     void receive_detailed_temps_message(const CAN_message_t& msg, unsigned long curr_millis);
     void receive_onboard_detailed_temps(const CAN_message_t& msg, unsigned long curr_millis);
