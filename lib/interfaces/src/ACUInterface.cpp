@@ -47,7 +47,18 @@ void ACUInterface::receive_detailed_voltages_message(const CAN_message_t& msg, u
     _curr_data.voltage_1 = HYTECH_voltage_1_ro_fromS(static_cast<float>(detailed_voltages_msg.voltage_1_ro));
     _curr_data.voltage_2 = HYTECH_voltage_2_ro_fromS(static_cast<float>(detailed_voltages_msg.voltage_2_ro));
 
+    uint8_t ic = _curr_data.voltage_ic_id;
+    for (int sensor = 0; sensor < 3; sensor++){
+        switch(sensor){
+            case 0: _curr_data.voltage_array[ic][sensor] = _curr_data.voltage_0; break;
+            case 1: _curr_data.voltage_array[ic][sensor] = _curr_data.voltage_1; break;
+            case 2: _curr_data.voltage_array[ic][sensor] = _curr_data.voltage_2; break;
+            default: _curr_data.voltage_array[ic][sensor] = 0;
+        }
+    }
 }
+
+
 
 void ACUInterface::receive_onboard_temps_message(const CAN_message_t& msg, unsigned long curr_millis) 
 {
@@ -72,6 +83,18 @@ void ACUInterface::receive_detailed_temps_message(const CAN_message_t& msg, unsi
     _curr_data.therm_id_0 = HYTECH_thermistor_id_0_ro_fromS(static_cast<float>(detailed_temps.thermistor_id_0_ro));
     _curr_data.therm_id_1 = HYTECH_thermistor_id_1_ro_fromS(static_cast<float>(detailed_temps.thermistor_id_1_ro));
     _curr_data.therm_id_2 = HYTECH_thermistor_id_2_ro_fromS(static_cast<float>(detailed_temps.thermistor_id_2_ro));    
+
+
+
+uint8_t ic = _curr_data.ic_detailed_id;
+for (int therm = 0; therm < 3; therm++){
+    switch(therm){
+        case 0: _curr_data.cell_temps[ic][therm] = _curr_data.therm_id_0; break;
+        case 1: _curr_data.cell_temps[ic][therm] = _curr_data.therm_id_1; break;
+        case 2: _curr_data.cell_temps[ic][therm] = _curr_data.therm_id_2; break;
+        default: _curr_data.cell_temps[ic][therm] = 0;
+    }
+}
 
 }
 

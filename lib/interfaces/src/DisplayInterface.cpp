@@ -72,25 +72,23 @@ void DisplayInterface::display_data() {
     
 
 }
-// function that dsiplays cell temsp from BMS
-//this needs to be changed to loop through all the ICs and get the values
-
+// function that displays cell temps from BMS
 void DisplayInterface::display_data_temps() {
     Display.fillScreen(ILI9341_BLACK);
     Display.setCursor(0,0);
     Display.setRotation(3);
     Display.setTextSize(2);
-    Display.print("IC: ");
-    Display.println(ACUInterfaceInstance::instance().get_latest_data().ic_detailed_id);
-
-    Display.print("Therm 0: ");
-    Display.println(ACUInterfaceInstance::instance().get_latest_data().therm_id_0);
-
-    Display.print("Therm 1: ");
-    Display.println(ACUInterfaceInstance::instance().get_latest_data().therm_id_1);
-
-    Display.print("Therm 2: ");
-    Display.println(ACUInterfaceInstance::instance().get_latest_data().therm_id_2);
+   
+    for (int ic = 0; ic < 12; ic++){
+        Display.print("IC ");
+        Display.print(ic);
+        Display.print(": ");
+        Display.print(ACUInterfaceInstance::instance().get_latest_data().cell_temps[ic][0], 3);
+        Display.print(" ");
+        Display.print(ACUInterfaceInstance::instance().get_latest_data().cell_temps[ic][1], 3);
+        Display.print(" ");
+        Display.print(ACUInterfaceInstance::instance().get_latest_data().cell_temps[ic][2], 3);
+    }
 
 }
 
@@ -101,18 +99,16 @@ void DisplayInterface::display_data_v(){
     Display.setRotation(3);
     Display.setTextSize(2);
 
-    //this needs to be changed to loop through all the ICs and get the values
-    Display.print("IC: ");
-    Display.println(ACUInterfaceInstance::instance().get_latest_data().voltage_ic_id);
-
-    Display.print("voltage 0: ");
-    Display.println(ACUInterfaceInstance::instance().get_latest_data().voltage_0);
-
-    Display.print("Voltage 1: ");
-    Display.println(ACUInterfaceInstance::instance().get_latest_data().voltage_1);
-
-    Display.print("Voltage 2: ");
-    Display.println(ACUInterfaceInstance::instance().get_latest_data().voltage_2);
+    for(int ic = 0; ic < 126; ic++){
+        Display.print("IC ");
+        Display.print(ic);
+        Display.print(": ");
+        Display.print(ACUInterfaceInstance::instance().get_latest_data().voltage_array[ic][0], 3);
+        Display.print(" ");
+        Display.print(ACUInterfaceInstance::instance().get_latest_data().voltage_array[ic][1], 3);
+        Display.print(" ");
+        Display.print(ACUInterfaceInstance::instance().get_latest_data().voltage_array[ic][2], 3);
+    } 
 
 
 }
@@ -200,11 +196,13 @@ void DisplayInterface::toggle_display_data()
 
             Display.print("Total pack Volts: ");
             Display.println(ACUInterfaceInstance::instance().get_latest_data().total_voltage, 3);
-            
+            break;
         case 3: 
             display_data_temps();
+            break;
         case 4:
             display_data_v();
+            break;
     }
 }
 
