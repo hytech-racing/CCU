@@ -99,6 +99,7 @@ void DisplayInterface::display_data_v(){
     Display.setRotation(3);
     Display.setTextSize(2);
 
+// may need to be adjusted to fit on display
     for(int ic = 0; ic < 126; ic++){
         Display.print("IC ");
         Display.print(ic);
