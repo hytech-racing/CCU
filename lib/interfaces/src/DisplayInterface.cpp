@@ -221,6 +221,7 @@ void DisplayInterface::toggle_display_data()
                     Display.print("\n");
                     Display.print("\n"); 
             }
+            break;
         case 5:
             Display.fillScreen(ILI9341_BLACK);
             Display.setCursor(0,0);
@@ -241,7 +242,8 @@ void DisplayInterface::toggle_display_data()
                 }
                 Display.print("\n");
                 Display.print("\n"); 
-        }
+        } 
+        break;
         case 6: 
             Display.fillScreen(ILI9341_BLACK);
             Display.setCursor(0,0);
@@ -263,6 +265,7 @@ void DisplayInterface::toggle_display_data()
                 Display.print("\n");
                 Display.print("\n"); 
         }
+        break;
 
     }
 }
