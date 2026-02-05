@@ -48,14 +48,43 @@ void ACUInterface::receive_detailed_voltages_message(const CAN_message_t& msg, u
     _curr_data.voltage_2 = HYTECH_voltage_2_ro_fromS(static_cast<float>(detailed_voltages_msg.voltage_2_ro));
 
     uint8_t ic = _curr_data.voltage_ic_id;
-    for (int sensor = 0; sensor < 3; sensor++){
-        switch(sensor){
-            case 0: _curr_data.voltage_array[ic][sensor] = _curr_data.voltage_0; break;
-            case 1: _curr_data.voltage_array[ic][sensor] = _curr_data.voltage_1; break;
-            case 2: _curr_data.voltage_array[ic][sensor] = _curr_data.voltage_2; break;
-            default: _curr_data.voltage_array[ic][sensor] = 0;
+    uint8_t group = _curr_data.voltage_group_id;
+    if (ic % 2 == 0){
+        switch(group){
+            case 0:
+                _curr_data.voltage_array[ic][0] = _curr_data.voltage_0; break;
+                _curr_data.voltage_array[ic][1] = _curr_data.voltage_1; break;
+                _curr_data.voltage_array[ic][2] = _curr_data.voltage_2; break;
+            case 1: 
+                _curr_data.voltage_array[ic][3] = _curr_data.voltage_0; break;
+                _curr_data.voltage_array[ic][4] = _curr_data.voltage_1; break;
+                _curr_data.voltage_array[ic][6] = _curr_data.voltage_2; break;
+            case 2:
+                _curr_data.voltage_array[ic][7] = _curr_data.voltage_0; break;
+                _curr_data.voltage_array[ic][8] = _curr_data.voltage_1; break;
+                _curr_data.voltage_array[ic][9] = _curr_data.voltage_2; break;
+            case 3:
+                _curr_data.voltage_array[ic][10] = _curr_data.voltage_0; break;
+                _curr_data.voltage_array[ic][11] = _curr_data.voltage_1; break;
+                _curr_data.voltage_array[ic][12] = _curr_data.voltage_2; break;
         }
     }
+    else {
+        switch(group){
+            case 0:
+                _curr_data.voltage_array[ic][0] = _curr_data.voltage_0; break;
+                _curr_data.voltage_array[ic][1] = _curr_data.voltage_1; break;
+                _curr_data.voltage_array[ic][2] = _curr_data.voltage_2; break;
+            case 1: 
+                _curr_data.voltage_array[ic][3] = _curr_data.voltage_0; break;
+                _curr_data.voltage_array[ic][4] = _curr_data.voltage_1; break;
+                _curr_data.voltage_array[ic][6] = _curr_data.voltage_2; break;
+            case 2:
+                _curr_data.voltage_array[ic][7] = _curr_data.voltage_0; break;
+                _curr_data.voltage_array[ic][8] = _curr_data.voltage_1; break;
+                _curr_data.voltage_array[ic][9] = _curr_data.voltage_2; break;
+        }
+}
 }
 
 

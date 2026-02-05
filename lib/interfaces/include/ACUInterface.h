@@ -51,7 +51,7 @@ struct ACUInterfaceData_s
     volt voltage_0;
     volt voltage_1;
     volt voltage_2;
-    volt voltage_array[126][3]; //array that holds all volatge values for each cell
+    volt voltage_array[12][12]; //array that holds all volatge values for each cell
 
 };
 

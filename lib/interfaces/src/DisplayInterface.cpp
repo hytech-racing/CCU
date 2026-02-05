@@ -78,16 +78,17 @@ void DisplayInterface::display_data_temps() {
     Display.setCursor(0,0);
     Display.setRotation(3);
     Display.setTextSize(2);
+    Display.println("Cell Temps");
    
-    for (int ic = 0; ic < 12; ic++){
-        Display.print("IC ");
+    for (int ic = 1; ic < 13; ic++){
+        Display.print("Cell ");
         Display.print(ic);
         Display.print(": ");
-        Display.print(ACUInterfaceInstance::instance().get_latest_data().cell_temps[ic][0], 3);
+        Display.print(ACUInterfaceInstance::instance().get_latest_data().cell_temps[ic-1][0], 3);
         Display.print(" ");
-        Display.print(ACUInterfaceInstance::instance().get_latest_data().cell_temps[ic][1], 3);
+        Display.print(ACUInterfaceInstance::instance().get_latest_data().cell_temps[ic-1][1], 3);
         Display.print(" ");
-        Display.print(ACUInterfaceInstance::instance().get_latest_data().cell_temps[ic][2], 3);
+        Display.println(ACUInterfaceInstance::instance().get_latest_data().cell_temps[ic-1][2], 3);
     }
 
 }
@@ -97,21 +98,23 @@ void DisplayInterface::display_data_v(){
     Display.fillScreen(ILI9341_BLACK);
     Display.setCursor(0,0);
     Display.setRotation(3);
-    Display.setTextSize(2);
+    Display.setTextSize(1);
+    Display.println("Detailed Voltages");
+    Display.print("\n");
 
-// may need to be adjusted to fit on display
-    for(int ic = 0; ic < 126; ic++){
-        Display.print("IC ");
+// may need to be adjusted to fit on display/
+// need to be fixed: there are 12 ICs even ones have 12 reading odd have 9; three eahc group has 3 readings
+    for(int ic = 1; ic < 10; ic++){
+        Display.print("Cell ");
         Display.print(ic);
-        Display.print(": ");
-        Display.print(ACUInterfaceInstance::instance().get_latest_data().voltage_array[ic][0], 3);
-        Display.print(" ");
-        Display.print(ACUInterfaceInstance::instance().get_latest_data().voltage_array[ic][1], 3);
-        Display.print(" ");
-        Display.print(ACUInterfaceInstance::instance().get_latest_data().voltage_array[ic][2], 3);
-    } 
-
-
+        Display.print(":    ");
+        for (int i = 0; i < 12; i++){
+            Display.print(ACUInterfaceInstance::instance().get_latest_data().voltage_array[ic-1][i], 3);
+            Display.print(" ");
+        }
+        Display.print("\n");
+        Display.print("\n"); 
+}
 }
 
 void DisplayInterface::refresh_display_data(unsigned long curr_millis) {
@@ -127,7 +130,7 @@ void DisplayInterface::toggle_display_data()
 
     Display.setCursor(0,0);
     
-    if (clicks > 4) 
+    if (clicks > 5) 
     {
         clicks = 0;
     }
@@ -204,6 +207,25 @@ void DisplayInterface::toggle_display_data()
         case 4:
             display_data_v();
             break;
+        case 5: 
+            Display.fillScreen(ILI9341_BLACK);
+            Display.setCursor(0,0);
+            Display.setRotation(3);
+            Display.setTextSize(1);
+            Display.println("Detailed Voltages");
+            Display.print("\n");
+            for(int ic = 10; ic < 13; ic++){
+                    Display.print("Cell ");
+                    Display.print(ic);
+                    Display.print(":    ");
+                    for (int i = 0; i < 12; i++){
+                        Display.print(ACUInterfaceInstance::instance().get_latest_data().voltage_array[ic-1][i], 3);
+                        Display.print(" ");
+                    }
+                    Display.print("\n");
+                    Display.print("\n"); 
+            }
+
     }
 }
 
