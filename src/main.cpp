@@ -106,8 +106,6 @@ void loop()
 {
   button_state = digitalRead(A15);
   scheduler.run();
-  // remove delay for future. bad practice wrt arduino
-  //delay(100);
 
 }
 

@@ -47,9 +47,11 @@ void ACUInterface::receive_detailed_voltages_message(const CAN_message_t& msg, u
     _curr_data.voltage_1 = HYTECH_voltage_1_ro_fromS(static_cast<float>(detailed_voltages_msg.voltage_1_ro));
     _curr_data.voltage_2 = HYTECH_voltage_2_ro_fromS(static_cast<float>(detailed_voltages_msg.voltage_2_ro));
 
+    // for each IC, depending on the group ID, places the voltage values in the appropriate column of the array
+    // values grouped in groups of three. 
     uint8_t ic = _curr_data.voltage_ic_id;
     uint8_t group = _curr_data.voltage_group_id;
-    if (ic % 2 == 0){
+    if (ic % 2 == 0){  //even ICs have 12 total values, 4 groups
         switch(group){
             case 0:
                 _curr_data.voltage_array[ic][0] = _curr_data.voltage_0; break;
@@ -70,7 +72,7 @@ void ACUInterface::receive_detailed_voltages_message(const CAN_message_t& msg, u
         }
     }
     else {
-        switch(group){
+        switch(group){ // odd ICs have 9 total values, 3 groups
             case 0:
                 _curr_data.voltage_array[ic][0] = _curr_data.voltage_0; break;
                 _curr_data.voltage_array[ic][1] = _curr_data.voltage_1; break;
