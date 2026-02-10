@@ -43,6 +43,12 @@ class DisplayInterface
         void refresh_display_data(unsigned long curr_millis);
         void toggle_display_data();
 
+        static constexpr uint8_t MAX_ICS_set1 = 7;
+        static constexpr uint8_t MAX_ICS_set2 = 13;
+        static constexpr uint8_t MAX_ICS = 12;
+        static constexpr uint8_t VOLTS_PER_IC = 12;
+        static constexpr uint8_t TEMPS_PER_IC = 3;
+
         Adafruit_ILI9341 Display;
 
 

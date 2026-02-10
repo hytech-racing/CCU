@@ -9,6 +9,9 @@
 #include "CANInterface.h"
 #include "CCUData.h"
 
+    static constexpr uint8_t MAX_IC_INDEX = 12;
+    static constexpr uint8_t VOLT_GROUPS = 4;
+    static constexpr uint8_t VOLTS_PER_IC = 12;
 struct ACUInterfaceData_s 
 {
     /* ACU Status Message */
@@ -43,7 +46,8 @@ struct ACUInterfaceData_s
     float max_cell_temp;
     float min_cell_temp;
     float avg_cell_temp;
-    float cell_temps[12][3];
+    // array to hold cell temp data
+    std::array<std::array<float, 3>, MAX_IC_INDEX> cell_temps;
 
     /* BMS detailed voltages data*/
     int voltage_group_id;
@@ -51,8 +55,8 @@ struct ACUInterfaceData_s
     volt voltage_0;
     volt voltage_1;
     volt voltage_2;
-    volt voltage_array[12][12]; //array that holds all voltage values for each cell; each row is one IC
-
+    //array that holds all voltage values for each cell; each row is one IC
+    std::array<std::array<float, VOLTS_PER_IC>, MAX_IC_INDEX> voltage_array;
 };
 
 class ACUInterface

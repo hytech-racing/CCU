@@ -49,44 +49,54 @@ void ACUInterface::receive_detailed_voltages_message(const CAN_message_t& msg, u
 
     // for each IC, depending on the group ID, places the voltage values in the appropriate column of the array
     // values grouped in groups of three. 
-    uint8_t ic = _curr_data.voltage_ic_id;
-    uint8_t group = _curr_data.voltage_group_id;
-    if (ic % 2 == 0){  //even ICs have 12 total values, 4 groups
-        switch(group){
-            case 0:
-                _curr_data.voltage_array[ic][0] = _curr_data.voltage_0; break;
-                _curr_data.voltage_array[ic][1] = _curr_data.voltage_1; break;
-                _curr_data.voltage_array[ic][2] = _curr_data.voltage_2; break;
-            case 1: 
-                _curr_data.voltage_array[ic][3] = _curr_data.voltage_0; break;
-                _curr_data.voltage_array[ic][4] = _curr_data.voltage_1; break;
-                _curr_data.voltage_array[ic][6] = _curr_data.voltage_2; break;
-            case 2:
-                _curr_data.voltage_array[ic][7] = _curr_data.voltage_0; break;
-                _curr_data.voltage_array[ic][8] = _curr_data.voltage_1; break;
-                _curr_data.voltage_array[ic][9] = _curr_data.voltage_2; break;
-            case 3:
-                _curr_data.voltage_array[ic][10] = _curr_data.voltage_0; break;
-                _curr_data.voltage_array[ic][11] = _curr_data.voltage_1; break;
-                _curr_data.voltage_array[ic][12] = _curr_data.voltage_2; break;
+    uint8_t ic = _curr_data.voltage_ic_id; //NOLINT
+    uint8_t group = _curr_data.voltage_group_id; //NOLINT
+ 
+    if (ic < MAX_IC_INDEX && group < VOLT_GROUPS){   // to make sure IC and group are bounded
+        if (ic % 2 == 0){  //even ICs have 12 total values, 4 groups
+            switch(group){
+                case 0:
+                    _curr_data.voltage_array.at(ic).at(0) = _curr_data.voltage_0; 
+                    _curr_data.voltage_array.at(ic).at(1) = _curr_data.voltage_1; 
+                    _curr_data.voltage_array.at(ic).at(2) = _curr_data.voltage_2;
+                    break;
+                case 1: 
+                    _curr_data.voltage_array.at(ic).at(3) = _curr_data.voltage_0; 
+                    _curr_data.voltage_array.at(ic).at(4) = _curr_data.voltage_1; 
+                    _curr_data.voltage_array.at(ic).at(5) = _curr_data.voltage_2; 
+                    break;
+                case 2:
+                    _curr_data.voltage_array.at(ic).at(6) = _curr_data.voltage_0; 
+                    _curr_data.voltage_array.at(ic).at(7) = _curr_data.voltage_1; 
+                    _curr_data.voltage_array.at(ic).at(8) = _curr_data.voltage_2; 
+                    break;
+                case 3:
+                    _curr_data.voltage_array.at(ic).at(9) = _curr_data.voltage_0; 
+                    _curr_data.voltage_array.at(ic).at(10) = _curr_data.voltage_1; 
+                    _curr_data.voltage_array.at(ic).at(11) = _curr_data.voltage_2; 
+                    break;
+            }
+        }
+        else {
+            switch(group){ // odd ICs have 9 total values, 3 groups
+                case 0:
+                    _curr_data.voltage_array.at(ic).at(0) = _curr_data.voltage_0; 
+                    _curr_data.voltage_array.at(ic).at(1) = _curr_data.voltage_1; 
+                    _curr_data.voltage_array.at(ic).at(2) = _curr_data.voltage_2; 
+                    break;
+                case 1: 
+                    _curr_data.voltage_array.at(ic).at(3) = _curr_data.voltage_0; 
+                    _curr_data.voltage_array.at(ic).at(4) = _curr_data.voltage_1; 
+                    _curr_data.voltage_array.at(ic).at(5) = _curr_data.voltage_2; 
+                    break;
+                case 2:
+                    _curr_data.voltage_array.at(ic).at(6) = _curr_data.voltage_0; 
+                    _curr_data.voltage_array.at(ic).at(7) = _curr_data.voltage_1; 
+                    _curr_data.voltage_array.at(ic).at(8) = _curr_data.voltage_2; 
+                    break;
+            }
         }
     }
-    else {
-        switch(group){ // odd ICs have 9 total values, 3 groups
-            case 0:
-                _curr_data.voltage_array[ic][0] = _curr_data.voltage_0; break;
-                _curr_data.voltage_array[ic][1] = _curr_data.voltage_1; break;
-                _curr_data.voltage_array[ic][2] = _curr_data.voltage_2; break;
-            case 1: 
-                _curr_data.voltage_array[ic][3] = _curr_data.voltage_0; break;
-                _curr_data.voltage_array[ic][4] = _curr_data.voltage_1; break;
-                _curr_data.voltage_array[ic][6] = _curr_data.voltage_2; break;
-            case 2:
-                _curr_data.voltage_array[ic][7] = _curr_data.voltage_0; break;
-                _curr_data.voltage_array[ic][8] = _curr_data.voltage_1; break;
-                _curr_data.voltage_array[ic][9] = _curr_data.voltage_2; break;
-        }
-}
 }
 
 
@@ -117,15 +127,12 @@ void ACUInterface::receive_detailed_temps_message(const CAN_message_t& msg, unsi
 
 
 
-uint8_t ic = _curr_data.ic_detailed_id;
-for (int therm = 0; therm < 3; therm++){
-    switch(therm){
-        case 0: _curr_data.cell_temps[ic][therm] = _curr_data.therm_id_0; break;
-        case 1: _curr_data.cell_temps[ic][therm] = _curr_data.therm_id_1; break;
-        case 2: _curr_data.cell_temps[ic][therm] = _curr_data.therm_id_2; break;
-        default: _curr_data.cell_temps[ic][therm] = 0;
-    }
-}
+    uint8_t ic = _curr_data.ic_detailed_id;  //NOLINT
+    if (ic < MAX_IC_INDEX) {
+            _curr_data.cell_temps.at(ic).at(0) = _curr_data.therm_id_0; 
+            _curr_data.cell_temps.at(ic).at(1) = _curr_data.therm_id_0; 
+            _curr_data.cell_temps.at(ic).at(2) = _curr_data.therm_id_0; 
+        }
 
 }
 

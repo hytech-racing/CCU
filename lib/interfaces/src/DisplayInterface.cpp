@@ -80,15 +80,20 @@ void DisplayInterface::display_data_temps() {
     Display.setTextSize(2);
     Display.println("Cell Temps");
    
-    for (int ic = 1; ic < 13; ic++){
-        Display.print("Cell ");
-        Display.print(ic);
-        Display.print(": ");
-        Display.print(ACUInterfaceInstance::instance().get_latest_data().cell_temps[ic-1][0], 3);
-        Display.print(" ");
-        Display.print(ACUInterfaceInstance::instance().get_latest_data().cell_temps[ic-1][1], 3);
-        Display.print(" ");
-        Display.println(ACUInterfaceInstance::instance().get_latest_data().cell_temps[ic-1][2], 3);
+    for (int ic = 1; ic < MAX_ICS_set2; ic++){
+        uint8_t ic_idx = static_cast<uint8_t>(ic - 1);
+        
+        // Bounds check for linter
+        if (ic_idx < MAX_ICS){
+            Display.print("Cell ");
+            Display.print(ic);
+            Display.print(": ");
+            Display.print(ACUInterfaceInstance::instance().get_latest_data().cell_temps[ic-1][0], 3);
+            Display.print(" ");
+            Display.print(ACUInterfaceInstance::instance().get_latest_data().cell_temps[ic-1][1], 3);
+            Display.print(" ");
+            Display.println(ACUInterfaceInstance::instance().get_latest_data().cell_temps[ic-1][2], 3);
+        }
     }
 
 }
@@ -104,11 +109,11 @@ void DisplayInterface::display_data_v(){
     Display.println("Detailed Voltages");
     Display.print("\n");
 
-    for(int ic = 1; ic < 7; ic++){  //can change conditiosn of this look to show more or less ICs
+    for(int ic = 1; ic < MAX_ICS_set1; ic++){  //can change conditiosn of this look to show more or less ICs
         Display.print("Cell ");
         Display.print(ic);
         Display.print(":    ");
-        for (int i = 0; i < 12; i++){
+        for (int i = 0; i < MAX_ICS; i++){
             Display.print(ACUInterfaceInstance::instance().get_latest_data().voltage_array[ic-1][i], 3);
             Display.print(" ");
         }
@@ -130,7 +135,7 @@ void DisplayInterface::toggle_display_data()
 
     Display.setCursor(0,0);
     
-    if (clicks > 6) 
+    if (clicks > 4) 
     {
         clicks = 0;
     }
@@ -211,11 +216,11 @@ void DisplayInterface::toggle_display_data()
             Display.setTextSize(1);
             Display.println("Detailed Voltages");
             Display.print("\n");
-            for(int ic = 7; ic < 13; ic++){
+            for(int ic = MAX_ICS_set1; ic < MAX_ICS_set2; ic++){
                     Display.print("Cell ");
                     Display.print(ic);
                     Display.print(":    ");
-                    for (int i = 0; i < 12; i++){
+                    for (int i = 0; i < MAX_ICS; i++){
                         Display.print(ACUInterfaceInstance::instance().get_latest_data().voltage_array[ic-1][i], 3);
                         Display.print(" ");
                     }
