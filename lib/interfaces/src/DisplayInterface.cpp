@@ -183,7 +183,7 @@ void DisplayInterface::setup_button_pin(uint8_t pin) {
 void DisplayInterface::button_func() {
     static unsigned long last_interrupt_time = 0;
     unsigned long interrupt_time = millis();
-    if (interrupt_time - last_interrupt_time > 50) {
+    if (interrupt_time - last_interrupt_time > debounce_time) {
         DisplayInterfaceInstance::instance().clicks++;
         last_interrupt_time = interrupt_time;
     }

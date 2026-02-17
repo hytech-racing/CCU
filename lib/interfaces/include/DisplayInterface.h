@@ -45,6 +45,7 @@ class DisplayInterface
         Adafruit_ILI9341 Display;
         
         volatile unsigned long clicks = 0;
+        static constexpr uint8_t debounce_time = 50;
 
 
     private:
