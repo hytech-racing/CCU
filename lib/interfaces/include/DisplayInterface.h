@@ -10,9 +10,6 @@
 #include "SharedFirmwareTypes.h"
 #include "ACUInterface.h"
 
-extern unsigned long button_state;
-extern unsigned long last_button_state;
-extern unsigned long clicks;
 
 using pin = size_t;
 
@@ -42,14 +39,12 @@ class DisplayInterface
         void display_data_v();
         void refresh_display_data(unsigned long curr_millis);
         void toggle_display_data();
-
-        static constexpr uint8_t MAX_ICS_set1 = 7;
-        static constexpr uint8_t MAX_ICS_set2 = 13;
-        static constexpr uint8_t MAX_ICS = 12;
-        static constexpr uint8_t VOLTS_PER_IC = 12;
-        static constexpr uint8_t TEMPS_PER_IC = 3;
+        void setup_button_pin(uint8_t pin);
+        static void button_func();
 
         Adafruit_ILI9341 Display;
+        
+        volatile unsigned long clicks = 0;
 
 
     private:

@@ -16,9 +16,6 @@
 #include "SystemTimeInterface.h"
 #include "DisplayInterface.h"
 
-const unsigned long debounce_time = 50;  // milliseconds
-unsigned long switch_press_time;
-
 FlexCAN_Type<CAN2> CHARGER_CAN; //placed here after debugging
 FlexCAN_Type<CAN1> ACU_CAN;
 
@@ -53,20 +50,7 @@ HT_TASK::Task debug_print_task(HT_TASK::DUMMY_FUNCTION, print_data, CCUConstants
 HT_TASK::Task tick_state_machine_task(HT_TASK::DUMMY_FUNCTION, tick_state_machine, CCUConstants::TICK_STATE_MACHINE_PRIORITY, CCUConstants::TICK_STATE_MACHINE_PERIOD);
 HT_TASK::Task calculate_charge_current_task(HT_TASK::DUMMY_FUNCTION, calculate_charge_current, CCUConstants::TICK_STATE_MACHINE_PRIORITY, CCUConstants::TICK_STATE_MACHINE_PERIOD);
 
-void button_press() 
-{
-    clicks += 1;
-}
 
-void debounce() 
-{ 
-    
-    if (millis() - switch_press_time >= debounce_time) 
-    {
-      button_press();
-      switch_press_time = millis(); 
-    }
-}
 
 
 
@@ -76,10 +60,9 @@ void setup() {
  
 
   qn::Ethernet.begin(); //begins QNEthernet
-  pinMode(A15, INPUT_PULLUP); // edit
 
   intitialize_all_interfaces();
-  attachInterrupt(digitalPinToInterrupt(A15), debounce, FALLING);
+  DisplayInterfaceInstance::instance().setup_button_pin(A15);
 
   scheduler.setTimingFunction(micros);
   scheduler.schedule(read_dial_task);
@@ -93,7 +76,7 @@ void setup() {
   scheduler.schedule(kick_watchdog_task); 
   //scheduler.schedule(tick_state_machine_task); //this task times out watchdog for some reason (state machine would be nice to have but isn't a priority for CCU to work)
   scheduler.schedule(calculate_charge_current_task);
-  //scheduler.schedule(update_display_task);
+  scheduler.schedule(update_display_task);
   scheduler.schedule(toggle_display_task);
 
   handle_CAN_setup(ACU_CAN, CCUConstants::CAN_BAUDRATE, &CCUCANInterfaceImpl::on_acu_can_receive);
@@ -104,8 +87,6 @@ void setup() {
 
 void loop() 
 {
-  button_state = digitalRead(A15);
   scheduler.run();
-
 }
 

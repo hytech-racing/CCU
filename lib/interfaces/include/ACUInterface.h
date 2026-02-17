@@ -12,6 +12,10 @@
     static constexpr uint8_t MAX_IC_INDEX = 12;
     static constexpr uint8_t VOLT_GROUPS = 4;
     static constexpr uint8_t VOLTS_PER_IC = 12;
+
+    static constexpr uint8_t MAX_ICS_Voltage_Screen1 = 6;
+    static constexpr uint8_t MAX_ICS_Voltage_Screen2 = 12;
+    static constexpr uint8_t TEMPS_PER_IC = 3;
 struct ACUInterfaceData_s 
 {
     /* ACU Status Message */
