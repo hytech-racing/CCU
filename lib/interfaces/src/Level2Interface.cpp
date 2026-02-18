@@ -10,17 +10,19 @@ void Level2Interface::init() {
     analogReadResolution(12);
 }
 
-void toggle_240_charging() {
+void Level2Interface::toggle_240_charging() {
     if (enabled) {
         digitalWrite(teensy_start_charge, HIGH);
+        Serial.println("writing toggle high");
     } 
     else 
     {
-        digitalWrite(teensy_start_charge, HIGH);
+        digitalWrite(teensy_start_charge, LOW);
+        Serial.println("writing toggle low");
     }
 }
 
-bool check_240_charge_condition() {
+bool Level2Interface::check_240_charge_condition() {
     read_pin_vals();
 
     //lets check if we are in 240V mode
@@ -38,7 +40,7 @@ bool check_240_charge_condition() {
 
 }
 
-void read_pin_vals() {
+void Level2Interface::read_pin_vals() {
     cp_v_raw  = analogRead(teensy_cp_v);
     cp_pwm_raw = analogRead(teensy_cp_pwm);
     pp_v_raw  = analogRead(teensy_pp_v);
@@ -48,7 +50,7 @@ void read_pin_vals() {
 
 }
 
-float readPeakVoltage(pin p, uint32_t window_us = 3000) {
+float Level2Interface::readPeakVoltage(pin p, uint32_t window_us = 3000) {
     const uint32_t start = micros();
     uint16_t peak = 0;
 

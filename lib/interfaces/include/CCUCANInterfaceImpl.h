@@ -32,7 +32,7 @@ struct CANInterfaces
 
 using CANInterfacesInstance = etl::singleton<CANInterfaces>;
 
-extern FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> CHARGER_CAN; // gets defined in main as of right now
+extern FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> CHARGER_CAN; // gets defined in main as of right now
 extern FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> ACU_CAN; // gets defined in main as of right now
 
 namespace CCUCANInterfaceImpl

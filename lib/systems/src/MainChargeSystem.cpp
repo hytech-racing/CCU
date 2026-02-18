@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <cmath>
 
-
+#include "Level2Interface.h"
 
 void MainChargeSystem::calculate_charge_current() {
 
@@ -26,6 +26,7 @@ void MainChargeSystem::calculate_charge_current() {
   
   bool voltage_reached = (high_voltage >= _ccu_data.cutoff_voltage) || (ACUInterfaceInstance::instance().get_latest_data().total_voltage > _ccu_data.max_pack_voltage); //NOLINT
   bool level_2_charging = Level2InterfaceInstance::instance().check_240_charge_condition();
+  Serial.println("Charge condition: " + level_2_charging);
   if (shutdown_low || acu_shutdown_low)
   {
     _ccu_data.charging_state = ChargingState_e::NOT_CHARGING;
@@ -45,7 +46,7 @@ void MainChargeSystem::calculate_charge_current() {
     _ccu_data.balancing_enabled = false;
   } else if (_ccu_data.level_2_enabled) {
     _ccu_data.calculated_charge_current = 240; //need to figure out what number corresponds to 12 amps (pack can handle ~13.__
-    Level2Interface::instance().toggle_240_charging(); //actually start recieving power EVSE
+    Level2InterfaceInstance::instance().toggle_240_charging(); //actually start recieving power EVSE
   } else {
     _ccu_data.calculated_charge_current = _ccu_data.charger_current_max; // 120 = 3.4 amps
   } 

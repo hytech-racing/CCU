@@ -5,8 +5,6 @@
 
 #include "ACUInterface.h"
 
-#include "interfaces/include/Level2Interface.h"
-
 #include "SharedFirmwareTypes.h"
 
 #ifdef TEENSY_OPT_SMALLEST_CODE

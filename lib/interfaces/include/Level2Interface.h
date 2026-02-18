@@ -45,7 +45,7 @@ private:
 
 public:
     Level2Interface(
-        CCUData &_ccu_data,
+        CCUData &_ccu_data_in,
         pin cp_v = LEVEL2_PARAMS::CONTROL_V_SENSE,
         pin cp_pwm = LEVEL2_PARAMS::CONTROL_PWM_SENSE,
         pin pp_v = LEVEL2_PARAMS::PROXIMITY_SENSE,
@@ -54,12 +54,13 @@ public:
             teensy_cp_pwm(cp_pwm),
             teensy_pp_v(pp_v),
             enabled(_ccu_data.level_2_enabled),
-            teensy_start_charge(sc)
+            teensy_start_charge(sc),
+            _ccu_data(_ccu_data_in)
     {};
     
     void init();
     void toggle_240_charging();
-    void check_240_charge_condition();
+    bool check_240_charge_condition();
     void read_pin_vals();
     float readPeakVoltage(pin p, uint32_t window_us = 3000);
 
