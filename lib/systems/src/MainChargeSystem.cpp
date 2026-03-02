@@ -43,10 +43,12 @@ void MainChargeSystem::calculate_charge_current() {
   /* Tells the charger to stop charging if the shutdown button is pressed or one of the cell voltags is too high */
   if (voltage_reached || shutdown_low || acu_shutdown_low) {  //ACU will cause a BMS fault if there is a cell or board temp that is too high
     _ccu_data.calculated_charge_current = 0;
+    _ccu_data.level_2_enabled = false;
     _ccu_data.balancing_enabled = false;
   } else if (_ccu_data.level_2_enabled) {
+    Level2InterfaceInstance::instance().start_240_charging(); //actually start recieving power EVSE
+    _ccu_data.level_2_enabled = true;
     _ccu_data.calculated_charge_current = 240; //need to figure out what number corresponds to 12 amps (pack can handle ~13.__
-    Level2InterfaceInstance::instance().toggle_240_charging(); //actually start recieving power EVSE
   } else {
     _ccu_data.calculated_charge_current = _ccu_data.charger_current_max; // 120 = 3.4 amps
   } 

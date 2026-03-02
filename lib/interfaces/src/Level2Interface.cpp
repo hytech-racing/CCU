@@ -9,32 +9,38 @@ void Level2Interface::init() {
     digitalWrite(teensy_start_charge, LOW);
     analogReadResolution(12);
 }
-
-void Level2Interface::toggle_240_charging() {
-    if (enabled) {
+ 
+/**
+ * to toggle 240V fet between on and off
+ */
+void Level2Interface::start_240_charging() {
+    if (_ccu_data.level_2_ready) {
         digitalWrite(teensy_start_charge, HIGH);
+        _ccu_data.level_2_enabled = true;
         Serial.println("writing toggle high");
     } 
     else 
     {
         digitalWrite(teensy_start_charge, LOW);
+        _ccu_data.level_2_enabled = false;
         Serial.println("writing toggle low");
     }
 }
 
-bool Level2Interface::check_240_charge_condition() {
+/**
+ * checking if we can go flip on the EVSE switch
+ */
+void Level2Interface::check_240_charge_condition() {
+    return;
     read_pin_vals();
 
     //lets check if we are in 240V mode
-    _ccu_data.level_2_enabled = (cp_v_voltage > 0.1); //not in 240V mode
-    enabled = _ccu_data.level_2_enabled;
-    if (enabled) {
-        cp_v_voltage = readPeakVoltage(teensy_cp_v, 3000); // 3 ms window
-        if (cp_v_voltage >= 3.0) {
+    if (cp_v_voltage > 0.1) { //if 240 enabled is high, then we are
+        if (cp_v_voltage >= 3.0) { //change 3.0  to the value of correct value
             //okay to start charge
-            return true;
+            _ccu_data.level_2_ready = true;
         } else {
-            return false;
+            _ccu_data.level_2_ready = false;
         }
     }
 
@@ -47,19 +53,7 @@ void Level2Interface::read_pin_vals() {
     cp_v_voltage  = (cp_v_raw  * ADC_REF_VOLTAGE) / ADC_MAX_COUNT;
     cp_pwm_voltage = (cp_pwm_raw * ADC_REF_VOLTAGE) / ADC_MAX_COUNT;
     pp_v_voltage  = (pp_v_raw  * ADC_REF_VOLTAGE) / ADC_MAX_COUNT;
-
-}
-
-float Level2Interface::readPeakVoltage(pin p, uint32_t window_us = 3000) {
-    const uint32_t start = micros();
-    uint16_t peak = 0;
-
-    while ((micros() - start) < window_us)
-    {
-        uint16_t v = analogRead(p);
-        if (v > peak) peak = v;
-    }
-
-    // Convert ADC counts to volts (assuming 3.3V ADC reference and 12-bit)
-    return (peak * ADC_REF_VOLTAGE) / ADC_MAX_COUNT;
+    Serial.printf("CP Voltage: %.2f", cp_v_voltage);
+    Serial.printf("CP PWM: %.2f", cp_pwm_voltage);
+    Serial.printf("PP Voltage: %.2f", pp_v_voltage);
 }

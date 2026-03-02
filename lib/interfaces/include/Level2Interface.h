@@ -16,7 +16,7 @@ using pin = size_t;
 /* 240V Charging Constants */
 namespace LEVEL2_PARAMS {
 
-    constexpr const pin CONTROL_V_SENSE = 37; //pin to read voltage on CP line
+    constexpr const pin CONTROL_V_SENSE = 27; //pin to read voltage on CP line
     constexpr const pin CONTROL_PWM_SENSE = 29; // pin to read PWM signal from CP
     constexpr const pin PROXIMITY_SENSE = 15; // pin to read voltage on PP
     constexpr const pin START_CHARGE = 32; //pin used to control start charging fet
@@ -29,7 +29,6 @@ private:
     pin teensy_cp_v;
     pin teensy_cp_pwm;
     pin teensy_pp_v;
-    bool enabled;
     pin teensy_start_charge;
 
     uint16_t cp_v_raw;
@@ -53,16 +52,14 @@ public:
             teensy_cp_v(cp_v),
             teensy_cp_pwm(cp_pwm),
             teensy_pp_v(pp_v),
-            enabled(_ccu_data.level_2_enabled),
             teensy_start_charge(sc),
             _ccu_data(_ccu_data_in)
     {};
     
     void init();
-    void toggle_240_charging();
-    bool check_240_charge_condition();
+    void start_240_charging();
+    void check_240_charge_condition();
     void read_pin_vals();
-    float readPeakVoltage(pin p, uint32_t window_us = 3000);
 
 
 };
