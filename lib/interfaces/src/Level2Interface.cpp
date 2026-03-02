@@ -31,7 +31,6 @@ void Level2Interface::start_240_charging() {
  * checking if we can go flip on the EVSE switch
  */
 void Level2Interface::check_240_charge_condition() {
-    return;
     read_pin_vals();
 
     //lets check if we are in 240V mode
