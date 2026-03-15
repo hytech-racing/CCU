@@ -30,7 +30,7 @@ namespace qn = qindesign::network; //setup of qn namespace
 qn::EthernetUDP udp; //setup of qn namespace
 
 /* Rotary Encoder Setup */
-RotaryEncoderInterface& enc = RotaryEncoderInterfaceInstance::instance();
+RotaryEncoderInterface& enc = RotaryEncoderInterfaceInstance::instance(); //getInstance();?
 
 /* Scheduler Setup */
 HT_SCHED::Scheduler& scheduler = HT_SCHED::Scheduler::getInstance(); 
@@ -79,7 +79,7 @@ void setup() {
 
   handle_CAN_setup(ACU_CAN, CCUConstants::CAN_BAUDRATE, &CCUCANInterfaceImpl::on_acu_can_receive);
   handle_CAN_setup(CHARGER_CAN, CCUConstants::CHARGER_CAN_BAUDRATE, &CCUCANInterfaceImpl::on_charger_can_receive);
-  enc.setupEncoder();
+  enc.setup_encoder();
 }
 
 

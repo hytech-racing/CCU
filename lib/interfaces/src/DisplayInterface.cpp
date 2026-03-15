@@ -21,7 +21,7 @@ void DisplayInterface::display_data() {
         Display.print("Charging at  ");
         Display.println(_ccu_data.calculated_charge_current);
     } else if (_ccu_data.charging_state == ChargingState_e::MANUAL_CHARGING) {
-        Display.print("Charging (M) at ");
+        Display.print("Manually charging at ");
         Display.println(_ccu_data.calculated_charge_current);
     } else if (_ccu_data.charging_state == ChargingState_e::DONE_CHARGING) {
         Display.println("Done charging!");

@@ -35,7 +35,7 @@ HT_TASK::TaskResponse intitialize_all_interfaces()
 
 // MOVE IN FUTURE IF NECESSARY
 HT_TASK::TaskResponse update_encoder(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
-    RotaryEncoderInterfaceInstance::instance().updateEncoder();
+    RotaryEncoderInterfaceInstance::instance().update_encoder();
     return HT_TASK::TaskResponse::YIELD;
 }
 

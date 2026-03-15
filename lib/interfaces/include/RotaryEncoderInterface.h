@@ -26,12 +26,12 @@ public:
     RotaryEncoderInterface(CCUData &ccu_data) :
     _ccu_data(ccu_data) {Serial.begin(9600);};
 
-    void setupEncoder();
-    void updateEncoder();
+    void setup_encoder();
+    void update_encoder();
     static void isr1();
     void set_enc_value(int dt_value);
 
-    bool isButtonPressed() const { return _encoder_data.state; };
+    bool is_button_pressed() const { return _encoder_data.state; };
 
 private:
     rotary_encoder_s _encoder_data;

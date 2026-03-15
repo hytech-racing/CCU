@@ -7,9 +7,9 @@
 #include "etl/singleton.h"
 #include <etl/delegate.h>
 
-#define CLK 2 //change based on actual pin used
-#define DT 3 //change based on actual pin used
-#define SW 4 //change based on actual pin used
+#define CLK 21
+#define DT 20 
+#define SW 19 
 
 struct rotary_encoder_s {
     volatile bool state = false;
@@ -25,29 +25,12 @@ public:
     RotaryEncoderInterface(CCUData &ccu_data) :
     _ccu_data(ccu_data) {};
 
-    inline void setupEncoder() {
-        _encoder_data.encoder_value = 0;
-        _encoder_data.state = false;
-    }
+    void setup_encoder();
+    void update_encoder();
+    static void isr1();
+    void set_enc_value(int dt_value);
 
-    inline void updateEncoder() {
-        // Sync internal encoder value to CCUData (matching real implementation)
-        _ccu_data.encoder_value = _encoder_data.encoder_value;
-    }
-
-    inline void set_enc_value(int dt_value) {
-        if (dt_value == HIGH) {
-            if (_encoder_data.encoder_value < _encoder_data.max_value) {
-                _encoder_data.encoder_value += 1.0f;
-            }
-        } else {
-            if (_encoder_data.encoder_value > _encoder_data.min_value) {
-                _encoder_data.encoder_value -= 1.0f;
-            }
-        }
-    }
-
-    bool isButtonPressed() const { return _encoder_data.state; };
+    bool is_button_pressed() const { return _encoder_data.state; };
 
 private:
     rotary_encoder_s _encoder_data;

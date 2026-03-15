@@ -3,7 +3,7 @@
 
 
 const int bounce_delay = 100; //Worked best during testing to minimize switch bouncing
-volatile unsigned long last_interrupt_time = 0;
+unsigned long last_interrupt_time = 0;
 
 void RotaryEncoderInterface::isr1() {
     unsigned long current_time = millis();
@@ -27,7 +27,7 @@ void RotaryEncoderInterface::set_enc_value(int enc_b_value) {
     }
 }
 
-void RotaryEncoderInterface::setupEncoder() {
+void RotaryEncoderInterface::setup_encoder() {
     _encoder_data.encoder_value = 0;
     _encoder_data.state = false;
     pinMode(CLK, INPUT_PULLUP);
@@ -36,7 +36,7 @@ void RotaryEncoderInterface::setupEncoder() {
     attachInterrupt(digitalPinToInterrupt(CLK), RotaryEncoderInterface::isr1, FALLING);
 }
 
-void RotaryEncoderInterface::updateEncoder() {
+void RotaryEncoderInterface::update_encoder() {
     static float prev_value = -1;
     int btn_state = digitalRead(SW);
     int charger_state = static_cast<int> (_ccu_data.charging_state);
