@@ -9,8 +9,8 @@ using pin = size_t;
 /* Watchdog Constants */
 namespace WATCHDOG_PARAMS {
 
-    constexpr const pin WATCHDOG_PIN = 26; //teensy input to watchdog
-    constexpr const pin SOFTWARE_OK_PIN = 27; // Watchdog's !RESET pin
+    constexpr const pin WATCHDOG_PIN = 35; //teensy input to watchdog
+    constexpr const pin SOFTWARE_OK_PIN = 34; // Watchdog's !RESET pin
     constexpr unsigned long WATCHDOG_KICK_INTERVAL_MS = 10UL;
 
 };

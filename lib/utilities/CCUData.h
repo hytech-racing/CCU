@@ -7,6 +7,7 @@ enum class ChargingState_e
 {
     NOT_CHARGING = 0,
     CHARGING =1,
+    FAST_CHARGING=3,
     DONE_CHARGING =2
 };
 
@@ -26,6 +27,8 @@ struct CCUData
   float min_cell_temp = 0; //value given for initialization
   static constexpr float balancing_voltage = 3.8; //voltage at which cells begin balancing
   float max_board_temp;
+  bool level_2_ready = false;
+  bool level_2_enabled = false; //tells CCU systems what to do
 };
 
 
