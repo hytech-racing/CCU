@@ -7,6 +7,7 @@ enum class ChargingState_e
 {
     NOT_CHARGING = 0,
     CHARGING =1,
+    FAST_CHARGING=3,
     DONE_CHARGING =2
 };
 
@@ -26,6 +27,8 @@ struct CCUData
   float min_cell_temp = 0; //value given for initialization
   static constexpr float balancing_voltage = 3.8; //voltage at which cells begin balancing
   float max_board_temp;
+  bool level_2_ready = false;
+  bool level_2_enabled = false; //tells CCU systems what to do
 };
 
 
@@ -46,6 +49,9 @@ namespace CCUConstants
 
   constexpr unsigned long ENQUEUE_CHARGER_CAN_DATA_PRIORITY = 5;
   constexpr unsigned long ENQUEUE_CHARGER_CAN_DATA_PERIOD = 100000;
+
+  constexpr unsigned long DATA_LOGGING_PRIORITY = 14;
+  constexpr unsigned long DATA_LOGGING_PERIOD = 30000000; // 0.0333 hz
 
   constexpr unsigned long DIAL_PERIOD_US = 20000;
   constexpr unsigned long ETHERNET_PERIOD_US = 20000;

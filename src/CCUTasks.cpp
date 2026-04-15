@@ -1,6 +1,6 @@
 #include "CCUTasks.h"
 #include "EMInterface.h"
-
+#include <SD.h>
 
 
 CCUData ccu_data; //NOLINT (necessary for passing ccu_data struct as a reference)
@@ -26,6 +26,8 @@ HT_TASK::TaskResponse intitialize_all_interfaces()
     /* These should be put in a CCU Systems Tasks but I put it here just to get CCU working asap */
     MainChargeSystemInstance::create(ccu_data); //NOLINT (necessary for passing ccu_data struct as a reference)
     DisplayInterfaceInstance::create(ccu_data); //NOLINT (necessary for passing ccu_data struct as a reference)
+
+    DataLoggingInterfaceInstance::create();
 
     return HT_TASK::TaskResponse::YIELD;
 
@@ -120,8 +122,6 @@ HT_TASK::TaskResponse run_update_display_task(const unsigned long& sysMicros, co
     return HT_TASK::TaskResponse::YIELD;
 }
 
-
-
 HT_TASK::TaskResponse print_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
     
     Serial.print("Charge enable: ");
@@ -155,4 +155,16 @@ HT_TASK::TaskResponse print_data(const unsigned long& sysMicros, const HT_TASK::
    // Serial.println(digitalRead(ccu_data.SHDN_E_READ) == HIGH);
 
    return HT_TASK::TaskResponse::YIELD;
+}
+
+HT_TASK::TaskResponse init_data_logging(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+    if (!DataLoggingInterfaceInstance::instance().init()) {
+        return HT_TASK::TaskResponse::EXIT;
+    }
+    return HT_TASK::TaskResponse::YIELD;
+}
+
+HT_TASK::TaskResponse run_data_logging(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
+    DataLoggingInterfaceInstance::instance().log_data();
+    return HT_TASK::TaskResponse::YIELD;
 }

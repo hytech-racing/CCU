@@ -17,7 +17,7 @@
 #include "DisplayInterface.h"
 
 
-FlexCAN_Type<CAN2> CHARGER_CAN; //placed here after debugging
+FlexCAN_Type<CAN3> CHARGER_CAN; //placed here after debugging
 FlexCAN_Type<CAN1> ACU_CAN;
 
 
@@ -49,8 +49,7 @@ HT_TASK::Task kick_watchdog_task(init_kick_watchdog, run_kick_watchdog, CCUConst
 HT_TASK::Task debug_print_task(HT_TASK::DUMMY_FUNCTION, print_data, CCUConstants::UPDATE_DISPLAY_PRIORITY, CCUConstants::UPDATE_DISPLAY_PERIOD); 
 HT_TASK::Task tick_state_machine_task(HT_TASK::DUMMY_FUNCTION, tick_state_machine, CCUConstants::TICK_STATE_MACHINE_PRIORITY, CCUConstants::TICK_STATE_MACHINE_PERIOD);
 HT_TASK::Task calculate_charge_current_task(HT_TASK::DUMMY_FUNCTION, calculate_charge_current, CCUConstants::TICK_STATE_MACHINE_PRIORITY, CCUConstants::TICK_STATE_MACHINE_PERIOD);
-
-
+HT_TASK::Task data_logging_task(init_data_logging, run_data_logging, CCUConstants::DATA_LOGGING_PRIORITY, CCUConstants::DATA_LOGGING_PERIOD); // Can be added if we need data logging
 
 void setup() {
   SPI.begin();
@@ -73,6 +72,7 @@ void setup() {
   //scheduler.schedule(tick_state_machine_task); //this task times out watchdog for some reason (state machine would be nice to have but isn't a priority for CCU to work)
   scheduler.schedule(calculate_charge_current_task);
   scheduler.schedule(update_display_task);
+  scheduler.schedule(data_logging_task); // can be added if we need data logging
 
   handle_CAN_setup(ACU_CAN, CCUConstants::CAN_BAUDRATE, &CCUCANInterfaceImpl::on_acu_can_receive);
   handle_CAN_setup(CHARGER_CAN, CCUConstants::CHARGER_CAN_BAUDRATE, &CCUCANInterfaceImpl::on_charger_can_receive);
@@ -80,5 +80,6 @@ void setup() {
 
 
 void loop() {
+  Serial.println("running");
   scheduler.run();
 }

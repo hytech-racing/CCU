@@ -15,7 +15,7 @@ using pin = size_t;
 
 namespace DISPLAY_PINS
 {
-    constexpr const pin LCD_CS = 36;
+    constexpr const pin LCD_CS = 39;
     constexpr const pin LCD_SCK = 13;
     constexpr const pin LCD_MISO = 12;
     constexpr const pin LCD_MOSI = 11;
