@@ -142,7 +142,7 @@ HT_TASK::TaskResponse init_update_display_task(const unsigned long& sysMicros, c
 
 HT_TASK::TaskResponse run_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
 {
-    DisplayInterfaceInstance::instance().display_data();
+    DisplayInterfaceInstance::instance().display_data(Level2SystemInstance::instance().is_120_switched(ADCInterfaceInstance::instance()));
     DisplayInterfaceInstance::instance().refresh_display_data(sys_time::hal_millis());
     return HT_TASK::TaskResponse::YIELD;
 }

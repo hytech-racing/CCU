@@ -62,7 +62,7 @@ public:
     {}
 
     void init();
-    void display_data();
+    void display_data(bool is_120_switched);
     void refresh_display_data(unsigned long curr_millis);
 
     Adafruit_ILI9341 Display;
