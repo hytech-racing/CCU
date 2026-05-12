@@ -65,8 +65,8 @@ void setup()
   // scheduler.schedule(read_dial_task);
   scheduler.schedule(queue_ACU_CAN);
   scheduler.schedule(queue_Charger_CAN);
-  //scheduler.schedule(send_ethernet);
-  //scheduler.schedule(receive_ethernet);
+  scheduler.schedule(send_ethernet);
+  scheduler.schedule(receive_ethernet);
   scheduler.schedule(send_all_data);
 
   scheduler.schedule(debug_print_task); //uncomment if display is not updating values, otherwise no need for serial monitor

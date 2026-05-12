@@ -75,6 +75,8 @@ void initialize_all_interfaces()
         }
     );
 
+    CCUEthernetInterface::create();
+    CCUEthernetInterface::instance().init_ethernet_device();
 }
 
 HT_TASK::TaskResponse run_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
@@ -105,12 +107,14 @@ HT_TASK::TaskResponse handle_enqueue_charger_can_data(const unsigned long& sysMi
 
 HT_TASK::TaskResponse run_send_ethernet(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
 {
+
     return HT_TASK::TaskResponse::YIELD;
 }
 
 
 HT_TASK::TaskResponse run_receive_ethernet(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
 {
+
     return HT_TASK::TaskResponse::YIELD;
 }
 

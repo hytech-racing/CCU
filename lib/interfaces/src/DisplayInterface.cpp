@@ -24,7 +24,7 @@ void DisplayInterface::display_data(bool is_120_switched) {
     //     Display.println("Not Charging");
     // }
 
-    Display.print("Set to "); Display.print(is_120_switched ? "120" : "240"); Display.println(" V Charging"); 
+    Display.print("Set to "); Display.print(is_120_switched ? "120" : "240"); Display.println("V Charging"); 
 
     Display.print("Cell Voltage max: ");
     Display.println(ACUInterfaceInstance::instance().get_latest_data().high_voltage, 3);
