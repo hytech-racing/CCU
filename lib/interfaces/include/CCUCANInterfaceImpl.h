@@ -1,33 +1,37 @@
 #ifndef CCUCANINTERFACEIMPL
 #define CCUCANINTERFACEIMPL
 
+/* External Dependencies */
 #include "CANInterface.h"
-
-#include "ACUInterface.h"
-#include "ChargerInterface.h"
-
-#include "EMInterface.h"
 #include "etl/singleton.h"
 #include <etl/delegate.h>
 #include "FlexCAN_T4.h"
-
 #include "hytech.h" // generated CAN library
+
+/* Local Interface Includes  */
+#include "ACUInterface.h"
+#include "ChargerInterface.h"
+#include "EMInterface.h"
 
 using CANRXBufferType = Circular_Buffer<uint8_t, (uint32_t)16, sizeof(CAN_message_t)>;
 using CANTXBufferType = Circular_Buffer<uint8_t, (uint32_t)128, sizeof(CAN_message_t)>;
+
 
 template <CAN_DEV_TABLE CAN_DEV> using FlexCAN_Type = FlexCAN_T4<CAN_DEV, RX_SIZE_256, TX_SIZE_16>;
 
 struct CANInterfaces
 {
     explicit CANInterfaces(ACUInterface &acu_int, ChargerInterface &charger_int, EnergyMeterInterface & em_int) :
-        acu_interface(acu_int), 
+        acu_interface(acu_int),
         charger_interface(charger_int),
         em_interface(em_int) {}
 
-    ACUInterface & acu_interface;
-    ChargerInterface & charger_interface;
-    EnergyMeterInterface & em_interface;
+    ACUInterface& acu_interface;
+    ChargerInterface& charger_interface;
+    EnergyMeterInterface& em_interface;
+
+    float max_pack_voltage = 0.0f;
+    float cutoff_voltage = 0.0f;
 };
 
 using CANInterfacesInstance = etl::singleton<CANInterfaces>;
@@ -43,7 +47,7 @@ namespace CCUCANInterfaceImpl
     /* TX buffer for Charger CAN */
     extern CANTXBufferType charger_can_tx_buffer;
     /* TX buffer for ACU CAN */
-    extern CANTXBufferType acu_can_tx_buffer;  
+    extern CANTXBufferType acu_can_tx_buffer;
 
     void on_acu_can_receive(const CAN_message_t &msg);
     void on_charger_can_receive(const CAN_message_t &msg);
@@ -51,7 +55,7 @@ namespace CCUCANInterfaceImpl
     void ccu_CAN_recv(CANInterfaces &interfaces, const CAN_message_t &msg, unsigned long millis);
 
     void send_all_CAN_msgs(CANTXBufferType &buffer, FlexCAN_T4_Base *can_interface);
-    
+
 }; // namespace CCUCANInterfaceImpl
 
 #endif // CCUCANINTERFACEIMPL

@@ -1,58 +1,39 @@
 #include "Level2Interface.h"
 
 
-void Level2Interface::init() {
-    pinMode(teensy_cp_v, INPUT);
-    pinMode(teensy_cp_pwm, INPUT);
-    pinMode(teensy_pp_v, INPUT);
-    pinMode(teensy_start_charge, OUTPUT);
-    digitalWrite(teensy_start_charge, LOW);
-    analogReadResolution(12);
+void Level2Interface::init()
+{
+    pinMode(_pinout.teensy_control_pwm_sense_pin, INPUT);
+    pinMode(_pinout.teensy_start_charge_pin, OUTPUT);
 }
- 
-/**
- * to toggle 240V fet between on and off
- */
-void Level2Interface::start_240_charging() {
-    if (_ccu_data.level_2_ready) {
-        digitalWrite(teensy_start_charge, HIGH);
-        _ccu_data.level_2_enabled = true;
-        Serial.println("writing toggle high");
-    } 
-    else 
+
+bool Level2Interface::_is_pwm_duty_cycle_valid()
+{
+    unsigned long highTime = pulseIn(_pinout.teensy_control_pwm_sense_pin, HIGH, 100000);
+    unsigned long lowTime  = pulseIn(_pinout.teensy_control_pwm_sense_pin, LOW, 100000);
+    // Returns the length of the pulse in microseconds
+    // Returns 0 if no pulse starts
+
+    if (highTime == 0 || lowTime == 0)
     {
-        digitalWrite(teensy_start_charge, LOW);
-        _ccu_data.level_2_enabled = false;
-        Serial.println("writing toggle low");
-    }
-}
-
-/**
- * checking if we can go flip on the EVSE switch
- */
-void Level2Interface::check_240_charge_condition() {
-    read_pin_vals();
-
-    //lets check if we are in 240V mode
-    if (cp_v_voltage > 0.1) { //if 240 enabled is high, then we are
-        if (cp_v_voltage >= 3.0) { //change 3.0  to the value of correct value
-            //okay to start charge
-            _ccu_data.level_2_ready = true;
-        } else {
-            _ccu_data.level_2_ready = false;
-        }
+        // Handle 0% or 100% duty cycle (no transitions detected)
+        _readings.control_pwm_duty_cycle = digitalRead(_pinout.teensy_control_pwm_sense_pin) ? 100.0 : 0.0;
+        return false;
     }
 
+    // Calculate duty cycle
+    _readings.control_pwm_duty_cycle = ((float) highTime / (highTime + lowTime)) * 100.0;
+
+    // Check if in valid range (9.5% to 96.5%)
+    return (_readings.control_pwm_duty_cycle > 9.5 && _readings.control_pwm_duty_cycle < 96.5);
 }
 
-void Level2Interface::read_pin_vals() {
-    cp_v_raw  = analogRead(teensy_cp_v);
-    cp_pwm_raw = analogRead(teensy_cp_pwm);
-    pp_v_raw  = analogRead(teensy_pp_v);
-    cp_v_voltage  = (cp_v_raw  * ADC_REF_VOLTAGE) / ADC_MAX_COUNT;
-    cp_pwm_voltage = (cp_pwm_raw * ADC_REF_VOLTAGE) / ADC_MAX_COUNT;
-    pp_v_voltage  = (pp_v_raw  * ADC_REF_VOLTAGE) / ADC_MAX_COUNT;
-    Serial.printf("CP Voltage: %.2f", cp_v_voltage);
-    Serial.printf("CP PWM: %.2f", cp_pwm_voltage);
-    Serial.printf("PP Voltage: %.2f", pp_v_voltage);
+void Level2Interface::set_start_charge(bool state)
+{
+    digitalWrite(_pinout.teensy_start_charge_pin, state);
+}
+
+Level2_Data_s Level2Interface::getLevel2Data() const
+{
+    return _readings;
 }

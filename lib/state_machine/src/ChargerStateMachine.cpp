@@ -1,51 +1,189 @@
 #include "ChargerStateMachine.h"
 
-
-//logic for changing states - still need to account for dial_position
-ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_millis) 
+// logic for changing states - still need to account for dial_position
+ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_millis)
 {
-    switch (_current_state) //takes in the _current_state variables and matches it to each case
+    switch (_current_state) // takes in the _current_state variables and matches it to each case
     {
-        case ChargerState_e::INITIAL:
+        case ChargerState_e::STARTUP:
         {
-            //pinMode(_ccu_data.SHDN_E_READ, OUTPUT);
+            if (current_millis - _last_state_changed_time > startup_delay_ms)
+            {
+                if (!_is_120_conditions_ok())
+                {
+                    _set_state(ChargerState_e::ERROR, current_millis);
+                    break;
+                }
 
-            if (_ccu_data.balancing_enabled) {
-                set_state(ChargerState_e::CHARGING_WITH_BALANCING, current_millis);
-                break;
+                if (_is_120_conditions_ok())
+                {
+                    _set_state(ChargerState_e::CHECK_SWITCH, current_millis);
+                    break;
+                }
             }
-
-            // Code that must run in INITIAL state (sending CAN messages, checking exit conditions)
-
-            break;
-
-        }
-
-        case ChargerState_e::CHARGING_WITH_BALANCING:
-        {
-            if (!(_ccu_data.balancing_enabled)) {
-                set_state(ChargerState_e::CHARGING_NO_BALANCING, current_millis);
-                break;
-            } 
-
-            // Code that must run in CHARGING_WITH_BALANCING state (sending CAN messages, checking for exit condition, etc)
 
             break;
         }
-
-        case ChargerState_e::CHARGING_NO_BALANCING:
+        case ChargerState_e::CHECK_SWITCH:
         {
-            if (_ccu_data.balancing_enabled) {
-                set_state(ChargerState_e::CHARGING_WITH_BALANCING, current_millis);
-                break;
-
-            } else {
-                set_state(ChargerState_e::CHARGING_NO_BALANCING, current_millis);
+            /**
+             * Purpose of this state is to check the switch position
+             *
+             * Error Cases:
+             * 1) Startup/120V conditions become errored (CP no longer zero, PP no longer 5, etc.)
+             *
+             * NOTE:
+             * 240_OK low + JMP_Read high = 120V
+             * 240_OK low = JMP_Read low  = 240V
+             */
+            if (!_is_120_conditions_ok())
+            {
+                _set_state(ChargerState_e::ERROR, current_millis);
                 break;
             }
 
-            // Code that must run in CHARGING_NO_BALANCING state
+             if (_is_120_conditions_ok() && _is_120_switched())
+            {
+                _set_state(ChargerState_e::CHARGING_120, current_millis);
+                break;
+            }
 
+            if (_is_120_conditions_ok() && _is_240_switched())
+            {
+                _set_state(ChargerState_e::CHECK_240_B2_OK, current_millis);
+                break;
+            }
+
+            break;
+        }
+        case ChargerState_e::CHARGE_120_UNLATCHED:
+        {
+            /**
+             * Purpose of this state is to allow user to have more control about when we start charging. Use the latch button to engage charging.
+             * However, in this state we are ready for 120V Charging.
+             *
+             * Error Cases:
+             * 1) Startup values error (CP no longer zero, PP no longer 5, etc.)
+             * 2) Someone switches to 240V charging
+             */
+            if (!_is_120_conditions_ok() || !_is_120_switched())
+            {
+                _set_state(ChargerState_e::ERROR, current_millis);
+                break;
+            }
+
+            if (_is_shdn_C_high())
+            {
+                _set_state(ChargerState_e::CHARGING_120, current_millis);
+                break;
+            }
+
+            break;
+        }
+        case ChargerState_e::CHARGING_120:
+        {
+            /**
+             * In this state we are performing 120V charging.
+             *
+             * Error Cases:
+             * 1) Startup values error (CP no longer zero, PP no longer 5, etc.)
+             * 2) Someone switches to 240V charging w/o delatching
+             */
+            if (!_is_120_conditions_ok() || !_is_120_switched())
+            {
+                _set_state(ChargerState_e::ERROR, current_millis);
+                break;
+            }
+
+            break;
+        }
+        case ChargerState_e::CHECK_240_B2_OK:
+        {
+            /**
+             * This state checks for EVSE State B2. If okay, set START_CHARGE high (done in exit logic).
+             *
+             * NOTE: In state B2, 240_Ok = HIGH.
+             *
+             * Error Cases:
+             * 1) Someone switches to 120V charging
+             */
+            if (!_is_240_switched())
+            {
+                _set_state(ChargerState_e::ERROR, current_millis);
+                break;
+            }
+
+            if (_is_state_B2_ready())
+            {
+                _set_state(ChargerState_e::CHECK_240_C2_OK, current_millis);
+                break;
+            }
+
+            break;
+        }
+        case ChargerState_e::CHECK_240_C2_OK:
+        {
+            /**
+             * This state checks for EVSE State C/C2.
+             *
+             * Error Cases:
+             * 1) Someone switches to 120V charging
+             * 3) State B2 values are no longer present (no pwm from charger at all)
+             */
+            if (!_is_240_switched() || !_is_state_B2_ready())
+            {
+                _set_state(ChargerState_e::ERROR, current_millis);
+                break;
+            }
+
+            if (_is_240_switched() && _is_state_C2_ready())
+            {
+                _set_state(ChargerState_e::CHARGE_240_UNLATCHED, current_millis);
+                break;
+            }
+
+            break;
+        }
+        case ChargerState_e::CHARGE_240_UNLATCHED:
+        {
+            /**
+             * Purpose of this state is to allow user to have more control about when we start charging. Use the latch button to engage charging.
+             * However, in this state we are ready for 240V Charging.
+             *
+             * Error Cases:
+             * 1) State C2 values error (incorrect pwm values, etc.)
+             * 2) Someone switches to 120V charging
+             */
+            if (!_is_state_C2_ready() || !_is_240_switched())
+            {
+                _set_state(ChargerState_e::ERROR, current_millis);
+                break;
+            }
+
+            if (_is_shdn_C_high())
+            {
+                _set_state(ChargerState_e::CHARGING_240, current_millis);
+                break;
+            }
+
+            break;
+        }
+        case ChargerState_e::CHARGING_240:
+        {
+            /**
+             * In this state we are performing 240V charging.
+             *
+             * Error Cases:
+             * 1) State C values error (CP no longer zero, PP no longer 5, etc.)
+             * 2) Someone switches to 120V charging w/o delatching
+             */
+            if (!_is_state_C2_ready() || !_is_240_switched())
+            {
+                _set_state(ChargerState_e::ERROR, current_millis);
+                break;
+            }
+
+            break;
         }
         default: // Should never occur
         {
@@ -56,61 +194,60 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
     return _current_state;
 }
 
-void ChargerStateMachine::set_state(ChargerState_e new_state, unsigned long current_millis) 
+void ChargerStateMachine::_set_state(ChargerState_e new_state, unsigned long current_millis)
 {
-    handle_exit_logic(_current_state, current_millis);
+    _handle_exit_logic(_current_state, current_millis);
     _current_state = new_state;
-    handle_entry_logic(_current_state, current_millis);
-    
+    _handle_entry_logic(_current_state, current_millis);
+
+    // update any time there is a state change
+    _last_state_changed_time = current_millis;
 }
 
-//reset each state as you leave it
-void ChargerStateMachine::handle_exit_logic(ChargerState_e prev_state, unsigned long current_millis)
+void ChargerStateMachine::_handle_exit_logic(ChargerState_e prev_state, unsigned long current_millis)
 {
     switch(prev_state)
     {
-        case ChargerState_e::INITIAL:
+        case ChargerState_e::CHECK_240_B2_OK:
         {
-            //pinMode(_ccu_data.SHDN_E_READ, OUTPUT);
+            _set_start_charge_high();
             break;
         }
-        case ChargerState_e::CHARGING_NO_BALANCING:
-        {
-            break;
-        }
-        case ChargerState_e::CHARGING_WITH_BALANCING:
-        {
-            break;
-        }
-        default: 
-        {
-            break;
-        }
+        case ChargerState_e::STARTUP: { break; }
+        case ChargerState_e::CHECK_SWITCH: { break; }
+        case ChargerState_e::CHARGE_120_UNLATCHED: { break; }
+        case ChargerState_e::CHARGING_120: { break; } // only exit would be to error, probably implement as enter logic
+        case ChargerState_e::CHECK_240_C2_OK: { break; }
+        case ChargerState_e::CHARGE_240_UNLATCHED: { break; }
+        case ChargerState_e::CHARGING_240: { break; } // only exit would be to error, probably implement as enter logic
+        case ChargerState_e::ERROR: { break; }
+        default: { break; }
     }
 }
 
 //make sure each state is reset before you enter it
-void ChargerStateMachine::handle_entry_logic(ChargerState_e new_state, unsigned long current_millis)
+void ChargerStateMachine::_handle_entry_logic(ChargerState_e new_state, unsigned long current_millis)
 {
     switch(new_state)
     {
-        case ChargerState_e::INITIAL:
-        {
-           // pinMode(_ccu_data.SHDN_E_READ, OUTPUT);
-            break;
-        }
-        case ChargerState_e::CHARGING_NO_BALANCING:
+        case ChargerState_e::STARTUP:
         {
             break;
         }
-        case ChargerState_e::CHARGING_WITH_BALANCING:
+        case ChargerState_e::ERROR:
         {
+            _set_sw_shdn_low();
+            _set_start_charge_low();
             break;
         }
-        default:
-        {
-            break;
-        }
+        case ChargerState_e::CHECK_SWITCH: { break; }
+        case ChargerState_e::CHARGE_120_UNLATCHED: { break; }
+        case ChargerState_e::CHARGING_120: { break; } // only exit would be to error, probably implement as enter logic
+        case ChargerState_e::CHECK_240_B2_OK: { break; }
+        case ChargerState_e::CHECK_240_C2_OK: { break; }
+        case ChargerState_e::CHARGE_240_UNLATCHED: { break; }
+        case ChargerState_e::CHARGING_240: { break; } // only exit would be to error, probably implement as enter logic
+        default: { break; }
     }
 }
 

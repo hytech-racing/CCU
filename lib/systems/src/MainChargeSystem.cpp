@@ -2,52 +2,126 @@
 #include <algorithm>
 #include <cmath>
 
-#include "Level2Interface.h"
+void MainChargeSystem::calculate_charge_current( float max_pack_voltage, float cutoff_voltage, float charger_current_max, bool is_balancing_enabled )
+{
+    // Get battery data from ACU
+    float average_voltage = ACUInterfaceInstance::instance().get_latest_data().average_voltage; //average voltage across the cells
+    float low_voltage = ACUInterfaceInstance::instance().get_latest_data().low_voltage; //the lowest voltage in any of the cells
+    float high_voltage = ACUInterfaceInstance::instance().get_latest_data().high_voltage; //the highest voltage in any of the cells
+    float total_voltage = ACUInterfaceInstance::instance().get_latest_data().total_voltage; //the total voltage in the pack
 
-void MainChargeSystem::calculate_charge_current() {
+    // Check safety conditions first
+    if (!_is_safety_conditions_valid())
+    {
+        _charge_data.calculated_charge_current = 0.0F;
+        _charge_data.is_balancing_enabled = false;
+        is_balancing_enabled = false;
+        return;
+    }
 
-  float average_voltage = 0;
-  float low_voltage = 0;
-  float high_voltage = 0;
-  float total_voltage = 0;
-  float calculated_charge_current = 0; 
+    // Check if voltage limits reached/exceeded
+    bool is_voltage_limit_exceeded = (high_voltage >= cutoff_voltage) || (total_voltage > max_pack_voltage);
 
-  average_voltage = ACUInterfaceInstance::instance().get_latest_data().average_voltage; //average voltage across the cells
-  low_voltage = ACUInterfaceInstance::instance().get_latest_data().low_voltage; //the lowest voltage in any of the cells
-  high_voltage = ACUInterfaceInstance::instance().get_latest_data().high_voltage; //the highest voltage in any of the cells
-  total_voltage = ACUInterfaceInstance::instance().get_latest_data().total_voltage; //the total voltage in the pack
+    if (is_voltage_limit_exceeded)
+    {
+        _charge_data.calculated_charge_current = 0.0F;
+        _charge_data.is_balancing_enabled = false;
+        is_balancing_enabled = false;
+        return;
+    }
 
-  bool shutdown_low = (digitalRead(_ccu_data.SHDN_E_READ) != HIGH); //e-stop on charge cart
+    ChargerState_e current_state = ChargerStateMachineInstance::instance().get_state();
 
-  /** acu_state comes from the bms_status message. If shutdown is low on ACU (HVP is unplugged), acu_state = 1.
-   *  If acu_state = 2, we should/are safe to be charging
-   */
-  bool acu_shutdown_low = ACUInterfaceInstance::instance().get_latest_data().acu_state == 1; //NOLINT
-  
-  bool voltage_reached = (high_voltage >= _ccu_data.cutoff_voltage) || (ACUInterfaceInstance::instance().get_latest_data().total_voltage > _ccu_data.max_pack_voltage); //NOLINT
-  Serial.println("Is level ready?: " + _ccu_data.level_2_ready);
-  if (shutdown_low || acu_shutdown_low)
-  {
-    _ccu_data.charging_state = ChargingState_e::NOT_CHARGING;
-  } else if(voltage_reached)
-  {
-    _ccu_data.charging_state = ChargingState_e::DONE_CHARGING;
-  } else if (_ccu_data.level_2_ready) {
-    _ccu_data.charging_state = ChargingState_e::FAST_CHARGING;
-  } else {
-    _ccu_data.charging_state = ChargingState_e::CHARGING;
-  }
-  
+    // Determine requested current based on state
+    float requested_current = _get_current_for_state(current_state, charger_current_max);
 
-  /* Tells the charger to stop charging if the shutdown button is pressed or one of the cell voltags is too high */
-  if (voltage_reached || shutdown_low || acu_shutdown_low) {  //ACU will cause a BMS fault if there is a cell or board temp that is too high
-    _ccu_data.calculated_charge_current = 0;
-    _ccu_data.level_2_enabled = false;
-    _ccu_data.balancing_enabled = false;
-  } else if (_ccu_data.level_2_ready) {
-    Level2InterfaceInstance::instance().start_240_charging(); //actually start recieving power EVSE
-    _ccu_data.calculated_charge_current = 240; //need to figure out what number corresponds to 12 amps (pack can handle ~13.__
-  } else {
-    _ccu_data.calculated_charge_current = _ccu_data.charger_current_max; // 120 = 3.4 amps
-  } 
+    // Apply safety limits
+    _charge_data.calculated_charge_current = _apply_current_limits(requested_current);
+
+    // Update balancing state
+    _charge_data.is_balancing_enabled = determine_balancing_state();
+    is_balancing_enabled = _charge_data.is_balancing_enabled;
+}
+
+bool MainChargeSystem::determine_balancing_state(float voltage_delta_threshold, float min_balance_voltage)
+{
+    const auto& acu_data = ACUInterfaceInstance::instance().get_latest_data();
+
+    // Calculate voltage delta (max - min)
+    float voltage_delta = acu_data.high_voltage - acu_data.low_voltage;
+
+    // Get current charger state
+    ChargerState_e current_state = ChargerStateMachineInstance::instance().get_state();
+
+    // Only balance if:
+    // 1. All cells are above minimum safe voltage
+    // 2. There's significant voltage imbalance
+    // 3. We're not actively charging at high current (to avoid conflicts)
+    // 4. We're in an active charging state
+    bool cells_above_min = acu_data.low_voltage > min_balance_voltage;
+    bool significant_imbalance = voltage_delta > voltage_delta_threshold;
+    bool safe_current_for_balancing = _charge_data.calculated_charge_current < 5.0F;
+    bool in_charge_state = (current_state == ChargerState_e::CHARGING_120) ||
+                          (current_state == ChargerState_e::CHARGING_240);
+
+    return cells_above_min && significant_imbalance &&
+           safe_current_for_balancing && in_charge_state;
+}
+
+bool MainChargeSystem::_is_safety_conditions_valid()
+{
+    // Check E-stop on charge cart (shutdown E)
+    bool is_shutdown_low = ( ADCInterfaceInstance::instance().read_shdn_E_voltage() != HIGH );
+
+    /**
+     * Check ACU state: acu_state comes from the bms_status message. If shutdown is low on ACU (HVP is unplugged), acu_state = 1.
+     * If acu_state = 2, we should/are safe to be charging
+     */
+    bool is_acu_shutdown_low = ACUInterfaceInstance::instance().get_latest_data().acu_state == 1; //NOLINT
+
+    // Check for error state from state machine
+    ChargerState_e current_state = ChargerStateMachineInstance::instance().get_state();
+    bool is_in_error_state = (current_state == ChargerState_e::ERROR);
+
+    if (is_shutdown_low || is_acu_shutdown_low || is_in_error_state)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+float MainChargeSystem::_apply_current_limits(float requested_current)
+{
+    // Never exceed maximum current
+    float limited_current = std::min(requested_current, _MAXIMUM_NEVER_EXCEED_CURRENT);
+
+    // Temperature redundancy check? Or does it get too hot at comp?
+
+    // Ensure non-negative
+    return std::max(0.0F, limited_current);
+}
+
+float MainChargeSystem::_get_current_for_state(ChargerState_e state, float charger_current_max)
+{
+    switch (state)
+    {
+        case ChargerState_e::CHARGING_120:
+            // 120V Charging, max is ~4A
+            return charger_current_max * 0.3F;  // Scale down for 120V = 3.6A
+
+        case ChargerState_e::CHARGING_240:
+            // Level 2 charging, can use full current ~12A
+            return charger_current_max;
+
+        case ChargerState_e::STARTUP:
+        case ChargerState_e::CHECK_SWITCH:
+        case ChargerState_e::CHARGE_120_UNLATCHED:
+        case ChargerState_e::CHECK_240_B2_OK:
+        case ChargerState_e::CHECK_240_C2_OK:
+        case ChargerState_e::CHARGE_240_UNLATCHED:
+        case ChargerState_e::ERROR:
+        default:
+            return 0.0F;
+    }
 }

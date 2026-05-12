@@ -8,19 +8,20 @@
 #include <QNEthernet.h>
 #include "MainChargeSystem.h"
 #include "SharedFirmwareTypes.h"
-#include "CCUParams.h"
+#include "CCU_Constants.h"
 #include "ht_sched.hpp"
 #include "ht_task.hpp"
 #include "ChargerStateMachine.h"
 #include "CCUCANInterfaceImpl.h"
-#include "CCUTasks.h"
+#include "CCU_SystemTasks.h"
+#include "CCU_InterfaceTasks.h"
 
 FlexCAN_Type<CAN2> CHARGER_CAN; // gets defined in main as of right now
 FlexCAN_Type<CAN1> ACU_CAN;
 
 /* Parameters */
 ACUAllData_s acu_all_data;
-//CCUParams ccu_params; 
+//CCUParams ccu_params;
 
 /* Initialization of the charging state machine */
 ChargerStateMachine state_machine;
@@ -49,7 +50,7 @@ HT_TASK::Task run_sample_CAN_data(HT_TASK::DUMMY_FUNCTION, sample_CAN_data, 2); 
 
 
 
-    
+
 
 /* Functions */
 void setup() {
@@ -77,5 +78,5 @@ void setup() {
 void loop() {
   scheduler.run();
   //delay(10);
-  
+
 }
