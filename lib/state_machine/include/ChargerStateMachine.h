@@ -93,7 +93,7 @@ class ChargerStateMachine
         etl::delegate<void()> _set_start_charge_high;
         etl::delegate<void()> _set_start_charge_low;
 
-        const unsigned long startup_delay_ms = 10000UL; // ms
+        const unsigned long startup_delay_ms = 5000UL; // ms
 };
 
 using ChargerStateMachineInstance = etl::singleton<ChargerStateMachine>;

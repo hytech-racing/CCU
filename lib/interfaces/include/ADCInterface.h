@@ -166,11 +166,14 @@ public:
      * @return state of 240_OK signal
     */
     bool read_240_ok();
+    bool is_240_ok_low();
 
     /**
      * @return voltage value of JP_OUT_READ
     */
     volt read_jumper_out();
+    bool is_jumper_out_high();
+    bool is_jumper_out_low();
 
     /**
      * @return ADC parameters

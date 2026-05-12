@@ -11,6 +11,7 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
             {
                 if (!_is_120_conditions_ok())
                 {
+                    Serial.println("120 CONDITIONS IS NOT OK");
                     _set_state(ChargerState_e::ERROR, current_millis);
                     break;
                 }
@@ -35,23 +36,23 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
              * 240_OK low + JMP_Read high = 120V
              * 240_OK low = JMP_Read low  = 240V
              */
-            if (!_is_120_conditions_ok())
-            {
-                _set_state(ChargerState_e::ERROR, current_millis);
-                break;
-            }
+            // if (!_is_120_conditions_ok())
+            // {
+            //     _set_state(ChargerState_e::ERROR, current_millis);
+            //     break;
+            // }
 
-            if (_is_120_switched())
-            {
-                _set_state(ChargerState_e::CHARGING_120, current_millis);
-                break;
-            }
+            // if (_is_120_switched())
+            // {
+            //     _set_state(ChargerState_e::CHARGING_120, current_millis);
+            //     break;
+            // }
 
-            if (_is_240_switched())
-            {
-                _set_state(ChargerState_e::CHECK_240_B2_OK, current_millis);
-                break;
-            }
+            // if (_is_240_switched())
+            // {
+            //     _set_state(ChargerState_e::CHECK_240_B2_OK, current_millis);
+            //     break;
+            // }
 
             break;
         }

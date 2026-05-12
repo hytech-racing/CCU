@@ -14,8 +14,8 @@ namespace watchdog_default_parameters
 
 struct WatchdogPinout_s
 {
-    pin teensy_sw_not_ok_pin ; // Watchdog's !RESET pin
     pin teensy_watchdog_pin; //teensy input to watchdog
+    pin teensy_sw_not_ok_pin ; // Watchdog's !RESET pin
 };
 
 struct WatchdogInterfaceParams_s

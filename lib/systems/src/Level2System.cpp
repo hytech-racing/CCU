@@ -5,8 +5,8 @@ bool Level2System::check_120_conditions(ADCInterface& adc_interface)
 {
     if (adc_interface.is_control_pilot_low() &&
         adc_interface.is_proximity_pilot_high() &&
-        (adc_interface.read_240_enabled() == HIGH) &&
-        (adc_interface.read_240_ok() == LOW))
+        adc_interface.read_240_enabled() &&
+        adc_interface.is_240_ok_low())
     {
         return true;
     }
@@ -16,7 +16,7 @@ bool Level2System::check_120_conditions(ADCInterface& adc_interface)
 
 bool Level2System::is_120_switched(ADCInterface& adc_interface)
 {
-    if ((adc_interface.read_240_ok() == LOW) && (adc_interface.read_jumper_out() == HIGH))
+    if ((adc_interface.is_240_ok_low()) && (adc_interface.is_jumper_out_high()))
     {
         return true;
     }
@@ -26,7 +26,7 @@ bool Level2System::is_120_switched(ADCInterface& adc_interface)
 
 bool Level2System::is_240_switched(ADCInterface& adc_interface)
 {
-    if ((adc_interface.read_240_ok() == LOW) && (adc_interface.read_jumper_out() == LOW))
+    if ((adc_interface.is_240_ok_low()) && (adc_interface.is_jumper_out_low()))
     {
         return true;
     }

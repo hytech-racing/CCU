@@ -92,7 +92,7 @@ namespace CCUConstants
     constexpr unsigned long ETHERNET_PERIOD_US = 20000; // 20 000 us = 50 Hz
 
     constexpr unsigned long UPDATE_DISPLAY_PRIORITY = 11;
-    constexpr unsigned long UPDATE_DISPLAY_PERIOD = 100000;
+    constexpr unsigned long UPDATE_DISPLAY_PERIOD = 200000;
 
     constexpr unsigned long REFRESH_DISPLAY_PRIORITY = 13;
     constexpr unsigned long READ_DIAL_PRIORITY = 10;

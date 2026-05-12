@@ -13,6 +13,9 @@ void ADCInterface::init(uint32_t init_millis)
     pinMode(_adc_parameters.pinout.teensy_scaled_24V_pin, INPUT);
     pinMode(_adc_parameters.pinout.teensy_control_pilot_pin, INPUT);
     pinMode(_adc_parameters.pinout.teensy_proximity_pilot_pin, INPUT);
+    pinMode(_adc_parameters.pinout.teensy_240_enabled_pin, INPUT);
+    pinMode(_adc_parameters.pinout.teensy_240_ok_pin, INPUT);
+    pinMode(_adc_parameters.pinout.teensy_jumper_out_pin, INPUT);
 
     _init_millis = init_millis;
 }
@@ -102,11 +105,15 @@ bool ADCInterface::read_240_enabled()
     return out;
 }
 
-
 bool ADCInterface::read_240_ok()
 {
     bool out = digitalRead(_adc_parameters.pinout.teensy_240_ok_pin);
     return out;
+}
+
+bool ADCInterface::is_240_ok_low()
+{
+    return read_240_ok() < adc_default_parameters::TEENSY41_MIN_DIGITAL_READ_VOLTAGE_THRESH;
 }
 
 
@@ -114,6 +121,16 @@ volt ADCInterface::read_jumper_out()
 {
     volt data = static_cast<float>(analogRead(_adc_parameters.pinout.teensy_jumper_out_pin)) * _adc_parameters.conversions.jumper_out_conv_factor;
     return data;
+}
+
+bool ADCInterface::is_jumper_out_high()
+{
+    return read_jumper_out() > adc_default_parameters::TEENSY41_MAX_DIGITAL_READ_VOLTAGE_THRESH;
+}
+
+bool ADCInterface::is_jumper_out_low()
+{
+    return read_jumper_out() < adc_default_parameters::TEENSY41_MIN_DIGITAL_READ_VOLTAGE_THRESH;
 }
 
 const ADCInterfaceParams_s& ADCInterface::get_adc_params() const

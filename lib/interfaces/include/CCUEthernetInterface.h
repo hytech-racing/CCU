@@ -6,7 +6,7 @@
 #include "hytech_msgs.pb.h"
 #include "SharedFirmwareTypes.h"
 
-#include "device_fw_version.h"
+// #include "device_fw_version.h"
 #include "ProtobufMsgInterface.h"
 #include "EthernetAddressDefs.h"
 
