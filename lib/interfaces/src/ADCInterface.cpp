@@ -80,6 +80,10 @@ volt ADCInterface::read_control_pilot()
     return data;
 }
 
+bool ADCInterface::is_control_pilot_low()
+{
+    return read_control_pilot() < adc_default_parameters::CONTROL_PILOT_VOLTAGE_LOW_THRESHOLD;
+}
 
 volt ADCInterface::read_proximity_pilot()
 {
@@ -87,6 +91,10 @@ volt ADCInterface::read_proximity_pilot()
     return data;
 }
 
+bool ADCInterface::is_proximity_pilot_high()
+{
+    return read_proximity_pilot() > adc_default_parameters::PROXIMITY_PILOT_VOLTAGE_HIGH_THRESHOLD;
+}
 
 bool ADCInterface::read_240_enabled()
 {

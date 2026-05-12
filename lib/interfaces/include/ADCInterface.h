@@ -15,6 +15,9 @@ namespace adc_default_parameters
     constexpr const float TEENSY41_MAX_DIGITAL_READ_VOLTAGE_THRESH = 2.8F;
     constexpr const float SHUTDOWN_VOLTAGE_DIGITAL_THRESHOLD = 12.0F;
 
+    constexpr const float CONTROL_PILOT_VOLTAGE_LOW_THRESHOLD = 0.5f;
+    constexpr const float PROXIMITY_PILOT_VOLTAGE_HIGH_THRESHOLD = 4.0f;
+
     static constexpr float TEENSY41_REF_VOLTAGE = 3.3f;
 };
 
@@ -146,11 +149,13 @@ public:
      * @return voltage value of Control Pilot
     */
     volt read_control_pilot();
+    bool is_control_pilot_low();
 
     /**
      * @return voltage value of Proximity Pilot
     */
     volt read_proximity_pilot();
+    bool is_proximity_pilot_high();    
 
     /**
      * @return state of 240_Enabled signal

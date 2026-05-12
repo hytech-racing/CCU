@@ -4,6 +4,9 @@
 /* External Dependencies*/
 #include "hytech_msgs.pb.h"
 #include "SharedFirmwareTypes.h"
+#include <algorithm>
+#include <cstddef>
+#include <iterator>
 
 /**
  * @brief Output values from CCU to ACU.
@@ -16,7 +19,7 @@ struct CCUOutput_s
 
 namespace CCUEthernetInterface
 {
-    void recieve_pb_msg_acu_all_data(const hytech_msgs_ACUAllData_s &msg_in, ACUAllDataType_s &acu_all_data);
+    void recieve_pb_msg_acu_all_data(const hytech_msgs_ACUAllData &msg_in, ACUAllDataType_s &acu_all_data);
 };
 
 

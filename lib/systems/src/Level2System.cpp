@@ -3,8 +3,8 @@
 
 bool Level2System::check_120_conditions(ADCInterface& adc_interface)
 {
-    if ((adc_interface.read_control_pilot() < 0.2) &&
-        (adc_interface.read_proximity_pilot() > 4.8) &&
+    if (adc_interface.is_control_pilot_low() &&
+        adc_interface.is_proximity_pilot_high() &&
         (adc_interface.read_240_enabled() == HIGH) &&
         (adc_interface.read_240_ok() == LOW))
     {

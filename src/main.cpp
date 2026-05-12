@@ -72,7 +72,7 @@ void setup()
 
   scheduler.schedule(run_sample_can_data);
   scheduler.schedule(kick_watchdog_task);
-  //scheduler.schedule(tick_state_machine_task); //this task times out watchdog for some reason (state machine would be nice to have but isn't a priority for CCU to work)
+  scheduler.schedule(tick_state_machine_task); //this task times out watchdog for some reason (state machine would be nice to have but isn't a priority for CCU to work)
   scheduler.schedule(calculate_charge_current_task);
   scheduler.schedule(update_display_task);
   //scheduler.schedule(check_level2_condition);

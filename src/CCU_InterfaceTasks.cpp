@@ -184,14 +184,9 @@ HT_TASK::TaskResponse debug_prints(const unsigned long& sysMicros, const HT_TASK
 
     Serial.print("CP Voltage Sense      ");
     Serial.println(ADCInterfaceInstance::instance().read_control_pilot());
-    // Serial.print("        ");
-    // Serial.println(Level2InterfaceInstance::instance().get_level_2_data().cp_v_voltage);
 
     Serial.print("PP Voltage Sense      ");
     Serial.println(ADCInterfaceInstance::instance().read_proximity_pilot());
-    // Serial.print(Level2InterfaceInstance::instance().get_level_2_data().pp_v_raw);
-    // Serial.print("        ");
-    // Serial.println(Level2InterfaceInstance::instance().get_level_2_data().pp_v_voltage);
 
     /* SHDN Information */
     Serial.println();
