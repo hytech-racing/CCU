@@ -6,62 +6,76 @@ void initialize_all_interfaces()
 
 
     /* ADC Interface */
-    ADCInterfaceInstance::create(   ADCPinout_s { CCUInterfaces::SHDN_A_PIN,
-                                CCUInterfaces::SHDN_B_PIN,
-                                CCUInterfaces::SHDN_C_PIN,
-                                CCUInterfaces::SHDN_D_PIN,
-                                CCUInterfaces::SHDN_E_PIN,
-                                CCUInterfaces::SHDN_F_PIN,
-                                CCUInterfaces::SHDN_G_PIN,
-                                CCUInterfaces::SCALED_24V_PIN,
-                                CCUInterfaces::CONTROL_PILOT_PIN,
-                                CCUInterfaces::PROXIMITY_PILOT_PIN,
-                                CCUInterfaces::TEENSY_240_ENABLED_PIN,
-                                CCUInterfaces::TEENSY_240_OK_PIN,
-                                CCUInterfaces::JUMPER_OUT_PIN },
-                                    ADCConversions_s { CCUInterfaces::GLV_CONV_FACTOR,
-                                CCUInterfaces::CONTROL_PILOT_CONV_FACTOR,
-                                CCUInterfaces::PROXIMITY_PILOT_CONV_FACTOR,
-                                CCUInterfaces::JUMPER_OUT_CONV_FACTOR },
-                                4096.0f
+    ADCInterfaceInstance::create(   
+        ADCPinout_s 
+        { 
+            CCUInterfaces::SHDN_A_PIN,
+            CCUInterfaces::SHDN_B_PIN,
+            CCUInterfaces::SHDN_C_PIN,
+            CCUInterfaces::SHDN_D_PIN,
+            CCUInterfaces::SHDN_E_PIN,
+            CCUInterfaces::SHDN_F_PIN,
+            CCUInterfaces::SHDN_G_PIN,
+            CCUInterfaces::SCALED_24V_PIN,
+            CCUInterfaces::CONTROL_PILOT_PIN,
+            CCUInterfaces::PROXIMITY_PILOT_PIN,
+            CCUInterfaces::TEENSY_240_ENABLED_PIN,
+            CCUInterfaces::TEENSY_240_OK_PIN,
+            CCUInterfaces::JUMPER_OUT_PIN 
+        },
+        ADCConversions_s 
+        { 
+            CCUInterfaces::GLV_CONV_FACTOR,
+            CCUInterfaces::CONTROL_PILOT_CONV_FACTOR,
+            CCUInterfaces::PROXIMITY_PILOT_CONV_FACTOR,
+            CCUInterfaces::JUMPER_OUT_CONV_FACTOR 
+        },
+        CCUInterfaces::BIT_RESOLUTION
     );
-    ADCInterfaceInstance::instance().init(sys_time::hal_millis());
 
+    ADCInterfaceInstance::instance().init(sys_time::hal_millis());
 
     /* CAN Interfaces Construct */
     CANInterfacesInstance::create(ACUInterfaceInstance::instance(), ChargerInterfaceInstance::instance(), EnergyMeterInterfaceInstance::instance());
 
-
     /* Charger Interface */
     ChargerInterface(ACUInterfaceInstance::instance());
 
-
     /* Display Interface */
-    DisplayInterfaceInstance::create(   DisplayPinout_s { CCUInterfaces::LCD_CS_PIN,
-                                    CCUInterfaces::LCD_DC_PIN,
-                                    CCUInterfaces::LCD_MOSI_PIN,
-                                    CCUInterfaces::LCD_SCK_PIN,
-                                    CCUInterfaces::LCD_RESET_PIN,
-                                    CCUInterfaces::LCD_MISO_PIN }
+    DisplayInterfaceInstance::create(  
+        DisplayPinout_s 
+        { 
+            CCUInterfaces::LCD_CS_PIN,
+            CCUInterfaces::LCD_DC_PIN,
+            CCUInterfaces::LCD_MOSI_PIN,
+            CCUInterfaces::LCD_SCK_PIN,
+            CCUInterfaces::LCD_RESET_PIN,
+            CCUInterfaces::LCD_MISO_PIN 
+        }
     );
     DisplayInterfaceInstance::instance().init();
 
 
     /* Level2 Interface */
-    Level2InterfaceInstance::create( Level2Pinout_s { CCUInterfaces::CONTROL_PWM_SENSE_PIN,
-                                    CCUInterfaces::START_CHARGE_PIN }
+    Level2InterfaceInstance::create( 
+        Level2Pinout_s
+        { 
+            CCUInterfaces::CONTROL_PWM_SENSE_PIN,
+            CCUInterfaces::START_CHARGE_PIN 
+        }
     );
     Level2InterfaceInstance::instance().init();
 
-
     /* Watchdog Interface */
-    WatchdogInterfaceInstance::create( WatchdogPinout_s {
-                                CCUInterfaces::WATCHDOG_KICK_PIN,
-                                CCUInterfaces::SOFTWARE_NOT_OK_PIN }
+    WatchdogInterfaceInstance::create(  
+        WatchdogPinout_s 
+        {
+            CCUInterfaces::WATCHDOG_KICK_PIN,
+            CCUInterfaces::SOFTWARE_NOT_OK_PIN 
+        }
     );
 
 }
-
 
 HT_TASK::TaskResponse run_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
 {
@@ -178,7 +192,6 @@ HT_TASK::TaskResponse debug_prints(const unsigned long& sysMicros, const HT_TASK
     // Serial.print(Level2InterfaceInstance::instance().get_level_2_data().pp_v_raw);
     // Serial.print("        ");
     // Serial.println(Level2InterfaceInstance::instance().get_level_2_data().pp_v_voltage);
-
 
     /* SHDN Information */
     Serial.println();

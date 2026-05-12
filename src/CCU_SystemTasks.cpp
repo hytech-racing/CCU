@@ -8,7 +8,7 @@ bool initialize_all_systems()
         Level2InterfaceInstance::instance(),
         ADCInterfaceInstance::instance(),
         WatchdogInterfaceInstance::instance(),
-        Level2SystemThresholds_s{}
+        Level2SystemThresholds_s {}
     );
 
     // Create MainChargeSystem instance
@@ -32,7 +32,7 @@ bool initialize_all_systems()
     etl::delegate<bool()> is_state_C2_ready = etl::delegate<bool()>::create([]() -> bool
                                                                                 { return Level2SystemInstance::instance().check_state_C2_conditions(ADCInterfaceInstance::instance(), Level2InterfaceInstance::instance()); });
 
-        etl::delegate<bool()> is_shdn_C_high = etl::delegate<bool()>::create([]() -> bool
+    etl::delegate<bool()> is_shdn_C_high = etl::delegate<bool()>::create([]() -> bool
                                                                                 { return Level2SystemInstance::instance().is_shdn_C_valid(ADCInterfaceInstance::instance()); });
 
     etl::delegate<void()> set_sw_shdn_high = etl::delegate<void()>::create([]() -> void
@@ -59,8 +59,6 @@ bool initialize_all_systems()
                                     sys_time::hal_millis());
 
     return true;
-
-
 }
 
 

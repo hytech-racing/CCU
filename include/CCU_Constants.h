@@ -14,11 +14,8 @@ namespace CCUInterfaces
 {
     /* Interface Constants */
     const size_t ANALOG_READ_RESOLUTION = 12;
+    const float BIT_RESOLUTION = 4096.0f;
     const size_t SERIAL_BAUDRATE = 115200;
-
-
-    /* ACU Interface Constants */
-
 
     /* ADC Interface Constants */
     constexpr const size_t SHDN_A_PIN = 9;
