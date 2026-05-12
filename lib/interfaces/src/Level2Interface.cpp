@@ -33,7 +33,7 @@ void Level2Interface::set_start_charge(bool state)
     digitalWrite(_pinout.teensy_start_charge_pin, state);
 }
 
-Level2_Data_s Level2Interface::getLevel2Data() const
+Level2_Data_s Level2Interface::get_level_2_data() const
 {
     return _readings;
 }

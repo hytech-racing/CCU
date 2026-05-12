@@ -138,52 +138,49 @@ HT_TASK::TaskResponse debug_prints(const unsigned long& sysMicros, const HT_TASK
 {
     const auto& acu_data = ACUInterfaceInstance::instance().get_latest_data();
     const auto& charger_data = ChargerInterfaceInstance::instance().get_latest_charger_data();
-    const auto& level2_data = Level2InterfaceInstance::instance().getLevel2Data();
-
-    Serial.println();
+    const auto& level2_data = Level2InterfaceInstance::instance().get_level_2_data();
 
     /* General Status */
-    Serial.printf("Balancing Enabled  : %s\n", MainChargeSystemInstance::instance().is_balancing_enabled() ? "YES" : "NO");
-    Serial.printf("Charging State  : %d\n", static_cast<int>(ChargerStateMachineInstance::instance().get_state()));
-    Serial.printf("BMS State       : %d\n", static_cast<int>(acu_data.acu_state));
+    Serial.print("Balancing Enabled  : "); Serial.println(MainChargeSystemInstance::instance().is_balancing_enabled() ? "YES" : "NO");
+    Serial.print("Charging State  : "); Serial.println(static_cast<size_t>(ChargerStateMachineInstance::instance().get_state()));
+    Serial.print("BMS State       : "); Serial.println(static_cast<size_t>(acu_data.acu_state));
     Serial.println();
 
     /* Voltage Information */
-    Serial.printf("Cell Voltage Max   : %.3f V\n", acu_data.high_voltage);
-    Serial.printf("Cell Voltage Min   : %.3f V\n", acu_data.low_voltage);
-    Serial.printf("Cell Voltage Avg   : %.3f V\n", acu_data.average_voltage);
-    Serial.printf("Cell Voltage Delta : %.3f V\n", acu_data.high_voltage - acu_data.low_voltage);
-    Serial.printf("Pack Voltage       : %.2f V\n", acu_data.total_voltage);
+    Serial.print("Cell Voltage Max   : "); Serial.println(acu_data.high_voltage);
+    Serial.print("Cell Voltage Min   : "); Serial.println(acu_data.low_voltage);
+    Serial.print("Cell Voltage Avg   : "); Serial.println(acu_data.average_voltage);
+    Serial.print("Cell Voltage Delta : "); Serial.println(acu_data.high_voltage - acu_data.low_voltage);
+    Serial.print("Pack Voltage       : "); Serial.println(acu_data.total_voltage);
     Serial.println();
 
-    /* Temperature Information */
-    Serial.printf("Max Cell Temp      : %.2f C\n", acu_data.max_cell_temp);
-    Serial.printf("Min Cell Temp      : %.2f C\n", acu_data.min_cell_temp);
-    Serial.printf("Max Board Temp     : %.2f C\n", acu_data.max_board_temp);
+    // /* Temperature Information */
+    Serial.print("Max Cell Temp       : "); Serial.println(acu_data.max_cell_temp);
+    Serial.print("Min Cell Temp      : "); Serial.println(acu_data.min_cell_temp);
+    Serial.print("Max Board Temp     : "); Serial.println(acu_data.max_board_temp);
     Serial.println();
 
     /* Charge Current Information */
-    Serial.printf("Charger Current    : %.2f A\n", charger_data.output_current_low);
-    Serial.printf("Calc Charge Curr   : %.2f A\n", MainChargeSystemInstance::instance().get_charge_current());
+    Serial.print("Charger Current    : "); Serial.println(charger_data.output_current_low);
+    Serial.print("Calc Charge Curr   : "); Serial.println(MainChargeSystemInstance::instance().get_charge_current());
     Serial.println();
-
 
     /* Charge Information */
-    Serial.println();
-    Serial.printf("CP PWM   : %.2f V   %5.1f%%\n", level2_data.control_pwm, level2_data.control_pwm_duty_cycle);
+    Serial.print("CP PWM   : "); Serial.print(level2_data.control_pwm); Serial.print(" V "); Serial.print(level2_data.control_pwm_duty_cycle); Serial.println("%");
 
-    // Serial.print("CP Voltage Sense      ");
-    // Serial.print(ADCInterfaceInstance::instance().read_control_pilot());
+    Serial.print("CP Voltage Sense      ");
+    Serial.println(ADCInterfaceInstance::instance().read_control_pilot());
     // Serial.print("        ");
-    // Serial.println(Level2InterfaceInstance::instance().getLevel2Data().cp_v_voltage);
+    // Serial.println(Level2InterfaceInstance::instance().get_level_2_data().cp_v_voltage);
 
-    // Serial.print("PP Voltage Sense      ");
-    // Serial.print(Level2InterfaceInstance::instance().getLevel2Data().pp_v_raw);
+    Serial.print("PP Voltage Sense      ");
+    Serial.println(ADCInterfaceInstance::instance().read_proximity_pilot());
+    // Serial.print(Level2InterfaceInstance::instance().get_level_2_data().pp_v_raw);
     // Serial.print("        ");
-    // Serial.println(Level2InterfaceInstance::instance().getLevel2Data().pp_v_voltage);
+    // Serial.println(Level2InterfaceInstance::instance().get_level_2_data().pp_v_voltage);
 
 
-   /* SHDN Information */
+    /* SHDN Information */
     Serial.println();
     Serial.printf("SHDN_A : %s\n", ADCInterfaceInstance::instance().read_shdn_A_voltage() ? "HIGH" : "LOW");
     Serial.printf("SHDN_B : %s\n", ADCInterfaceInstance::instance().read_shdn_B_voltage() ? "HIGH" : "LOW");

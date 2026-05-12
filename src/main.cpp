@@ -27,18 +27,12 @@ FlexCAN_Type<CAN3> CHARGER_CAN; //placed here after debugging
 FlexCAN_Type<CAN1> ACU_CAN;
 
 
-/* Parameters */
-ACUAllData_s<126, 48, 12> acu_all_data;
-
-
 /* Systems */
 namespace qn = qindesign::network; //setup of qn namespace
 qn::EthernetUDP udp; //setup of qn namespace
 
-
 /* Scheduler Setup */
 HT_SCHED::Scheduler& scheduler = HT_SCHED::Scheduler::getInstance();
-
 
 /* Task Declarations */
 /* read_dial, send_ethernet, and receieve_ethernet are not being used */
@@ -51,7 +45,7 @@ HT_TASK::Task receive_ethernet(HT_TASK::DUMMY_FUNCTION, &run_receive_ethernet, C
 HT_TASK::Task send_all_data(HT_TASK::DUMMY_FUNCTION, &handle_send_all_data, CCUConstants::SEND_ALL_DATA_PRIORITY, CCUConstants::SEND_ALL_DATA_PERIOD);
 HT_TASK::Task run_sample_can_data(HT_TASK::DUMMY_FUNCTION, &sample_can_data, CCUConstants::SAMPLE_CAN_DATA_PRIORITY, CCUConstants::SAMPLE_CAN_DATA_PERIOD);
 HT_TASK::Task kick_watchdog_task(run_kick_watchdog, &run_kick_watchdog, CCUConstants::KICK_WATCHDOG_PRIORITY, CCUConstants::KICK_WATCHDOG_PERIOD);
-HT_TASK::Task debug_prints_task(HT_TASK::DUMMY_FUNCTION, &debug_prints, CCUConstants::UPDATE_DISPLAY_PRIORITY, CCUConstants::UPDATE_DISPLAY_PERIOD);
+HT_TASK::Task debug_print_task(HT_TASK::DUMMY_FUNCTION, &debug_prints, CCUConstants::UPDATE_DISPLAY_PRIORITY, CCUConstants::UPDATE_DISPLAY_PERIOD);
 HT_TASK::Task tick_state_machine_task(HT_TASK::DUMMY_FUNCTION, &tick_state_machine, CCUConstants::TICK_STATE_MACHINE_PRIORITY, CCUConstants::TICK_STATE_MACHINE_PERIOD);
 HT_TASK::Task calculate_charge_current_task(HT_TASK::DUMMY_FUNCTION, &calculate_charge_current, CCUConstants::TICK_STATE_MACHINE_PRIORITY, CCUConstants::TICK_STATE_MACHINE_PERIOD);
 //HT_TASK::Task check_level2_condition(HT_TASK::DUMMY_FUNCTION, &check_level2_charge_condition, CCUConstants::LEVEL2_ENABLED_PRIORITY, CCUConstants::LEVEL2_ENABLED_SAMPLE_PERIOD );
@@ -72,7 +66,9 @@ void setup() {
   //scheduler.schedule(send_ethernet);
   //scheduler.schedule(receive_ethernet);
   scheduler.schedule(send_all_data);
-  // scheduler.schedule(debug_print_task); //uncomment if display is not updating values, otherwise no need for serial monitor
+
+  scheduler.schedule(debug_print_task); //uncomment if display is not updating values, otherwise no need for serial monitor
+
   scheduler.schedule(run_sample_can_data);
   scheduler.schedule(kick_watchdog_task);
   //scheduler.schedule(tick_state_machine_task); //this task times out watchdog for some reason (state machine would be nice to have but isn't a priority for CCU to work)

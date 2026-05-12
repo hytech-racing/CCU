@@ -44,7 +44,7 @@ public:
     void set_start_charge(bool state);
 
 
-    Level2_Data_s getLevel2Data() const;
+    Level2_Data_s get_level_2_data() const;
 
 private:
 
