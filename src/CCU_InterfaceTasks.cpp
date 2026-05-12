@@ -155,9 +155,10 @@ HT_TASK::TaskResponse debug_prints(const unsigned long& sysMicros, const HT_TASK
     const auto& level2_data = Level2InterfaceInstance::instance().get_level_2_data();
 
     /* General Status */
+    Serial.println(Level2SystemInstance::instance().is_120_switched(ADCInterfaceInstance::instance()) ? "Set to 120 V Charging" : "Set to 240 V Charging");
     Serial.print("Balancing Enabled  : "); Serial.println(MainChargeSystemInstance::instance().is_balancing_enabled() ? "YES" : "NO");
-    Serial.print("Charging State  : "); Serial.println(static_cast<size_t>(ChargerStateMachineInstance::instance().get_state()));
-    Serial.print("BMS State       : "); Serial.println(static_cast<size_t>(acu_data.acu_state));
+    Serial.print("Charging State     : "); Serial.println(static_cast<size_t>(ChargerStateMachineInstance::instance().get_state()));
+    Serial.print("BMS State          : "); Serial.println(static_cast<size_t>(acu_data.acu_state));
     Serial.println();
 
     /* Voltage Information */

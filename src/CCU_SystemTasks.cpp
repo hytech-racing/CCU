@@ -15,7 +15,6 @@ bool initialize_all_systems()
     MainChargeSystemInstance::create();
 
     /* State Machine Initialization */
-
     /* Delegate Function Definitions */
     etl::delegate<bool()> is_120_conditions_ok = etl::delegate<bool()>::create([]() -> bool
                                                                                 { return Level2SystemInstance::instance().check_120_conditions(ADCInterfaceInstance::instance()); });
@@ -36,27 +35,30 @@ bool initialize_all_systems()
                                                                                 { return Level2SystemInstance::instance().is_shdn_C_valid(ADCInterfaceInstance::instance()); });
 
     etl::delegate<void()> set_sw_shdn_high = etl::delegate<void()>::create([]() -> void
-                                                                                { return WatchdogInterfaceInstance::instance().set_sw_not_ok_pin_high(); });
+                                                                                { WatchdogInterfaceInstance::instance().set_sw_not_ok_pin_high(); });
 
     etl::delegate<void()> set_sw_shdn_low = etl::delegate<void()>::create([]() -> void
-                                                                                { return WatchdogInterfaceInstance::instance().set_sw_not_ok_pin_low(); });
+                                                                                { WatchdogInterfaceInstance::instance().set_sw_not_ok_pin_low(); });
 
     etl::delegate<void()> set_start_charge_high = etl::delegate<void()>::create([]() -> void
-                                                                                { return Level2InterfaceInstance::instance().set_start_charge(HIGH); });
+                                                                                { Level2InterfaceInstance::instance().set_start_charge(HIGH); });
 
     etl::delegate<void()> set_start_charge_low = etl::delegate<void()>::create([]() -> void
-                                                                                { return Level2InterfaceInstance::instance().set_start_charge(LOW); });
-    ChargerStateMachineInstance::create(is_120_conditions_ok,
-                                    is_120_switched,
-                                    is_240_switched,
-                                    is_state_B2_ready,
-                                    is_state_C2_ready,
-                                    is_shdn_C_high,
-                                    set_sw_shdn_high,
-                                    set_sw_shdn_low,
-                                    set_start_charge_high,
-                                    set_start_charge_low,
-                                    sys_time::hal_millis());
+                                                                                { Level2InterfaceInstance::instance().set_start_charge(LOW); });
+    
+    ChargerStateMachineInstance::create(
+        is_120_conditions_ok,
+        is_120_switched,
+        is_240_switched,
+        is_state_B2_ready,
+        is_state_C2_ready,
+        is_shdn_C_high,
+        set_sw_shdn_high,
+        set_sw_shdn_low,
+        set_start_charge_high,
+        set_start_charge_low,
+        sys_time::hal_millis()
+    );
 
     return true;
 }

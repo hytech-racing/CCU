@@ -5,10 +5,11 @@
 void MainChargeSystem::calculate_charge_current( float max_pack_voltage, float cutoff_voltage, float charger_current_max, bool is_balancing_enabled )
 {
     // Get battery data from ACU
-    float average_voltage = ACUInterfaceInstance::instance().get_latest_data().average_voltage; //average voltage across the cells
-    float low_voltage = ACUInterfaceInstance::instance().get_latest_data().low_voltage; //the lowest voltage in any of the cells
-    float high_voltage = ACUInterfaceInstance::instance().get_latest_data().high_voltage; //the highest voltage in any of the cells
-    float total_voltage = ACUInterfaceInstance::instance().get_latest_data().total_voltage; //the total voltage in the pack
+    const auto& acu_data = ACUInterfaceInstance::instance().get_latest_data();
+    float average_voltage = acu_data.average_voltage; //average voltage across the cells
+    float low_voltage = acu_data.low_voltage; //the lowest voltage in any of the cells
+    float high_voltage = acu_data.high_voltage; //the highest voltage in any of the cells
+    float total_voltage = acu_data.total_voltage; //the total voltage in the pack
 
     // Check safety conditions first
     if (!_is_safety_conditions_valid())

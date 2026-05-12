@@ -59,6 +59,7 @@ void setup()
   qn::Ethernet.begin(); //begins QNEthernet
 
   initialize_all_interfaces();
+  initialize_all_systems();
 
   scheduler.setTimingFunction(micros);
   // scheduler.schedule(read_dial_task);

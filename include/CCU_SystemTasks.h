@@ -31,6 +31,17 @@
  */
 bool initialize_all_systems();
 
+extern etl::delegate<bool()> is_120_conditions_ok;
+extern etl::delegate<bool()> is_120_switched; 
+extern etl::delegate<bool()> is_240_switched;
+extern etl::delegate<bool()> is_state_B2_ready;
+extern etl::delegate<bool()> is_state_C2_ready;
+extern etl::delegate<bool()> is_shdn_C_high;
+extern etl::delegate<void()> set_sw_shdn_high; 
+extern etl::delegate<void()> set_sw_shdn_low;
+extern etl::delegate<void()> set_start_charge_high;
+extern etl::delegate<void()> set_start_charge_low;
+
 HT_TASK::TaskResponse tick_state_machine(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
 HT_TASK::TaskResponse calculate_charge_current(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);

@@ -14,8 +14,7 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
                     _set_state(ChargerState_e::ERROR, current_millis);
                     break;
                 }
-
-                if (_is_120_conditions_ok())
+                else
                 {
                     _set_state(ChargerState_e::CHECK_SWITCH, current_millis);
                     break;
@@ -42,13 +41,13 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
                 break;
             }
 
-             if (_is_120_conditions_ok() && _is_120_switched())
+            if (_is_120_switched())
             {
                 _set_state(ChargerState_e::CHARGING_120, current_millis);
                 break;
             }
 
-            if (_is_120_conditions_ok() && _is_240_switched())
+            if (_is_240_switched())
             {
                 _set_state(ChargerState_e::CHECK_240_B2_OK, current_millis);
                 break;
@@ -210,18 +209,18 @@ void ChargerStateMachine::_handle_exit_logic(ChargerState_e prev_state, unsigned
     {
         case ChargerState_e::CHECK_240_B2_OK:
         {
-            _set_start_charge_high();
+            // _set_start_charge_high();
             break;
         }
-        case ChargerState_e::STARTUP: { break; }
-        case ChargerState_e::CHECK_SWITCH: { break; }
-        case ChargerState_e::CHARGE_120_UNLATCHED: { break; }
-        case ChargerState_e::CHARGING_120: { break; } // only exit would be to error, probably implement as enter logic
-        case ChargerState_e::CHECK_240_C2_OK: { break; }
-        case ChargerState_e::CHARGE_240_UNLATCHED: { break; }
-        case ChargerState_e::CHARGING_240: { break; } // only exit would be to error, probably implement as enter logic
-        case ChargerState_e::ERROR: { break; }
-        default: { break; }
+        case ChargerState_e::STARTUP: break;
+        case ChargerState_e::CHECK_SWITCH: break;
+        case ChargerState_e::CHARGE_120_UNLATCHED: break;
+        case ChargerState_e::CHARGING_120: break; // only exit would be to error, probably implement as enter logic
+        case ChargerState_e::CHECK_240_C2_OK: break;
+        case ChargerState_e::CHARGE_240_UNLATCHED: break;
+        case ChargerState_e::CHARGING_240: break; // only exit would be to error, probably implement as enter logic
+        case ChargerState_e::ERROR: break;
+        default: break;
     }
 }
 
@@ -236,18 +235,18 @@ void ChargerStateMachine::_handle_entry_logic(ChargerState_e new_state, unsigned
         }
         case ChargerState_e::ERROR:
         {
-            _set_sw_shdn_low();
-            _set_start_charge_low();
+            // _set_sw_shdn_low();
+            // _set_start_charge_low();
             break;
         }
-        case ChargerState_e::CHECK_SWITCH: { break; }
-        case ChargerState_e::CHARGE_120_UNLATCHED: { break; }
-        case ChargerState_e::CHARGING_120: { break; } // only exit would be to error, probably implement as enter logic
-        case ChargerState_e::CHECK_240_B2_OK: { break; }
-        case ChargerState_e::CHECK_240_C2_OK: { break; }
-        case ChargerState_e::CHARGE_240_UNLATCHED: { break; }
-        case ChargerState_e::CHARGING_240: { break; } // only exit would be to error, probably implement as enter logic
-        default: { break; }
+        case ChargerState_e::CHECK_SWITCH: break;
+        case ChargerState_e::CHARGE_120_UNLATCHED: break;
+        case ChargerState_e::CHARGING_120: break; // only exit would be to error, probably implement as enter logic
+        case ChargerState_e::CHECK_240_B2_OK: break;
+        case ChargerState_e::CHECK_240_C2_OK: break;
+        case ChargerState_e::CHARGE_240_UNLATCHED: break;
+        case ChargerState_e::CHARGING_240: break; // only exit would be to error, probably implement as enter logic
+        default: break;
     }
 }
 
