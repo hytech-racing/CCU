@@ -7,7 +7,7 @@
 
 //take the values from the protobuf message and update CCUInput_s
 
-void CCUEthernetInterface::recieve_pb_msg_acu_all_data(const hytech_msgs_ACUAllData_s &msg_in, ACUAllData_s<126, 48, 12> &acu_all_data)
+void CCUEthernetInterface::recieve_pb_msg_acu_all_data(const hytech_msgs_ACUAllData_s &msg_in, ACUAllDataType_s &acu_all_data)
 {
     for (uint32_t i = 0; i < msg_in.voltages_count; ++i) //NOLINT protoc struct is an array of floats
     {
