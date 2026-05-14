@@ -71,23 +71,24 @@ bool MainChargeSystem::determine_balancing_state(float voltage_delta_threshold, 
 
 bool MainChargeSystem::_is_safety_conditions_valid()
 {
-    // Check E-stop on charge cart (shutdown E)
-    bool is_shutdown_low = ADCInterfaceInstance::instance().read_shdn_E_voltage();
+    // Check BRB on charge cart (shutdown F is after BRB)
+    bool is_shutdown_low = !ADCInterfaceInstance::instance().read_shdn_F_voltage();
 
     /**
-     * Check ACU state: acu_state comes from the bms_status message. If shutdown is low on ACU (HVP is unplugged), acu_state = 1.
+     * Check ACU state: acu_state comes from the bms_status message. If shutdown is low on ACU (HVP is unplugged), acu_state = 3.
      * If acu_state = 2, we should/are safe to be charging
+     * ACU States for Reference: STARTUP = 0, ACTIVE = 1, CHARGING = 2, FAULTED = 3, WELDED = 4, WELDCHECK = 5
      */
-    bool is_acu_shutdown_low = ACUInterfaceInstance::instance().get_latest_data().acu_state == 1; //NOLINT
+    bool is_acu_shutdown_low = ACUInterfaceInstance::instance().get_latest_data().acu_state == 4 || 3; //NOLINT
 
     // Check for error state from state machine
-    ChargerState_e current_state = ChargerStateMachineInstance::instance().get_state();
-    bool is_in_error_state = (current_state == ChargerState_e::ERROR);
+    bool is_ccu_shutdown_low = (ChargerStateMachineInstance::instance().get_state() != ChargerState_e::ERROR);
 
-    if (is_shutdown_low || is_acu_shutdown_low || is_in_error_state)
+    if (is_shutdown_low || is_acu_shutdown_low || is_ccu_shutdown_low)
     {
         return false;
     }
+
 
     return true;
 }
