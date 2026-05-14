@@ -20,13 +20,11 @@ void ADCInterface::init(uint32_t init_millis)
     _init_millis = init_millis;
 }
 
-
 bool ADCInterface::read_shdn_A_voltage()
 {
     bool out = digitalRead(_adc_parameters.pinout.teensy_shdn_A_pin);
     return out;
 }
-
 
 bool ADCInterface::read_shdn_B_voltage()
 {
@@ -34,20 +32,17 @@ bool ADCInterface::read_shdn_B_voltage()
     return out;
 }
 
-
 bool ADCInterface::read_shdn_C_voltage()
 {
     bool out = digitalRead(_adc_parameters.pinout.teensy_shdn_C_pin);
     return out;
 }
 
-
 bool ADCInterface::read_shdn_D_voltage()
 {
     bool out = digitalRead(_adc_parameters.pinout.teensy_shdn_D_pin);
     return out;
 }
-
 
 bool ADCInterface::read_shdn_E_voltage()
 {
@@ -61,13 +56,11 @@ bool ADCInterface::read_shdn_F_voltage()
     return out;
 }
 
-
 bool ADCInterface::read_shdn_G_voltage()
 {
     bool out = digitalRead(_adc_parameters.pinout.teensy_shdn_G_pin);
     return out;
 }
-
 
 volt ADCInterface::read_global_lv_value()
 {
@@ -75,19 +68,16 @@ volt ADCInterface::read_global_lv_value()
     return data;
 }
 
-
 volt ADCInterface::read_control_pilot()
 {
     volt data = static_cast<float>(analogRead(_adc_parameters.pinout.teensy_control_pilot_pin)) * _adc_parameters.conversions.control_pilot_conv_factor;
     return data;
 }
 
-
 bool ADCInterface::is_control_pilot_low()
 {
     return read_control_pilot() < adc_default_parameters::CONTROL_PILOT_VOLTAGE_LOW_THRESHOLD;
 }
-
 
 volt ADCInterface::read_proximity_pilot()
 {
@@ -95,12 +85,10 @@ volt ADCInterface::read_proximity_pilot()
     return data;
 }
 
-
 bool ADCInterface::is_proximity_pilot_high()
 {
     return read_proximity_pilot() > adc_default_parameters::PROXIMITY_PILOT_VOLTAGE_HIGH_THRESHOLD;
 }
-
 
 bool ADCInterface::read_240_enabled()
 {
@@ -108,13 +96,11 @@ bool ADCInterface::read_240_enabled()
     return out;
 }
 
-
 bool ADCInterface::read_240_ok()
 {
     bool out = digitalRead(_adc_parameters.pinout.teensy_240_ok_pin);
     return out;
 }
-
 
 volt ADCInterface::read_jumper_out()
 {
@@ -122,18 +108,15 @@ volt ADCInterface::read_jumper_out()
     return data;
 }
 
-
 bool ADCInterface::is_jumper_out_high()
 {
     return read_jumper_out() > adc_default_parameters::TEENSY41_MAX_DIGITAL_READ_VOLTAGE_THRESH;
 }
 
-
 bool ADCInterface::is_jumper_out_low()
 {
     return read_jumper_out() < adc_default_parameters::TEENSY41_MIN_DIGITAL_READ_VOLTAGE_THRESH;
 }
-
 
 const ADCInterfaceParams_s& ADCInterface::get_adc_params() const
 {
