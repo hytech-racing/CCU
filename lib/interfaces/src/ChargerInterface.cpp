@@ -4,7 +4,7 @@
 #include "CCUCANInterfaceImpl.h" // fix this lmao
 
 
-void ChargerInterface::receive_charger_data_message(const CAN_message_t& msg, unsigned long curr_millis, ACUInterface& acu_interface, float max_pack_voltage, float cutoff_voltage) {
+void ChargerInterface::receive_charger_data_message(const CAN_message_t& msg, unsigned long curr_millis, ACUInterface& acu_interface, float max_pack_voltage, float cell_cutoff_voltage) {
     CHARGER_DATA_t charger_data_msg;
     //charger_data_s charger_data; //NOLINT - needed for initialization
     Unpack_CHARGER_DATA_hytech(&charger_data_msg, &msg.buf[0], msg.len);
@@ -18,7 +18,7 @@ void ChargerInterface::receive_charger_data_message(const CAN_message_t& msg, un
     acu_interface.set_is_charging_enabled(true); //if a charger message is received, we are ready to start charging
 
     /* Redundancy to avoid flipping between true and false for balancing (charging) enabled */
-    if (acu_interface.get_latest_data().total_voltage >= max_pack_voltage || ACUInterfaceInstance::instance().get_latest_data().high_voltage >= cutoff_voltage) {
+    if (acu_interface.get_latest_data().total_voltage >= max_pack_voltage || ACUInterfaceInstance::instance().get_latest_data().high_voltage >= cell_cutoff_voltage) {
         acu_interface.set_is_charging_enabled(false);
     }
 }
@@ -34,6 +34,20 @@ void ChargerInterface::enqueue_charging_data(ACUInterface& acu_interface, float 
     charger_control.max_charging_voltage_high = 0x14; //NOLINT (see comment) - need to change this in PCAN library
     charger_control.max_charging_voltage_low = 0xB4; //NOLINT (see comment)
     charger_control.max_charging_current_high = 0; // only "low" is being used/harnessed in
-    charger_control.max_charging_current_low = calculated_charge_current; //NOLINT (this works)
+    // charger_control.max_charging_current_low = calculated_charge_current; //NOLINT (this works)
+
+
+    // Elcon max is 12 A, set absolute hard limit at 11 A
+    // 2 Amp  -> 20  -> 0x14
+    // 4 Amp  -> 40  -> 0x28
+    // 6 Amp  -> 60  -> 0x3C
+    // 8 Amp  -> 80  -> 0x50
+    // 11 Amp -> 110 -> 0x6E
+    charger_control.max_charging_current_low = 0x14;
+    // charger_control.max_charging_current_low = 0x28;
+    // charger_control.max_charging_current_low = 0x3C;
+    // charger_control.max_charging_current_low = 0x50;
+    // charger_control.max_charging_current_low = 0x6E;
+
     CAN_util::enqueue_msg(&charger_control, &Pack_CHARGER_CONTROL_hytech, CCUCANInterfaceImpl::charger_can_tx_buffer);
 }

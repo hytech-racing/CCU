@@ -64,7 +64,7 @@ void ccu_CAN_recv(CANInterfaces &interfaces, const CAN_message_t &msg, unsigned 
     }
     case CHARGER_DATA_CANID:
     {
-        interfaces.charger_interface.receive_charger_data_message(msg, millis, interfaces.acu_interface, interfaces.max_pack_voltage, interfaces.cutoff_voltage);
+        interfaces.charger_interface.receive_charger_data_message(msg, millis, interfaces.acu_interface, interfaces.max_pack_voltage, interfaces.cell_cutoff_voltage);
         break;
     }
     case BMS_ONBOARD_TEMPS_CANID:

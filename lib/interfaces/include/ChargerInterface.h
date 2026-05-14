@@ -32,7 +32,7 @@ public:
         _acu_interface(acu_interface)
     {}
 
-    void receive_charger_data_message(const CAN_message_t& msg, unsigned long curr_milli, ACUInterface& acu_interface, float max_pack_voltage, float cutoff_voltage);
+    void receive_charger_data_message(const CAN_message_t& msg, unsigned long curr_milli, ACUInterface& acu_interface, float max_pack_voltage, float cell_cutoff_voltage);
 
     void send_charger_message();
 

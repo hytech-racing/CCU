@@ -80,7 +80,7 @@ HT_TASK::TaskResponse calculate_charge_current(const unsigned long& sysMicros, c
 
     MainChargeSystemInstance::instance().calculate_charge_current(
         CCUConstants::MAX_PACK_VOLTAGE,
-        CCUConstants::CUTOFF_VOLTAGE,
+        CCUConstants::CELL_CUTOFF_VOLTAGE,
         CCUConstants::CHARGER_CURRENT_MAX,
         is_balancing_enabled  // Will be updated by the function
     );

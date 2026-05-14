@@ -40,7 +40,7 @@ struct ChargeSystemData_s
 class MainChargeSystem {
     public:
         MainChargeSystem() :
-            _MAXIMUM_NEVER_EXCEED_CURRENT(25.0F)
+            _MAXIMUM_NEVER_EXCEED_CURRENT(25.0F) // 25 -> 2.5 Amps, at some point this should be 11A? Unless we make separate max currents for 120 and 240, which is what we should do tbh
         {
             _charge_data.calculated_charge_current = 0.0F;
             _charge_data.is_balancing_enabled = false;
@@ -49,13 +49,13 @@ class MainChargeSystem {
         /**
          * @brief Calculate and set the charge current based on cell state and charger state
          * @param max_pack_voltage Maximum allowable pack voltage
-         * @param cutoff_voltage Voltage to stop charging at
+         * @param cell_cutoff_voltage Voltage to stop charging at
          * @param charger_current_max Maximum current (will be scaled based on 120V vs 240V state)
          * @param is_balancing_enabled Reference to balancing state (will be updated)
          */
         void calculate_charge_current(
             float max_pack_voltage,
-            float cutoff_voltage,
+            float cell_cutoff_voltage,
             float charger_current_max,
             bool is_balancing_enabled
         );

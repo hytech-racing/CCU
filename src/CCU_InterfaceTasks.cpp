@@ -161,19 +161,15 @@ HT_TASK::TaskResponse debug_prints(const unsigned long& sysMicros, const HT_TASK
 
     /* General Status */
     Serial.println(Level2SystemInstance::instance().is_120_switched(ADCInterfaceInstance::instance()) ? "Set to 120 V Charging" : "Set to 240 V Charging");
+    Serial.print("ACU STATE     : "); Serial.println(static_cast<int>(ACUInterfaceInstance::instance().get_latest_data().acu_state));
+    Serial.print("Charging State        : "); Serial.println(static_cast<size_t>(ChargerStateMachineInstance::instance().get_state()));
 
 
     Serial.print("READ JUMPER OUT: "); Serial.println(ADCInterfaceInstance::instance().read_jumper_out());
-
-
-    Serial.print("READ 240 ENABLED: "); Serial.println(ADCInterfaceInstance::instance().read_240_enabled());
     Serial.print("READ 240 OK: "); Serial.println(ADCInterfaceInstance::instance().read_240_ok());
+    Serial.print("READ 240 ENABLED: "); Serial.println(ADCInterfaceInstance::instance().read_240_enabled());
 
-    Serial.print("IS CHECK 120 CONDITIONS OK: "); Serial.println(Level2SystemInstance::instance().check_120_conditions(ADCInterfaceInstance::instance()));
-
-    Serial.print("Balancing Enabled  : "); Serial.println(MainChargeSystemInstance::instance().is_balancing_enabled() ? "YES" : "NO");
-    Serial.print("Charging State     : "); Serial.println(static_cast<size_t>(ChargerStateMachineInstance::instance().get_state()));
-    Serial.print("BMS State          : "); Serial.println(static_cast<size_t>(acu_data.acu_state));
+    //Serial.print("Balancing Enabled  : "); Serial.println(MainChargeSystemInstance::instance().is_balancing_enabled() ? "YES" : "NO");
     Serial.println();
 
     /* Voltage Information */
@@ -191,18 +187,14 @@ HT_TASK::TaskResponse debug_prints(const unsigned long& sysMicros, const HT_TASK
     Serial.println();
 
     /* Charge Current Information */
-    Serial.print("Charger Current    : "); Serial.println(charger_data.output_current_low);
+    Serial.print("Charger Current Actual   : "); Serial.println(charger_data.output_current_low);
     Serial.print("Calc Charge Curr   : "); Serial.println(MainChargeSystemInstance::instance().get_charge_current());
     Serial.println();
 
     /* Charge Information */
-    Serial.print("CP PWM    "); Serial.print(level2_data.control_pwm); Serial.print(" V "); Serial.print(level2_data.control_pwm_duty_cycle); Serial.println("%");
-
-    Serial.print("CP Voltage Sense      ");
-    Serial.println(ADCInterfaceInstance::instance().read_control_pilot());
-
-    Serial.print("PP Voltage Sense      ");
-    Serial.println(ADCInterfaceInstance::instance().read_proximity_pilot());
+    Serial.print("CP PWM  "); Serial.print(level2_data.control_pwm); Serial.print(" V "); Serial.print(level2_data.control_pwm_duty_cycle); Serial.println("%");
+    Serial.print("CP Voltage Sense      "); Serial.println(ADCInterfaceInstance::instance().read_control_pilot());
+    Serial.print("PP Voltage Sense      "); Serial.println(ADCInterfaceInstance::instance().read_proximity_pilot());
 
     /* SHDN Information */
     Serial.print("SHDN_A : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_A_voltage() ? "HIGH" : "LOW");
@@ -213,10 +205,6 @@ HT_TASK::TaskResponse debug_prints(const unsigned long& sysMicros, const HT_TASK
     Serial.print("SHDN_F : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_F_voltage() ? "HIGH" : "LOW");
     Serial.print("SHDN_G : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_G_voltage() ? "HIGH" : "LOW");
     Serial.println();
-
-
-    Serial.println(ADCInterfaceInstance::instance().read_240_ok());
-    Serial.println(Level2SystemInstance::instance().check_state_C2_conditions(ADCInterfaceInstance::instance(), Level2InterfaceInstance::instance()));
 
    return HT_TASK::TaskResponse::YIELD;
 }

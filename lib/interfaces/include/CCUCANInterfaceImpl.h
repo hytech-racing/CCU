@@ -31,7 +31,7 @@ struct CANInterfaces
     EnergyMeterInterface& em_interface;
 
     float max_pack_voltage = 0.0f;
-    float cutoff_voltage = 0.0f;
+    float cell_cutoff_voltage = 0.0f;
 };
 
 using CANInterfacesInstance = etl::singleton<CANInterfaces>;
