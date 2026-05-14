@@ -79,7 +79,7 @@ bool MainChargeSystem::_is_safety_conditions_valid()
      * If acu_state = 2, we should/are safe to be charging
      * ACU States for Reference: STARTUP = 0, ACTIVE = 1, CHARGING = 2, FAULTED = 3, WELDED = 4, WELDCHECK = 5
      */
-    bool is_acu_shutdown_low = ACUInterfaceInstance::instance().get_latest_data().acu_state == 4 || 3; //NOLINT
+    bool is_acu_shutdown_low = ACUInterfaceInstance::instance().get_latest_data().acu_state != ACUState_e::CHARGING; //NOLINT
 
     // Check for error state from state machine
     bool is_ccu_shutdown_low = (ChargerStateMachineInstance::instance().get_state() != ChargerState_e::ERROR);

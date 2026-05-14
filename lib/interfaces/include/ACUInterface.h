@@ -16,7 +16,7 @@ struct ACUInterfaceData_s
 {
     /* ACU Status Message */
     unsigned long last_recv_status_millis;
-    uint16_t acu_state;
+    ACUState_e acu_state;
     bool heartbeat_ok;
 
     /* BMS Voltages */
@@ -57,7 +57,7 @@ public:
     {
         _curr_data.last_recv_status_millis = 0;
         _curr_data.heartbeat_ok = false; // start out false
-        _curr_data.acu_state = 0;
+        _curr_data.acu_state = ACUState_e::STARTUP;
         _curr_data.average_voltage = 0;
         _curr_data.low_voltage = 0;
         _curr_data.high_voltage = 0;
