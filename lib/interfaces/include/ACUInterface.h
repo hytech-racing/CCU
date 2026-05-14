@@ -46,7 +46,7 @@ struct ACUInterfaceData_s
     float cell_temps[12][3];
 
     /* Balancing Status */
-    bool is_balancing_enabled;
+    bool is_charging_enabled;
 };
 
 class ACUInterface
@@ -118,7 +118,7 @@ public:
     /**
      *
      */
-    bool set_is_balancing_enabled(bool state);
+    bool set_is_charging_enabled(bool state);
 
     /**
      *

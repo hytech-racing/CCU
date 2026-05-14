@@ -66,15 +66,15 @@ void ACUInterface::receive_onboard_detailed_temps(const CAN_message_t& msg, unsi
     _curr_data.temp_1 = HYTECH_temp_1_ro_fromS(static_cast<float>(onboard_detailed_temps.temp_1_ro));
 }
 
-bool ACUInterface::set_is_balancing_enabled(bool state)
+bool ACUInterface::set_is_charging_enabled(bool state)
 {
-    _curr_data.is_balancing_enabled = state;
+    _curr_data.is_charging_enabled = state;
 }
 
 
 void ACUInterface::enqueue_ccu_status_data()
 {
     CCU_STATUS_t ccu_status = {};
-    ccu_status.charger_enabled = _curr_data.is_balancing_enabled;
+    ccu_status.charger_enabled = _curr_data.is_charging_enabled;
     CAN_util::enqueue_msg(&ccu_status, &Pack_CCU_STATUS_hytech, CCUCANInterfaceImpl::acu_can_tx_buffer);
 }

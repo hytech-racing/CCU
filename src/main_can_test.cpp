@@ -16,20 +16,18 @@ void on_recv(const CAN_message_t &msg)
       Serial.print(msg.buf[i]); Serial.print(" "); //NOLINT (needed for testing)
     }
     Serial.print("  TS: "); Serial.println(msg.timestamp);
-  }
-    
+}    
 
 void setup()
 {
     //Serial.begin(115200);
     handle_CAN_setup(MAIN_CAN, 500000, &on_recv); //NOLINT (part of the test setup)
-    
 }
 
 void loop()
 {
-  Serial.println("looping");
-   // delay(100);
+    Serial.println("looping");
+    // delay(100);
     CAN_message_t test_msg;
     test_msg.id = 0xdd; //NOLINT (part of the test setup)
     test_msg.len = 1;
