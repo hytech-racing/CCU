@@ -67,7 +67,7 @@ class MainChargeSystem {
          * @return true if balancing should be enabled
          */
         bool determine_balancing_state(
-            float voltage_delta_threshold = 0.05F,
+            float voltage_delta_threshold = 0.02F,
             float min_balance_voltage = 3.0F
         );
 
