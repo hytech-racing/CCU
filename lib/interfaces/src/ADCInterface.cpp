@@ -83,10 +83,12 @@ volt ADCInterface::read_control_pilot()
     return data;
 }
 
+
 bool ADCInterface::is_control_pilot_low()
 {
     return read_control_pilot() < adc_default_parameters::CONTROL_PILOT_VOLTAGE_LOW_THRESHOLD;
 }
+
 
 volt ADCInterface::read_proximity_pilot()
 {
@@ -94,10 +96,12 @@ volt ADCInterface::read_proximity_pilot()
     return data;
 }
 
+
 bool ADCInterface::is_proximity_pilot_high()
 {
     return read_proximity_pilot() > adc_default_parameters::PROXIMITY_PILOT_VOLTAGE_HIGH_THRESHOLD;
 }
+
 
 bool ADCInterface::read_240_enabled()
 {
@@ -105,15 +109,11 @@ bool ADCInterface::read_240_enabled()
     return out;
 }
 
+
 bool ADCInterface::read_240_ok()
 {
     bool out = digitalRead(_adc_parameters.pinout.teensy_240_ok_pin);
     return out;
-}
-
-bool ADCInterface::is_240_ok_low()
-{
-    return read_240_ok() < adc_default_parameters::TEENSY41_MIN_DIGITAL_READ_VOLTAGE_THRESH;
 }
 
 
@@ -123,15 +123,18 @@ volt ADCInterface::read_jumper_out()
     return data;
 }
 
+
 bool ADCInterface::is_jumper_out_high()
 {
     return read_jumper_out() > adc_default_parameters::TEENSY41_MAX_DIGITAL_READ_VOLTAGE_THRESH;
 }
 
+
 bool ADCInterface::is_jumper_out_low()
 {
     return read_jumper_out() < adc_default_parameters::TEENSY41_MIN_DIGITAL_READ_VOLTAGE_THRESH;
 }
+
 
 const ADCInterfaceParams_s& ADCInterface::get_adc_params() const
 {

@@ -54,7 +54,7 @@ namespace CCUInterfaces
 
 
     /* Watchdog Interface Constants */
-    constexpr const size_t SOFTWARE_NOT_OK_PIN = 34; // Watchdog's !RESET pin
+    constexpr const size_t SW_SHDN_PIN = 34; // Watchdog's !RESET pin
     constexpr const size_t WATCHDOG_KICK_PIN = 35;
     constexpr const unsigned long WATCHDOG_KICK_INTERVAL_MS = 10UL; // why define this here and in the interface itslef isnt that useless?
 

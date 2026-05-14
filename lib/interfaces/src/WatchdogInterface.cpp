@@ -4,11 +4,11 @@
 void WatchdogInterface::init() {
     // Pin Congfiguration
     pinMode(_watchdog_parameters.pinout.teensy_watchdog_pin, OUTPUT);
-    pinMode(_watchdog_parameters.pinout.teensy_sw_not_ok_pin, OUTPUT);
+    pinMode(_watchdog_parameters.pinout.teensy_sw_shdn_pin, OUTPUT);
 
     // Inital Pin States For OUTPUT Pins
     digitalWrite(_watchdog_parameters.pinout.teensy_watchdog_pin, HIGH);
-    digitalWrite(_watchdog_parameters.pinout.teensy_sw_not_ok_pin, HIGH);
+    digitalWrite(_watchdog_parameters.pinout.teensy_sw_shdn_pin, LOW);
 }
 
 
@@ -23,12 +23,12 @@ bool WatchdogInterface::update_watchdog_state(uint32_t curr_millis)
     return _watchdog_state;
 }
 
-void WatchdogInterface::set_sw_not_ok_pin_low()
+void WatchdogInterface::set_sw_shdn_pin_low()
 {
-    digitalWrite(_watchdog_parameters.pinout.teensy_sw_not_ok_pin, LOW);
+    digitalWrite(_watchdog_parameters.pinout.teensy_sw_shdn_pin, LOW);
 }
 
-void WatchdogInterface::set_sw_not_ok_pin_high()
+void WatchdogInterface::set_sw_shdn_pin_high()
 {
-    digitalWrite(_watchdog_parameters.pinout.teensy_sw_not_ok_pin, HIGH);
+    digitalWrite(_watchdog_parameters.pinout.teensy_sw_shdn_pin, HIGH);
 }

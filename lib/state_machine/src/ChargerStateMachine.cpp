@@ -11,7 +11,6 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
             {
                 if (!_is_120_conditions_ok())
                 {
-                    Serial.println("120 CONDITIONS IS NOT OK");
                     _set_state(ChargerState_e::ERROR, current_millis);
                     break;
                 }
@@ -21,8 +20,6 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
                     break;
                 }
             }
-
-            break;
         }
         case ChargerState_e::CHECK_SWITCH:
         {
@@ -36,23 +33,29 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
              * 240_OK low + JMP_Read high = 120V
              * 240_OK low = JMP_Read low  = 240V
              */
-            // if (!_is_120_conditions_ok())
-            // {
-            //     _set_state(ChargerState_e::ERROR, current_millis);
-            //     break;
-            // }
 
-            // if (_is_120_switched())
-            // {
-            //     _set_state(ChargerState_e::CHARGING_120, current_millis);
-            //     break;
-            // }
+            if (current_millis - _last_state_changed_time < startup_delay_ms)
+            {
+                break; // delay to control the state transitions, cannot state transition too fast
+            }
 
-            // if (_is_240_switched())
-            // {
-            //     _set_state(ChargerState_e::CHECK_240_B2_OK, current_millis);
-            //     break;
-            // }
+            if (!_is_120_conditions_ok())
+            {
+                _set_state(ChargerState_e::ERROR, current_millis);
+                break;
+            }
+
+            if (_is_120_switched())
+            {
+                _set_state(ChargerState_e::CHARGE_120_UNLATCHED, current_millis);
+                break;
+            }
+
+            if (_is_240_switched())
+            {
+                _set_state(ChargerState_e::CHECK_240_B2_OK, current_millis);
+                break;
+            }
 
             break;
         }
@@ -66,6 +69,14 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
              * 1) Startup values error (CP no longer zero, PP no longer 5, etc.)
              * 2) Someone switches to 240V charging
              */
+
+            // // Check w david and adish, but this delay is technicaly bad because we want to immediatly detect errors
+            // // and you cannot state transition without physically hitting latch
+            // if (current_millis - _last_state_changed_time < startup_delay_ms)
+            // {
+            //     break;
+            // }
+
             if (!_is_120_conditions_ok() || !_is_120_switched())
             {
                 _set_state(ChargerState_e::ERROR, current_millis);
@@ -89,6 +100,7 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
              * 1) Startup values error (CP no longer zero, PP no longer 5, etc.)
              * 2) Someone switches to 240V charging w/o delatching
              */
+
             if (!_is_120_conditions_ok() || !_is_120_switched())
             {
                 _set_state(ChargerState_e::ERROR, current_millis);
@@ -105,11 +117,11 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
              * NOTE: In state B2, 240_Ok = HIGH.
              *
              * Error Cases:
-             * 1) Someone switches to 120V charging
+             * 1) Someone switches to 120V charging, ie. 240_Ok and JP_OUT_READ goes LOW
              */
-            if (!_is_240_switched())
+
+            if (current_millis - _last_state_changed_time < startup_delay_ms)
             {
-                _set_state(ChargerState_e::ERROR, current_millis);
                 break;
             }
 
@@ -127,16 +139,22 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
              * This state checks for EVSE State C/C2.
              *
              * Error Cases:
-             * 1) Someone switches to 120V charging
-             * 3) State B2 values are no longer present (no pwm from charger at all)
+             * 1) Someone switches to 120V charging, ie. 240_Ok and JP_OUT_READ goes LOW
              */
-            if (!_is_240_switched() || !_is_state_B2_ready())
+
+            if (current_millis - _last_state_changed_time < startup_delay_ms)
+            {
+                break;
+            }
+
+            if (!_is_240_conditions_ok())
             {
                 _set_state(ChargerState_e::ERROR, current_millis);
                 break;
             }
 
-            if (_is_240_switched() && _is_state_C2_ready())
+
+            if (_is_state_C2_ready())
             {
                 _set_state(ChargerState_e::CHARGE_240_UNLATCHED, current_millis);
                 break;
@@ -152,9 +170,17 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
              *
              * Error Cases:
              * 1) State C2 values error (incorrect pwm values, etc.)
-             * 2) Someone switches to 120V charging
+             * 2) Someone switches to 120V charging, ie. 240_Ok and JP_OUT_READ goes LOW
              */
-            if (!_is_state_C2_ready() || !_is_240_switched())
+
+            // Check w david and adish, but this delay is technicaly bad because we want to immediatly detect errors
+            // and you cannot state transition without physically hitting latch
+            if (current_millis - _last_state_changed_time < 15000)
+            {
+                break;
+            }
+
+            if (!_is_state_C2_ready() || !_is_240_conditions_ok())
             {
                 _set_state(ChargerState_e::ERROR, current_millis);
                 break;
@@ -177,7 +203,12 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
              * 1) State C values error (CP no longer zero, PP no longer 5, etc.)
              * 2) Someone switches to 120V charging w/o delatching
              */
-            if (!_is_state_C2_ready() || !_is_240_switched())
+            if (current_millis - _last_state_changed_time < 8000)
+            {
+                break;
+            }
+
+            if (!_is_state_C2_ready() || !_is_240_conditions_ok())
             {
                 _set_state(ChargerState_e::ERROR, current_millis);
                 break;
@@ -210,7 +241,7 @@ void ChargerStateMachine::_handle_exit_logic(ChargerState_e prev_state, unsigned
     {
         case ChargerState_e::CHECK_240_B2_OK:
         {
-            // _set_start_charge_high();
+            _set_start_charge_high();
             break;
         }
         case ChargerState_e::STARTUP: break;
@@ -234,19 +265,27 @@ void ChargerStateMachine::_handle_entry_logic(ChargerState_e new_state, unsigned
         {
             break;
         }
+        case ChargerState_e::CHARGING_120:
+        {
+            _set_sw_shdn_high();
+            break;
+        }
+        case ChargerState_e::CHARGING_240:
+        {
+            _set_sw_shdn_high();
+            break;
+        }
         case ChargerState_e::ERROR:
         {
-            // _set_sw_shdn_low();
-            // _set_start_charge_low();
+            _set_sw_shdn_low();
+            _set_start_charge_low();
             break;
         }
         case ChargerState_e::CHECK_SWITCH: break;
         case ChargerState_e::CHARGE_120_UNLATCHED: break;
-        case ChargerState_e::CHARGING_120: break; // only exit would be to error, probably implement as enter logic
         case ChargerState_e::CHECK_240_B2_OK: break;
         case ChargerState_e::CHECK_240_C2_OK: break;
         case ChargerState_e::CHARGE_240_UNLATCHED: break;
-        case ChargerState_e::CHARGING_240: break; // only exit would be to error, probably implement as enter logic
         default: break;
     }
 }

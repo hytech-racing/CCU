@@ -15,7 +15,7 @@ namespace watchdog_default_parameters
 struct WatchdogPinout_s
 {
     pin teensy_watchdog_pin; //teensy input to watchdog
-    pin teensy_sw_not_ok_pin ; // Watchdog's !RESET pin
+    pin teensy_sw_shdn_pin ; 
 };
 
 struct WatchdogInterfaceParams_s
@@ -45,12 +45,14 @@ public:
     bool update_watchdog_state(uint32_t curr_millis);
 
     /**
-     * Set sw not ok
+     * Set SW_SHDN pin low
      */
-    void set_sw_not_ok_pin_low();
-    void set_sw_not_ok_pin_high();
+    void set_sw_shdn_pin_low();
 
-    // Teensy ok pin?
+    /**
+     * Set SW_SHDN pin high
+     */
+    void set_sw_shdn_pin_high();
 
 private:
 

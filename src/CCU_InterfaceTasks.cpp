@@ -6,9 +6,9 @@ void initialize_all_interfaces()
 
 
     /* ADC Interface */
-    ADCInterfaceInstance::create(   
-        ADCPinout_s 
-        { 
+    ADCInterfaceInstance::create(
+        ADCPinout_s
+        {
             CCUInterfaces::SHDN_A_PIN,
             CCUInterfaces::SHDN_B_PIN,
             CCUInterfaces::SHDN_C_PIN,
@@ -21,14 +21,14 @@ void initialize_all_interfaces()
             CCUInterfaces::PROXIMITY_PILOT_PIN,
             CCUInterfaces::TEENSY_240_ENABLED_PIN,
             CCUInterfaces::TEENSY_240_OK_PIN,
-            CCUInterfaces::JUMPER_OUT_PIN 
+            CCUInterfaces::JUMPER_OUT_PIN
         },
-        ADCConversions_s 
-        { 
+        ADCConversions_s
+        {
             CCUInterfaces::GLV_CONV_FACTOR,
             CCUInterfaces::CONTROL_PILOT_CONV_FACTOR,
             CCUInterfaces::PROXIMITY_PILOT_CONV_FACTOR,
-            CCUInterfaces::JUMPER_OUT_CONV_FACTOR 
+            CCUInterfaces::JUMPER_OUT_CONV_FACTOR
         },
         CCUInterfaces::BIT_RESOLUTION
     );
@@ -43,9 +43,9 @@ void initialize_all_interfaces()
 
 
     /* Display Interface */
-    DisplayInterfaceInstance::create(  
-        DisplayPinout_s 
-        { 
+    DisplayInterfaceInstance::create(
+        DisplayPinout_s
+        {
             CCUInterfaces::LCD_CS_PIN,
             CCUInterfaces::LCD_SCK_PIN,
             CCUInterfaces::LCD_MISO_PIN,
@@ -58,23 +58,23 @@ void initialize_all_interfaces()
 
 
     /* Level2 Interface */
-    Level2InterfaceInstance::create( 
+    Level2InterfaceInstance::create(
         Level2Pinout_s
-        { 
+        {
             CCUInterfaces::CONTROL_PWM_SENSE_PIN,
-            CCUInterfaces::START_CHARGE_PIN 
+            CCUInterfaces::START_CHARGE_PIN
         }
     );
     Level2InterfaceInstance::instance().init();
 
     /* Watchdog Interface */
-    WatchdogInterfaceInstance::create(  
-        WatchdogPinout_s 
+    WatchdogInterfaceInstance::create(
+        WatchdogPinout_s
         {
             CCUInterfaces::WATCHDOG_KICK_PIN,
-            CCUInterfaces::SOFTWARE_NOT_OK_PIN 
-        }
-    );
+            CCUInterfaces::SW_SHDN_PIN
+        });
+    WatchdogInterfaceInstance::instance().init();
 
     // CCUEthernetInterface::create();
     // CCUEthernetInterface::instance().init_ethernet_device();
@@ -161,8 +161,8 @@ HT_TASK::TaskResponse debug_prints(const unsigned long& sysMicros, const HT_TASK
 
     /* General Status */
     Serial.println(Level2SystemInstance::instance().is_120_switched(ADCInterfaceInstance::instance()) ? "Set to 120 V Charging" : "Set to 240 V Charging");
-    
-    
+
+
     Serial.print("READ JUMPER OUT: "); Serial.println(ADCInterfaceInstance::instance().read_jumper_out());
 
 
@@ -196,24 +196,27 @@ HT_TASK::TaskResponse debug_prints(const unsigned long& sysMicros, const HT_TASK
     Serial.println();
 
     /* Charge Information */
-    Serial.print("CP PWM   : "); Serial.print(level2_data.control_pwm); Serial.print(" V "); Serial.print(level2_data.control_pwm_duty_cycle); Serial.println("%");
+    Serial.print("CP PWM    "); Serial.print(level2_data.control_pwm); Serial.print(" V "); Serial.print(level2_data.control_pwm_duty_cycle); Serial.println("%");
 
     Serial.print("CP Voltage Sense      ");
-    Serial.print(ADCInterfaceInstance::instance().read_control_pilot()); Serial.print("\t"); Serial.println(ADCInterfaceInstance::instance().is_control_pilot_low() ? "LOW" : "HIGH");
+    Serial.println(ADCInterfaceInstance::instance().read_control_pilot());
 
     Serial.print("PP Voltage Sense      ");
-    Serial.print(ADCInterfaceInstance::instance().read_proximity_pilot()); Serial.print("\t"); Serial.println(ADCInterfaceInstance::instance().is_proximity_pilot_high() ? "HIGH" : "LOW");
+    Serial.println(ADCInterfaceInstance::instance().read_proximity_pilot());
 
     /* SHDN Information */
+    Serial.print("SHDN_A : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_A_voltage() ? "HIGH" : "LOW");
+    Serial.print("SHDN_B : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_B_voltage() ? "HIGH" : "LOW");
+    Serial.print("SHDN_C : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_C_voltage() ? "HIGH" : "LOW");
+    Serial.print("SHDN_D : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_D_voltage() ? "HIGH" : "LOW");
+    Serial.print("SHDN_E : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_E_voltage() ? "HIGH" : "LOW");
+    Serial.print("SHDN_F : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_F_voltage() ? "HIGH" : "LOW");
+    Serial.print("SHDN_G : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_G_voltage() ? "HIGH" : "LOW");
     Serial.println();
-    Serial.printf("SHDN_A : %s\n", ADCInterfaceInstance::instance().read_shdn_A_voltage() ? "HIGH" : "LOW");
-    Serial.printf("SHDN_B : %s\n", ADCInterfaceInstance::instance().read_shdn_B_voltage() ? "HIGH" : "LOW");
-    Serial.printf("SHDN_C : %s\n", ADCInterfaceInstance::instance().read_shdn_C_voltage() ? "HIGH" : "LOW");
-    Serial.printf("SHDN_D : %s\n", ADCInterfaceInstance::instance().read_shdn_D_voltage() ? "HIGH" : "LOW");
-    Serial.printf("SHDN_E : %s\n", ADCInterfaceInstance::instance().read_shdn_E_voltage() ? "HIGH" : "LOW");
-    Serial.printf("SHDN_F : %s\n", ADCInterfaceInstance::instance().read_shdn_F_voltage() ? "HIGH" : "LOW");
-    Serial.printf("SHDN_G : %s\n", ADCInterfaceInstance::instance().read_shdn_G_voltage() ? "HIGH" : "LOW");
-    Serial.println();
+
+
+    Serial.println(ADCInterfaceInstance::instance().read_240_ok());
+    Serial.println(Level2SystemInstance::instance().check_state_C2_conditions(ADCInterfaceInstance::instance(), Level2InterfaceInstance::instance()));
 
    return HT_TASK::TaskResponse::YIELD;
 }

@@ -102,77 +102,92 @@ public:
     /**
      * @pre constructor called and instance created
      * @post Pins on Teensy configured and written as IN/OUT
-    */
+     */
     void init(uint32_t init_millis);
 
     /**
-     * @return shdn A voltage
-    */
+     * @return true if shdn A HIGH, else false
+     */
     bool read_shdn_A_voltage();
 
     /**
-     * @return shdn B voltage
-    */
+     * @return true if shdn B HIGH, else false
+     */
     bool read_shdn_B_voltage();
 
     /**
-     * @return shdn C voltage
-    */
+     * @return true if shdn C HIGH, else false
+     */
     bool read_shdn_C_voltage();
 
     /**
-     * @return shdn D voltage
-    */
+     * @return true if shdn D HIGH, else false
+     */
     bool read_shdn_D_voltage();
 
     /**
-     * @return shdn E voltage
-    */
+     * @return true if shdn E HIGH, else false
+     */
     bool read_shdn_E_voltage();
 
     /**
-     * @return shdn F voltage
-    */
+     * @return true if shdn  HIGH, else false
+     */
     bool read_shdn_F_voltage();
 
     /**
-     * @return shdn G voltage
-    */
+     * @return true if shdn G HIGH, else false
+     */
     bool read_shdn_G_voltage();
 
     /**
      * @return voltage value of GLV, nominal 24V
-    */
+     */
     volt read_global_lv_value();
 
     /**
      * @return voltage value of Control Pilot
-    */
+     */
     volt read_control_pilot();
+
+    /**
+     * @return true if Control Pilot voltage below threshold, else false
+     */
     bool is_control_pilot_low();
 
     /**
      * @return voltage value of Proximity Pilot
-    */
+     */
     volt read_proximity_pilot();
-    bool is_proximity_pilot_high();    
 
     /**
-     * @return state of 240_Enabled signal
-    */
+     * @return true if Proximity Pilot voltage above threshold, else false
+     */
+    bool is_proximity_pilot_high();
+
+    /**
+     * @return true if 240_Enabled HIGH, else false
+     */
     bool read_240_enabled();
 
     /**
-     * @return state of 240_OK signal
-    */
+     * @return true if 240_Ok HIGH, else false
+     */
     bool read_240_ok();
-    bool is_240_ok_low();
 
     /**
      * @return voltage value of JP_OUT_READ
-    */
+     */
     volt read_jumper_out();
+
+    /**
+     * @return true if JP_OUT_READ HIGH, else false
+     */
     bool is_jumper_out_high();
+
+    /**
+     * @return true if JP_OUT_READ LOW, else false
+     */
     bool is_jumper_out_low();
 
     /**

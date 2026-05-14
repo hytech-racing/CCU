@@ -51,7 +51,7 @@ HT_TASK::Task calculate_charge_current_task(HT_TASK::DUMMY_FUNCTION, &calculate_
 //HT_TASK::Task check_level2_condition(HT_TASK::DUMMY_FUNCTION, &check_level2_charge_condition, CCUConstants::LEVEL2_ENABLED_PRIORITY, CCUConstants::LEVEL2_ENABLED_SAMPLE_PERIOD );
 
 
-void setup() 
+void setup()
 {
   SPI.begin();
   SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0)); //NOLINT (spi settings)
@@ -83,7 +83,7 @@ void setup()
 }
 
 
-void loop() 
+void loop()
 {
   scheduler.run();
 }
