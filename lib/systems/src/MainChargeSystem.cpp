@@ -72,7 +72,7 @@ bool MainChargeSystem::determine_balancing_state(float voltage_delta_threshold, 
 bool MainChargeSystem::_is_safety_conditions_valid()
 {
     // Check E-stop on charge cart (shutdown E)
-    bool is_shutdown_low = ( ADCInterfaceInstance::instance().read_shdn_E_voltage() != HIGH );
+    bool is_shutdown_low = ADCInterfaceInstance::instance().read_shdn_E_voltage();
 
     /**
      * Check ACU state: acu_state comes from the bms_status message. If shutdown is low on ACU (HVP is unplugged), acu_state = 1.

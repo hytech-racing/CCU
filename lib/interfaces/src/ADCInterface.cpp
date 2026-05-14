@@ -55,7 +55,6 @@ bool ADCInterface::read_shdn_E_voltage()
     return out;
 }
 
-
 bool ADCInterface::read_shdn_F_voltage()
 {
     bool out = digitalRead(_adc_parameters.pinout.teensy_shdn_F_pin);
