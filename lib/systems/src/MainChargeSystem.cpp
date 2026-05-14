@@ -108,21 +108,18 @@ float MainChargeSystem::_get_current_for_state(ChargerState_e state, float charg
     switch (state)
     {
         case ChargerState_e::CHARGING_120:
+        {
             // 120V Charging, max is ~4A
             return charger_current_max * 0.3F;  // Scale down for 120V = 3.6A
-
+        }
         case ChargerState_e::CHARGING_240:
+        {
             // Level 2 charging, can use full current ~12A
             return charger_current_max;
-
-        case ChargerState_e::STARTUP:
-        case ChargerState_e::CHECK_SWITCH:
-        case ChargerState_e::CHARGE_120_UNLATCHED:
-        case ChargerState_e::CHECK_240_B2_OK:
-        case ChargerState_e::CHECK_240_C2_OK:
-        case ChargerState_e::CHARGE_240_UNLATCHED:
-        case ChargerState_e::ERROR:
+        }
         default:
+        {
             return 0.0F;
+        }
     }
 }
