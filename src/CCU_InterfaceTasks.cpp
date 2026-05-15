@@ -161,8 +161,8 @@ HT_TASK::TaskResponse debug_prints(const unsigned long& sysMicros, const HT_TASK
 
     /* General Status */
     Serial.println(Level2SystemInstance::instance().is_120_switched(ADCInterfaceInstance::instance()) ? "Set to 120 V Charging" : "Set to 240 V Charging");
-    Serial.print("ACU STATE     : "); Serial.println(static_cast<int>(ACUInterfaceInstance::instance().get_latest_data().acu_state));
-    Serial.print("Charging State        : "); Serial.println(static_cast<size_t>(ChargerStateMachineInstance::instance().get_state()));
+    Serial.print("ACU STATE      : "); Serial.println(static_cast<int>(ACUInterfaceInstance::instance().get_latest_data().acu_state));
+    Serial.print("Charging State : "); Serial.println(static_cast<size_t>(ChargerStateMachineInstance::instance().get_state()));
 
 
     Serial.print("READ JUMPER OUT: "); Serial.println(ADCInterfaceInstance::instance().read_jumper_out());

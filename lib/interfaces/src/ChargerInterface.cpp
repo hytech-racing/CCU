@@ -34,20 +34,6 @@ void ChargerInterface::enqueue_charging_data(ACUInterface& acu_interface, float 
     charger_control.max_charging_voltage_high = 0x14; //NOLINT (see comment) - need to change this in PCAN library
     charger_control.max_charging_voltage_low = 0xB4; //NOLINT (see comment)
     charger_control.max_charging_current_high = 0; // only "low" is being used/harnessed in
-    // charger_control.max_charging_current_low = calculated_charge_current; //NOLINT (this works)
-
-
-    // Elcon max is 12 A, set absolute hard limit at 11 A
-    // 2 Amp  -> 20  -> 0x14
-    // 4 Amp  -> 40  -> 0x28
-    // 6 Amp  -> 60  -> 0x3C
-    // 8 Amp  -> 80  -> 0x50
-    // 11 Amp -> 110 -> 0x6E
-    charger_control.max_charging_current_low = 0x14;
-    // charger_control.max_charging_current_low = 0x28;
-    // charger_control.max_charging_current_low = 0x3C;
-    // charger_control.max_charging_current_low = 0x50;
-    // charger_control.max_charging_current_low = 0x6E;
-
+    charger_control.max_charging_current_low = static_cast<uint8_t>(calculated_charge_current * 10); //NOLINT (this works)
     CAN_util::enqueue_msg(&charger_control, &Pack_CHARGER_CONTROL_hytech, CCUCANInterfaceImpl::charger_can_tx_buffer);
 }

@@ -66,8 +66,6 @@ namespace CCUConstants
     constexpr const float MAX_PACK_VOLTAGE = 530;
     constexpr const float MAX_ALLOWABLE_CELL_TEMP = 40; // celsius
     constexpr const float CELL_CUTOFF_VOLTAGE = 4.2; // max voltage that individual cell can be at
-    constexpr const float CHARGER_CURRENT_MAX = 110; // 110 -> 11 Amps
-    constexpr const float SAFE_CHARGING_CURRENT = 10; // 10 -> 1 Amp
 
     /* Task Times */
     constexpr unsigned long KICK_WATCHDOG_PERIOD = 1000; // 1 000 us = 1kHz

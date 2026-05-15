@@ -2,46 +2,44 @@
 #include <algorithm>
 #include <cmath>
 
-void MainChargeSystem::calculate_charge_current( float max_pack_voltage, float cell_cutoff_voltage, float charger_current_max, bool is_balancing_enabled )
+
+
+
+void MainChargeSystem::calculate_charge_current(float max_pack_voltage, float cell_cutoff_voltage)
 {
     // Get battery data from ACU
     const auto& acu_data = ACUInterfaceInstance::instance().get_latest_data();
-    float average_voltage = acu_data.average_voltage; //average voltage across the cells
-    float low_voltage = acu_data.low_voltage; //the lowest voltage in any of the cells
-    float high_voltage = acu_data.high_voltage; //the highest voltage in any of the cells
-    float total_voltage = acu_data.total_voltage; //the total voltage in the pack
+    float max_cell_voltage = acu_data.high_voltage; // the highest voltage in any of the cells
+    float total_pack_voltage = acu_data.total_voltage; // the total voltage in the pack
 
     // Check safety conditions first
     if (!_is_safety_conditions_valid())
     {
         _charge_data.calculated_charge_current = 0.0F;
         _charge_data.is_balancing_enabled = false;
-        is_balancing_enabled = false;
         return;
     }
 
     // Check if voltage limits reached/exceeded
-    bool is_voltage_limit_exceeded = (high_voltage >= cell_cutoff_voltage) || (total_voltage > max_pack_voltage);
+    bool is_voltage_limit_exceeded = (max_cell_voltage >= cell_cutoff_voltage) || (total_pack_voltage > max_pack_voltage);
 
     if (is_voltage_limit_exceeded)
     {
         _charge_data.calculated_charge_current = 0.0F;
         _charge_data.is_balancing_enabled = false;
-        is_balancing_enabled = false;
         return;
     }
 
     ChargerState_e current_state = ChargerStateMachineInstance::instance().get_state();
 
     // Determine requested current based on state
-    float requested_current = _get_current_for_state(current_state, charger_current_max);
+    float requested_current = _get_current_for_state(current_state);
 
     // Apply safety limits
-    _charge_data.calculated_charge_current = _apply_current_limits(requested_current);
+    _charge_data.calculated_charge_current = _apply_current_limits(current_state, requested_current);
 
     // Update balancing state
     _charge_data.is_balancing_enabled = determine_balancing_state();
-    is_balancing_enabled = _charge_data.is_balancing_enabled;
 }
 
 bool MainChargeSystem::determine_balancing_state(float voltage_delta_threshold, float min_balance_voltage)
@@ -82,38 +80,36 @@ bool MainChargeSystem::_is_safety_conditions_valid()
     bool is_acu_shutdown_low = ACUInterfaceInstance::instance().get_latest_data().acu_state != ACUState_e::CHARGING; //NOLINT
 
     // Check for error state from state machine
-    bool is_ccu_shutdown_low = (ChargerStateMachineInstance::instance().get_state() != ChargerState_e::ERROR);
+    bool is_ccu_shutdown_low = !(ChargerStateMachineInstance::instance().get_state() == ChargerState_e::CHARGING_120 ||
+                                ChargerStateMachineInstance::instance().get_state() == ChargerState_e::CHARGING_240);
 
     if (is_shutdown_low || is_acu_shutdown_low || is_ccu_shutdown_low)
     {
         return false;
     }
 
-
     return true;
 }
 
-float MainChargeSystem::_apply_current_limits(float requested_current)
+float MainChargeSystem::_apply_current_limits(ChargerState_e state, float requested_current)
 {
-    // Never exceed maximum current
-    float limited_current = std::min(requested_current, _MAXIMUM_NEVER_EXCEED_CURRENT);
-
-    // Temperature redundancy check? Or does it get too hot at comp?
+    return std::max(0.0F,requested_current);
+    // Temperature redundancy check? Derate check
 }
 
-float MainChargeSystem::_get_current_for_state(ChargerState_e state, float charger_current_max)
+float MainChargeSystem::_get_current_for_state(ChargerState_e state)
 {
     switch (state)
     {
         case ChargerState_e::CHARGING_120:
         {
-            // 120V Charging, max is 4A. Scale down to 3.85A
-            return charger_current_max * 0.35F;
+            // 120V Charging, max set at 3.5 amps
+            return _max_120V_current_amp;
         }
         case ChargerState_e::CHARGING_240:
         {
-            // Level 2 charging, max set at 11A
-            return charger_current_max;
+            // 240V charging, max set at 11 amps
+            return _max_240V_current_amp;
         }
         default:
         {

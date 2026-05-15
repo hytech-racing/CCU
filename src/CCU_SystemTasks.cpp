@@ -75,14 +75,9 @@ HT_TASK::TaskResponse tick_state_machine(const unsigned long &sysMicros, const H
 }
 
 HT_TASK::TaskResponse calculate_charge_current(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
-
-    bool is_balancing_enabled = false;
-
     MainChargeSystemInstance::instance().calculate_charge_current(
         CCUConstants::MAX_PACK_VOLTAGE,
-        CCUConstants::CELL_CUTOFF_VOLTAGE,
-        CCUConstants::CHARGER_CURRENT_MAX,
-        is_balancing_enabled  // Will be updated by the function
+        CCUConstants::CELL_CUTOFF_VOLTAGE
     );
 
     return HT_TASK::TaskResponse::YIELD;

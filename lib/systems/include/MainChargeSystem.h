@@ -29,6 +29,11 @@ enum BalancingState_e
     BALANCING
 };
 
+namespace charge_system_default_parameters
+{
+    const float _MAX_120V_CURRENT_AMP = 3.5;  // 3.5 amps is 35 in the charger CAN format
+    const float _MAX_240V_CURRENT_AMP = 5.0; // 11 amps is 100 in the charger CAN format
+};
 
 struct ChargeSystemData_s
 {
@@ -39,8 +44,9 @@ struct ChargeSystemData_s
 
 class MainChargeSystem {
     public:
-        MainChargeSystem() :
-            _MAXIMUM_NEVER_EXCEED_CURRENT(25.0F) // 25 -> 2.5 Amps, at some point this should be 11A? Unless we make separate max currents for 120 and 240, which is what we should do tbh
+        MainChargeSystem(float max_120V_current_amp = charge_system_default_parameters::_MAX_120V_CURRENT_AMP, float max_240V_current_amp = charge_system_default_parameters::_MAX_240V_CURRENT_AMP) :
+            _max_120V_current_amp(max_120V_current_amp),
+            _max_240V_current_amp(max_240V_current_amp)
         {
             _charge_data.calculated_charge_current = 0.0F;
             _charge_data.is_balancing_enabled = false;
@@ -55,9 +61,7 @@ class MainChargeSystem {
          */
         void calculate_charge_current(
             float max_pack_voltage,
-            float cell_cutoff_voltage,
-            float charger_current_max,
-            bool is_balancing_enabled
+            float cell_cutoff_voltage
         );
 
         /**
@@ -87,7 +91,8 @@ class MainChargeSystem {
         const ChargeSystemData_s& get_charge_data() const { return _charge_data; }
 
     private:
-        const float _MAXIMUM_NEVER_EXCEED_CURRENT;
+        const float _max_120V_current_amp;
+        const float _max_240V_current_amp;
 
         ChargeSystemData_s _charge_data;
 
@@ -96,15 +101,15 @@ class MainChargeSystem {
          */
         bool _is_safety_conditions_valid();
 
-        /**
-         * @brief Apply current limiting based on temperature and other factors
-         */
-        float _apply_current_limits(float requested_current);
+        // /**
+        //  * @brief Apply current limiting based on temperature and other factors
+        //  */
+        float _apply_current_limits(ChargerState_e state, float requested_current);
 
         /**
          * @brief Get appropriate current based on charger state
          */
-        float _get_current_for_state(ChargerState_e state, float charger_current_max);
+        float _get_current_for_state(ChargerState_e state);
 };
 
 using MainChargeSystemInstance = etl::singleton<MainChargeSystem>;
