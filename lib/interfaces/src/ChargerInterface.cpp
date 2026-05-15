@@ -4,7 +4,8 @@
 #include "CCUCANInterfaceImpl.h" // fix this lmao
 
 
-void ChargerInterface::receive_charger_data_message(const CAN_message_t& msg, unsigned long curr_millis, ACUInterface& acu_interface, float max_pack_voltage, float cell_cutoff_voltage) {
+void ChargerInterface::receive_charger_data_message(const CAN_message_t& msg, unsigned long curr_millis, ACUInterface& acu_interface, float max_pack_voltage, float cell_cutoff_voltage) 
+{
     CHARGER_DATA_t charger_data_msg;
     //charger_data_s charger_data; //NOLINT - needed for initialization
     Unpack_CHARGER_DATA_hytech(&charger_data_msg, &msg.buf[0], msg.len);

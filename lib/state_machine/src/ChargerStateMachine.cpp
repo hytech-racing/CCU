@@ -7,18 +7,19 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
     {
         case ChargerState_e::STARTUP:
         {
-            if (current_millis - _last_state_changed_time > startup_delay_ms)
+            if (current_millis - _last_state_changed_time < startup_delay_ms)
             {
-                if (!_is_120_conditions_ok())
-                {
-                    _set_state(ChargerState_e::ERROR, current_millis);
-                    break;
-                }
-                else
-                {
-                    _set_state(ChargerState_e::CHECK_SWITCH, current_millis);
-                    break;
-                }
+                break;
+            }
+            if (!_is_120_conditions_ok())
+            {
+                _set_state(ChargerState_e::ERROR, current_millis);
+                break;
+            }
+            else
+            {
+                _set_state(ChargerState_e::CHECK_SWITCH, current_millis);
+                break;
             }
         }
         case ChargerState_e::CHECK_SWITCH:

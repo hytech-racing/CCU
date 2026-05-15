@@ -32,7 +32,7 @@ enum BalancingState_e
 namespace charge_system_default_parameters
 {
     const float _MAX_120V_CURRENT_AMP = 3.5;  // 3.5 amps is 35 in the charger CAN format
-    const float _MAX_240V_CURRENT_AMP = 5.0; // 11 amps is 100 in the charger CAN format
+    const float _MAX_240V_CURRENT_AMP = 5.0; // 11 amps is 110 in the charger CAN format
 };
 
 struct ChargeSystemData_s
