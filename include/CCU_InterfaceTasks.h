@@ -1,24 +1,42 @@
-#ifndef CCUTASKS_H
-#define CCUTASKS_H
+#ifndef CCU_INTERFACETASKS_H
+#define CCU_INTERFACETASKS_H
 
-#include <ht_sched.hpp>
+/* External Dependencies */
+#include <ht_task.hpp>
+#include "SharedFirmwareTypes.h"
+
+/* Local Dependencies */
+#include "CCU_Constants.h"
+
+/* Local System Includes */
+#include "Level2System.h"
+#include "MainChargeSystem.h"
+#include "ChargerStateMachine.h"
+
+/* Local Interface Include */
+#include "ACUInterface.h"
 #include "CANInterface.h"
 #include "CCUCANInterfaceImpl.h"
-#include "ACUInterface.h"
 #include "CCUEthernetInterface.h"
 #include "ChargerInterface.h"
-#include "SystemTimeInterface.h"
-#include "CCU_Constants.h"
-#include "WatchdogInterface.h"
-#include "ChargerStateMachine.h"
-#include "SharedFirmwareTypes.h"
-#include "SystemTimeInterface.h"
-#include "CCUData.h"
-#include "MainChargeSystem.h"
 #include "DisplayInterface.h"
+#include "Level2Interface.h"
+#include "SystemTimeInterface.h"
+#include "WatchdogInterface.h"
+
+/* For Debugging */
+#include "ChargerStateMachine.h"
 
 
-HT_TASK::TaskResponse intitialize_all_interfaces();
+/**
+ * @brief Creates an instance of all interfaces. Init functions are called if necessary.
+ */
+void initialize_all_interfaces();
+
+/**
+ * @brief This task will fetch the watchdog state from WatchdogSystem and write it to the watchdog pin.
+ */
+::HT_TASK::TaskResponse run_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
 HT_TASK::TaskResponse init_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
@@ -40,16 +58,7 @@ HT_TASK::TaskResponse sample_can_data(const unsigned long& sysMicros, const HT_T
 
 HT_TASK::TaskResponse handle_send_all_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
-HT_TASK::TaskResponse init_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
-
-HT_TASK::TaskResponse run_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
-
-HT_TASK::TaskResponse tick_state_machine(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
-
-HT_TASK::TaskResponse calculate_charge_current(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
-
-HT_TASK::TaskResponse print_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
-
+::HT_TASK::TaskResponse debug_prints(const unsigned long &sysMicros, const HT_TASK::TaskInfo &taskInfo);
 
 
 #endif
