@@ -38,7 +38,6 @@ namespace CCUInterfaces
     constexpr const float PROXIMITY_PILOT_CONV_FACTOR = 0.62962962963F; // 5.1K / (5.1K + 3K)
     constexpr const float JUMPER_OUT_CONV_FACTOR = 0.106699751861F; // 4.3K / (4.3K + 36K)
 
-
     /* Display Interface Constants */
     constexpr const size_t LCD_CS_PIN = 39;
     constexpr const size_t LCD_SCK_PIN = 13;
@@ -47,17 +46,17 @@ namespace CCUInterfaces
     constexpr const size_t LCD_RESET_PIN = 40;
     constexpr const size_t LCD_DC_PIN = 41;
 
+    constexpr const size_t BUTTON1_READ_PIN = 16;
+    constexpr const size_t BUTTON2_READ_PIN = 17;
 
     /* Level2 Interface Constants */
     constexpr const size_t CONTROL_PWM_SENSE_PIN = 10;
     constexpr const size_t START_CHARGE_PIN = 32;
 
-
     /* Watchdog Interface Constants */
     constexpr const size_t SW_SHDN_PIN = 34; // Watchdog's !RESET pin
     constexpr const size_t WATCHDOG_KICK_PIN = 35;
     constexpr const unsigned long WATCHDOG_KICK_INTERVAL_MS = 10UL; // why define this here and in the interface itslef isnt that useless?
-
 }
 namespace CCUConstants
 {
