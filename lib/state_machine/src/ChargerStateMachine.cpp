@@ -7,7 +7,7 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
     {
         case ChargerState_e::STARTUP:
         {
-            if (current_millis - _last_state_changed_time < startup_delay_ms)
+            if (current_millis - _last_state_changed_time < state_transition_delay_ms)
             {
                 break;
             }
@@ -35,7 +35,7 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
              * 240_OK low = JMP_Read low  = 240V
              */
 
-            if (current_millis - _last_state_changed_time < startup_delay_ms)
+            if (current_millis - _last_state_changed_time < state_transition_delay_ms)
             {
                 break; // delay to control the state transitions, cannot state transition too fast
             }
@@ -73,7 +73,7 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
 
             // // Check w david and adish, but this delay is technicaly bad because we want to immediatly detect errors
             // // and you cannot state transition without physically hitting latch
-            // if (current_millis - _last_state_changed_time < startup_delay_ms)
+            // if (current_millis - _last_state_changed_time < state_transition_delay_ms)
             // {
             //     break;
             // }
@@ -121,7 +121,7 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
              * 1) Someone switches to 120V charging, ie. 240_Ok and JP_OUT_READ goes LOW
              */
 
-            if (current_millis - _last_state_changed_time < startup_delay_ms)
+            if (current_millis - _last_state_changed_time < state_transition_delay_ms)
             {
                 break;
             }
@@ -143,7 +143,7 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
              * 1) Someone switches to 120V charging, ie. 240_Ok and JP_OUT_READ goes LOW
              */
 
-            if (current_millis - _last_state_changed_time < startup_delay_ms)
+            if (current_millis - _last_state_changed_time < state_transition_delay_ms)
             {
                 break;
             }
@@ -176,7 +176,7 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
 
             // Check w david and adish, but this delay is technicaly bad because we want to immediatly detect errors
             // and you cannot state transition without physically hitting latch
-            if (current_millis - _last_state_changed_time < 15000)
+            if (current_millis - _last_state_changed_time < state_transition_delay_ms)
             {
                 break;
             }
@@ -204,7 +204,7 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
              * 1) State C values error (CP no longer zero, PP no longer 5, etc.)
              * 2) Someone switches to 120V charging w/o delatching
              */
-            if (current_millis - _last_state_changed_time < 8000)
+            if (current_millis - _last_state_changed_time < state_transition_delay_ms)
             {
                 break;
             }

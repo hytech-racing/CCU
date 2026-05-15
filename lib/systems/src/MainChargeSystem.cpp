@@ -2,21 +2,18 @@
 #include <algorithm>
 #include <cmath>
 
-
-
-
 void MainChargeSystem::calculate_charge_current(float max_pack_voltage, float cell_cutoff_voltage)
 {
     // Get battery data from ACU
     const auto& acu_data = ACUInterfaceInstance::instance().get_latest_data();
     float max_cell_voltage = acu_data.high_voltage; // the highest voltage in any of the cells
     float total_pack_voltage = acu_data.total_voltage; // the total voltage in the pack
+    auto current_state = ChargerStateMachineInstance::instance().get_state();
 
     // Check safety conditions first
     if (!_is_safety_conditions_valid())
     {
         _charge_data.calculated_charge_current = 0.0F;
-        _charge_data.is_balancing_enabled = false;
         return;
     }
 
@@ -26,61 +23,34 @@ void MainChargeSystem::calculate_charge_current(float max_pack_voltage, float ce
     if (is_voltage_limit_exceeded)
     {
         _charge_data.calculated_charge_current = 0.0F;
-        _charge_data.is_balancing_enabled = false;
         return;
     }
-
-    ChargerState_e current_state = ChargerStateMachineInstance::instance().get_state();
 
     // Determine requested current based on state
     float requested_current = _get_current_for_state(current_state);
 
     // Apply safety limits
     _charge_data.calculated_charge_current = _apply_current_limits(current_state, requested_current);
-
-    // Update balancing state
-    _charge_data.is_balancing_enabled = determine_balancing_state();
-}
-
-bool MainChargeSystem::determine_balancing_state(float voltage_delta_threshold, float min_balance_voltage)
-{
-    const auto& acu_data = ACUInterfaceInstance::instance().get_latest_data();
-
-    // Calculate voltage delta (max - min)
-    float voltage_delta = acu_data.high_voltage - acu_data.low_voltage;
-
-    // Get current charger state
-    ChargerState_e current_state = ChargerStateMachineInstance::instance().get_state();
-
-    // Only balance if:
-    // 1. All cells are above minimum safe voltage
-    // 2. There's significant voltage imbalance
-    // 3. We're not actively charging at high current (to avoid conflicts)
-    // 4. We're in an active charging state
-    bool cells_above_min = acu_data.low_voltage > min_balance_voltage;
-    bool significant_imbalance = voltage_delta > voltage_delta_threshold;
-    bool safe_current_for_balancing = _charge_data.calculated_charge_current < 5.0F; // this is wrong? check with david
-    bool in_charge_state = (current_state == ChargerState_e::CHARGING_120) ||
-                          (current_state == ChargerState_e::CHARGING_240);
-
-    return cells_above_min && significant_imbalance &&
-           safe_current_for_balancing && in_charge_state;
 }
 
 bool MainChargeSystem::_is_safety_conditions_valid()
 {
     // Check BRB on charge cart (shutdown F is after BRB)
-    bool is_shutdown_low = !ADCInterfaceInstance::instance().read_shdn_F_voltage();
+    bool is_shutdown_low = false;
+    bool is_acu_shutdown_low = false;
+    bool is_ccu_shutdown_low = false;
+
+    is_shutdown_low = !ADCInterfaceInstance::instance().read_shdn_F_voltage();
 
     /**
      * Check ACU state: acu_state comes from the bms_status message. If shutdown is low on ACU (HVP is unplugged), acu_state = 3.
      * If acu_state = 2, we should/are safe to be charging
      * ACU States for Reference: STARTUP = 0, ACTIVE = 1, CHARGING = 2, FAULTED = 3, WELDED = 4, WELDCHECK = 5
      */
-    bool is_acu_shutdown_low = ACUInterfaceInstance::instance().get_latest_data().acu_state != ACUState_e::CHARGING; //NOLINT
+    is_acu_shutdown_low = ACUInterfaceInstance::instance().get_latest_data().acu_state != ACUState_e::CHARGING; //NOLINT
 
     // Check for error state from state machine
-    bool is_ccu_shutdown_low = !(ChargerStateMachineInstance::instance().get_state() == ChargerState_e::CHARGING_120 ||
+    is_ccu_shutdown_low = !(ChargerStateMachineInstance::instance().get_state() == ChargerState_e::CHARGING_120 ||
                                 ChargerStateMachineInstance::instance().get_state() == ChargerState_e::CHARGING_240);
 
     if (is_shutdown_low || is_acu_shutdown_low || is_ccu_shutdown_low)

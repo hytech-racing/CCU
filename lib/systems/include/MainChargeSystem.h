@@ -38,7 +38,6 @@ namespace charge_system_default_parameters
 struct ChargeSystemData_s
 {
     float calculated_charge_current;
-    bool is_balancing_enabled;
     ChargerState_e current_charger_state;
 };
 
@@ -49,7 +48,6 @@ class MainChargeSystem {
             _max_240V_current_amp(max_240V_current_amp)
         {
             _charge_data.calculated_charge_current = 0.0F;
-            _charge_data.is_balancing_enabled = false;
         }
 
         /**
@@ -57,7 +55,6 @@ class MainChargeSystem {
          * @param max_pack_voltage Maximum allowable pack voltage
          * @param cell_cutoff_voltage Voltage to stop charging at
          * @param charger_current_max Maximum current (will be scaled based on 120V vs 240V state)
-         * @param is_balancing_enabled Reference to balancing state (will be updated)
          */
         void calculate_charge_current(
             float max_pack_voltage,
@@ -71,6 +68,7 @@ class MainChargeSystem {
          * @return true if balancing should be enabled
          */
         bool determine_balancing_state(
+            ChargerState_e current_state,
             float voltage_delta_threshold = 0.02F,
             float min_balance_voltage = 3.0F
         );
@@ -79,11 +77,6 @@ class MainChargeSystem {
          * @brief Get calculated charge current
          */
         float get_charge_current() const { return _charge_data.calculated_charge_current; }
-
-        /**
-         * @brief Check if balancing is enabled
-         */
-        bool is_balancing_enabled() const { return _charge_data.is_balancing_enabled; }
 
         /**
          * @brief Get the current charge system data

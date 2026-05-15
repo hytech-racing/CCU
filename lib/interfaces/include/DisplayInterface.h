@@ -37,7 +37,7 @@ struct DisplayInterfaceParams_s
 };
 
 struct DisplayConfig_s {
-    float display_update_interval;
+    unsigned long display_update_interval_ms;
 };
 
 class DisplayInterface {
@@ -45,7 +45,7 @@ public:
     DisplayInterface(
         DisplayPinout_s pinout,
         DisplayConfig_s config = {
-            .display_update_interval = display_default_parameters::DISPLAY_UPDATE_INTERVAL_MS
+            .display_update_interval_ms = display_default_parameters::DISPLAY_UPDATE_INTERVAL_MS
         }
     ) :
         Display(
@@ -70,7 +70,7 @@ public:
     private:
         DisplayPinout_s _pinout;
         DisplayConfig_s _config;
-        float _display_time;
+        unsigned long _display_time;
 
         // DMAChannel dma_spi;
         // uint8_t txBuffer [256];

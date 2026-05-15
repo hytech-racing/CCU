@@ -9,8 +9,8 @@ void Level2Interface::init()
 
 bool Level2Interface::_is_pwm_duty_cycle_valid()
 {
-    unsigned long highTime = pulseIn(_pinout.teensy_control_pwm_sense_pin, HIGH, 100000);
-    unsigned long lowTime  = pulseIn(_pinout.teensy_control_pwm_sense_pin, LOW, 100000);
+    unsigned long highTime = pulseIn(_pinout.teensy_control_pwm_sense_pin, HIGH, _config.pwm_pulse_in_timeout_ms);
+    unsigned long lowTime  = pulseIn(_pinout.teensy_control_pwm_sense_pin, LOW, _config.pwm_pulse_in_timeout_ms);
     // Returns the length of the pulse in microseconds
     // Returns 0 if no pulse starts
 
@@ -22,10 +22,11 @@ bool Level2Interface::_is_pwm_duty_cycle_valid()
     }
 
     // Calculate duty cycle
-    _readings.control_pwm_duty_cycle = ((float) highTime / (highTime + lowTime)) * 100.0;
+    _readings.control_pwm_duty_cycle = (static_cast<float>(highTime) / static_cast<float>(highTime + lowTime)) * 100.0f;
 
     // Check if in valid range (9.5% to 96.5%)
-    return (_readings.control_pwm_duty_cycle > 9.5 && _readings.control_pwm_duty_cycle < 96.5);
+    return (_readings.control_pwm_duty_cycle > _config.min_valid_pwm_duty_cycle_percent && 
+            _readings.control_pwm_duty_cycle < _config.max_valid_pwm_duty_cycle_percent);
 }
 
 void Level2Interface::set_start_charge(bool state)

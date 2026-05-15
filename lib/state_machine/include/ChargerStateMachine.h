@@ -49,10 +49,11 @@ class ChargerStateMachine
             _set_sw_shdn_high(set_sw_shdn_high),
             _set_sw_shdn_low(set_sw_shdn_low),
             _set_start_charge_high(set_start_charge_high),
-            _set_start_charge_low(set_start_charge_low)
+            _set_start_charge_low(set_start_charge_low),
+            _current_state(ChargerState_e::STARTUP),
+            _last_state_changed_time(current_millis)
             {
-                _current_state = ChargerState_e::STARTUP;
-                _last_state_changed_time = current_millis;
+
             };
 
         ChargerState_e tick_state_machine(unsigned long current_millis);
@@ -96,7 +97,7 @@ class ChargerStateMachine
         etl::delegate<void()> _set_start_charge_high;
         etl::delegate<void()> _set_start_charge_low;
 
-        const unsigned long startup_delay_ms = 5000UL; // ms
+        const unsigned long state_transition_delay_ms = 2500UL; // ms
 };
 
 using ChargerStateMachineInstance = etl::singleton<ChargerStateMachine>;

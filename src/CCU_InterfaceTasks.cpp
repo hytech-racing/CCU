@@ -59,7 +59,7 @@ void initialize_all_interfaces()
 
     /* Level2 Interface */
     Level2InterfaceInstance::create(
-        Level2Pinout_s
+        Level2_Pinout_s
         {
             CCUInterfaces::CONTROL_PWM_SENSE_PIN,
             CCUInterfaces::START_CHARGE_PIN
@@ -164,12 +164,10 @@ HT_TASK::TaskResponse debug_prints(const unsigned long& sysMicros, const HT_TASK
     Serial.print("ACU STATE      : "); Serial.println(static_cast<int>(ACUInterfaceInstance::instance().get_latest_data().acu_state));
     Serial.print("Charging State : "); Serial.println(static_cast<size_t>(ChargerStateMachineInstance::instance().get_state()));
 
-
     Serial.print("READ JUMPER OUT: "); Serial.println(ADCInterfaceInstance::instance().read_jumper_out());
     Serial.print("READ 240 OK: "); Serial.println(ADCInterfaceInstance::instance().read_240_ok());
     Serial.print("READ 240 ENABLED: "); Serial.println(ADCInterfaceInstance::instance().read_240_enabled());
 
-    //Serial.print("Balancing Enabled  : "); Serial.println(MainChargeSystemInstance::instance().is_balancing_enabled() ? "YES" : "NO");
     Serial.println();
 
     /* Voltage Information */

@@ -1,13 +1,15 @@
 #include "DisplayInterface.h"
 
-void DisplayInterface::init() {
+void DisplayInterface::init() 
+{
     Display.begin();
     Display.setRotation(3);
     Display.setTextSize(2);
     Display.fillScreen(ILI9341_BLACK);
 }
 
-void DisplayInterface::display_data(bool is_120_switched) {
+void DisplayInterface::display_data(bool is_120_switched) 
+{
     Display.fillScreen(ILI9341_BLACK);
     Display.setCursor(0,0);
     Display.setRotation(3);
@@ -57,10 +59,10 @@ void DisplayInterface::display_data(bool is_120_switched) {
     Display.println(EnergyMeterInterfaceInstance::instance().get_latest_em_data().current_amps, 3);
 }
 
-void DisplayInterface::refresh_display_data(unsigned long curr_millis) {
-
-    if ((curr_millis - _display_time) >= _config.display_update_interval) {
-        // Display.fillScreen(ILI9341_BLACK);
+void DisplayInterface::refresh_display_data(unsigned long curr_millis) 
+{
+    if ((curr_millis - _display_time) >= _config.display_update_interval_ms) 
+    {
         _display_time = curr_millis;
     }
 }
