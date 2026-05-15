@@ -1,8 +1,9 @@
 #include "CCUCANInterfaceImpl.h"
 
+/* External Dependencies */
 #include <cstdint>
 
- 
+
 namespace CCUCANInterfaceImpl {
 
 /* RX buffers */
@@ -27,7 +28,7 @@ void on_acu_can_receive(const CAN_message_t &msg) {
     // for ( uint8_t i = 0; i < 8; i++ ) {
     //     Serial.print(msg.buf[i]); Serial.print(" ");
     // }
-    // Serial.print("  TS: "); Serial.println(msg.timestamp);  
+    // Serial.print("  TS: "); Serial.println(msg.timestamp);
 }
 
 void on_charger_can_receive(const CAN_message_t &msg) {
@@ -44,14 +45,14 @@ void on_charger_can_receive(const CAN_message_t &msg) {
     // for ( uint8_t i = 0; i < 8; i++ ) {
     //     Serial.print(msg.buf[i]); Serial.print(" ");
     // }
-    // Serial.print("  TS: "); Serial.println(msg.timestamp); 
+    // Serial.print("  TS: "); Serial.println(msg.timestamp);
 }
 
 void ccu_CAN_recv(CANInterfaces &interfaces, const CAN_message_t &msg, unsigned long millis) {
     //Serial.println("can recv");
     switch (msg.id) {
-    
-    case BMS_VOLTAGES_CANID: 
+
+    case BMS_VOLTAGES_CANID:
     {
         interfaces.acu_interface.receive_voltages_message(msg, millis);
         break;
@@ -63,7 +64,7 @@ void ccu_CAN_recv(CANInterfaces &interfaces, const CAN_message_t &msg, unsigned 
     }
     case CHARGER_DATA_CANID:
     {
-        interfaces.charger_interface.receive_charger_data_message(msg, millis);
+        interfaces.charger_interface.receive_charger_data_message(msg, millis, interfaces.acu_interface, interfaces.max_pack_voltage, interfaces.cell_cutoff_voltage);
         break;
     }
     case BMS_ONBOARD_TEMPS_CANID:
@@ -102,7 +103,7 @@ void send_all_CAN_msgs(CANTXBufferType &buffer, FlexCAN_T4_Base *can_interface) 
         buffer.pop_front(buf, sizeof(CAN_message_t));
         memmove(&msg, buf, sizeof(msg)); // NOLINT (decay of array to pointer)
         can_interface->write(msg);
-    } 
+    }
 }
 
 } // namespace CCUCANInterfaceImpl
