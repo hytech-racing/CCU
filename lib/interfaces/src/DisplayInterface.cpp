@@ -124,15 +124,64 @@ void DisplayInterface::display_data(bool is_120_switched)
 
             break;
         }
-        case DisplayView_e::VIEW_TEMPERATURE:
+        case DisplayView_e::VIEW_BOARD_TEMPERATURE:
         {
             auto board_temps = ACUInterfaceInstance::instance().get_latest_data().board_temps;
+
+            Display.setTextSize(1);
+
+            constexpr size_t temps_per_row = 3;
+
+            for (size_t row = 0; row < default_acu_params::NUM_BOARD_TEMPS / temps_per_row; row++)
+            {
+                for (size_t col = 0; col < temps_per_row; col++)
+                {
+                    size_t bt_index = (row * temps_per_row) + col;
+                    Display.print("BT");
+                    Display.print(bt_index);
+                    Display.print(": ");
+                    if (*board_temps[bt_index])
+                    {
+                        Display.print(*board_temps[bt_index], 3);
+                    }
+                    else
+                    {
+                        Display.print("--.-");
+                    }
+                }
+                Display.println();
+            }
+
+            break;
+        }
+        case DisplayView_e::VIEW_CELL_TEMPERATURE:
+        {
             auto cell_temps = ACUInterfaceInstance::instance().get_latest_data().cell_temps;
 
             Display.setTextSize(1);
 
-            // TODO: print temps
+            constexpr size_t temps_per_row = 3;
 
+            for (size_t row = 0; row < default_acu_params::NUM_CELL_TEMPS / temps_per_row; row++)
+            {
+                for (size_t col = 0; col < temps_per_row; col++)
+                {
+                    size_t ct_index = (row * temps_per_row) + col;
+                    Display.print("CT");
+                    Display.print(ct_index);
+                    Display.print(": ");
+                    if (*cell_temps[ct_index])
+                    {
+                        Display.print(*cell_temps[ct_index], 3);
+                    }
+                    else
+                    {
+                        Display.print("--.-");
+                    }
+                    
+                }
+                Display.println();
+            }
 
             break;
         }
