@@ -206,5 +206,48 @@ HT_TASK::TaskResponse debug_prints(const unsigned long& sysMicros, const HT_TASK
     Serial.print("SHDN_G : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_G_voltage() ? "HIGH" : "LOW");
     Serial.println();
 
+    // Test print detailed voltages and temps from ACU Interface
+    for (int c = 0; c < default_acu_params::NUM_CELLS; c++)
+    {
+        Serial.print("C"); Serial.print(c); Serial.print(": ");
+        if (*acu_data.cell_voltages[c])
+        {
+            Serial.print(*acu_data.cell_voltages[c], 3);
+        }
+        else
+        {
+            Serial.print("--.-");
+        }
+        Serial.print("\t");
+    }
+
+    for (int c = 0; c < default_acu_params::NUM_CELL_TEMPS; c++)
+    {
+        Serial.print("CT"); Serial.print(c); Serial.print(": ");
+        if (*acu_data.cell_temps[c])
+        {
+            Serial.print(*acu_data.cell_temps[c], 3);
+        }
+        else
+        {
+            Serial.print("--.-");
+        }
+        Serial.print("\t");
+    }
+
+    for (int c = 0; c < default_acu_params::NUM_BOARD_TEMPS; c++)
+    {
+        Serial.print("BT"); Serial.print(c); Serial.print(": ");
+        if (*acu_data.board_temps[c])
+        {
+            Serial.print(*acu_data.board_temps[c], 3);
+        }
+        else
+        {
+            Serial.print("--.-");
+        }
+        Serial.print("\t");
+    }
+
    return HT_TASK::TaskResponse::YIELD;
 }
