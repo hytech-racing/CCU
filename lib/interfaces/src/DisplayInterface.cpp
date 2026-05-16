@@ -222,5 +222,5 @@ void DisplayInterface::handle_button_events(unsigned long current_millis)
 
 void DisplayInterface::cycle_view()
 { 
-    _display_view = static_cast<DisplayView_e>((static_cast<size_t>(_display_view) + 1) % DisplayView_e::NUM_VIEWS);
+    _display_view = static_cast<DisplayView_e>((static_cast<size_t>(_display_view) + 1) % static_cast<size_t>(DisplayView_e::NUM_VIEWS));
 }
