@@ -118,6 +118,12 @@ bool ADCInterface::is_jumper_out_low()
     return read_jumper_out() < adc_default_parameters::TEENSY41_MIN_DIGITAL_READ_VOLTAGE_THRESH;
 }
 
+bool ADCInterface::is_reset_errors_button_pressed(unsigned long current_millis)
+{
+    _reset_error_button.update(current_millis);
+    return _reset_error_button.is_pressed();
+}
+
 const ADCInterfaceParams_s& ADCInterface::get_adc_params() const
 {
     return _adc_parameters;

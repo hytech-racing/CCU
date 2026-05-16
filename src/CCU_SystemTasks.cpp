@@ -38,7 +38,7 @@ bool initialize_all_systems()
                                                                                 { return Level2SystemInstance::instance().check_state_C2_conditions(ADCInterfaceInstance::instance(), Level2InterfaceInstance::instance()); });
 
     etl::delegate<bool()> reset_error_requested = etl::delegate<bool()>::create([]() -> bool
-                                                                                { return ButtonInterfaceInstance::instance().is_reset_errors_button_pressed(); });
+                                                                                { return ADCInterfaceInstance::instance().is_reset_errors_button_pressed(sys_time::hal_millis()); });
 
     etl::delegate<void()> set_sw_shdn_high = etl::delegate<void()>::create([]() -> void
                                                                                 { WatchdogInterfaceInstance::instance().set_sw_shdn_pin_high(); });

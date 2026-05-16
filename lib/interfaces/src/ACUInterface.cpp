@@ -84,7 +84,7 @@ void ACUInterface::receive_onboard_detailed_temps(const CAN_message_t& msg, unsi
     _curr_data.board_temps[ic_id] = HYTECH_temp_0_ro_fromS(onboard_detailed_temps.temp_0_ro);
 }
 
-bool ACUInterface::set_is_charging_enabled(bool state)
+void ACUInterface::set_is_charging_enabled(bool state)
 {
     _curr_data.is_charging_enabled = state;
 }

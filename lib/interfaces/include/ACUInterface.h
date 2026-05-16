@@ -112,7 +112,7 @@ public:
     /**
      *
      */
-    bool set_is_charging_enabled(bool state);
+    void set_is_charging_enabled(bool state);
 
     /**
      *
@@ -127,7 +127,6 @@ private:
     bool _first_received_message_heartbeat_init = false;
 
     ACUInterfaceData_s _curr_data;
-
 };
 
 using ACUInterfaceInstance = etl::singleton<ACUInterface>;

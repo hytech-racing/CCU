@@ -65,6 +65,11 @@ class ChargerStateMachine
         */
         ChargerState_e get_state() { return _current_state; }
 
+        /**
+         * @return string for printing out the state
+        */
+        const char* get_state_name();
+
     private:
 
         void _set_state(ChargerState_e new_state, unsigned long current_millis);

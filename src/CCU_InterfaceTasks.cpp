@@ -21,7 +21,8 @@ void initialize_all_interfaces()
             CCUInterfaces::PROXIMITY_PILOT_PIN,
             CCUInterfaces::TEENSY_240_ENABLED_PIN,
             CCUInterfaces::TEENSY_240_OK_PIN,
-            CCUInterfaces::JUMPER_OUT_PIN
+            CCUInterfaces::JUMPER_OUT_PIN,
+            CCUInterfaces::BUTTON2_READ_PIN,
         },
         ADCConversions_s
         {

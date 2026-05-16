@@ -14,12 +14,6 @@ namespace default_button_params
     constexpr uint8_t DEBOUNCE_MS = 100;
 }
 
-struct ButtonPinout_s
-{
-    pin cycle_display_view_pin;
-    pin reset_errors_pin;
-};
-
 struct ButtonState_s
 {
     uint32_t last_debounce_time_ms = 0;
