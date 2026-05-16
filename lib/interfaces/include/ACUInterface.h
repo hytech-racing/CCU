@@ -7,10 +7,20 @@
 #include "SharedFirmwareTypes.h"
 #include "etl/singleton.h"
 #include <etl/delegate.h>
+#include <array>
+#include <etl/optional.h>
 
 /* Local Interface Includes */
 #include "CANInterface.h"
 
+namespace default_acu_params
+{
+    constexpr size_t NUM_CHIPS = 12;
+    constexpr size_t NUM_CELL_VOLTAGES_PER_CHIP = 12;
+    constexpr size_t NUM_CELL_TEMPS_PER_CHIP = 4;
+    constexpr size_t NUM_BOARD_TEMPS_PER_CHIP = 1;
+    constexpr size_t NUM_DATA_PER_GROUP = 3;
+}
 
 struct ACUInterfaceData_s
 {
@@ -23,29 +33,20 @@ struct ACUInterfaceData_s
     volt average_voltage;
     volt low_voltage;
     volt high_voltage;
-    volt total_voltage;
+    volt pack_voltage;
 
-    /* BMS Onboard Temps Data */
+    /* BMS Temps Data */
+    celsius max_cell_temp;
+    celsius min_cell_temp;
+    celsius avg_cell_temp;
     celsius max_board_temp;
 
-    /* BMS Onboard Detailed Temps Data */
-    size_t ic_id;
-    float temp_0;
-    float temp_1;
+    /* BMS Detailed Data */
+    std::array<std::array<etl::optional<volt>, default_acu_params::NUM_CELL_VOLTAGES_PER_CHIP>, default_acu_params::NUM_CHIPS> cell_voltages;
+    std::array<std::array<etl::optional<celsius>, default_acu_params::NUM_CELL_TEMPS_PER_CHIP>, default_acu_params::NUM_CHIPS> cell_temps;
+    std::array<etl::optional<celsius>, default_acu_params::NUM_CHIPS> board_temps;
 
-    /* BMS Detailed Temps Data */
-    int group_id;
-    int ic_detailed_id;
-    float therm_id_0;
-    float therm_id_1;
-    float therm_id_2;
-
-    float max_cell_temp;
-    float min_cell_temp;
-    float avg_cell_temp;
-    float cell_temps[12][3];
-
-    /* Balancing Status */
+    /* Elcon Charger Status */
     bool is_charging_enabled;
 };
 
@@ -61,23 +62,11 @@ public:
         _curr_data.average_voltage = 0;
         _curr_data.low_voltage = 0;
         _curr_data.high_voltage = 0;
-        _curr_data.total_voltage = 0;
-
-        _curr_data.max_board_temp = 0;
-
-        _curr_data.ic_id = 0;
-        _curr_data.temp_0 = 0;
-        _curr_data.temp_1 = 0;
-
-        _curr_data.group_id = 0;
-        _curr_data.ic_detailed_id = 0;
-        _curr_data.therm_id_0 = 0;
-        _curr_data.therm_id_1 = 0;
-        _curr_data.therm_id_2 = 0;
-
+        _curr_data.pack_voltage = 0;
         _curr_data.max_cell_temp = 0;
         _curr_data.min_cell_temp = 100;
         _curr_data.avg_cell_temp = 0;
+        _curr_data.max_board_temp = 0;
     };
 
     /**
@@ -99,6 +88,11 @@ public:
      *
      */
     void receive_voltages_message(const CAN_message_t& msg, unsigned long curr_millis); //BMS_VOLTAGES and BMS_DETAILED_VOLTAGES
+
+    /**
+     * @brief handles packaging of detailed cell voltages message
+    */
+    void receive_detailed_voltages_message(const CAN_message_t& msg, unsigned long curr_millis);
 
     /**
      *

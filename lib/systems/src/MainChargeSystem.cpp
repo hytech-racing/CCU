@@ -7,7 +7,7 @@ void MainChargeSystem::calculate_charge_current(float max_pack_voltage, float ce
     // Get battery data from ACU
     const auto& acu_data = ACUInterfaceInstance::instance().get_latest_data();
     float max_cell_voltage = acu_data.high_voltage; // the highest voltage in any of the cells
-    float total_pack_voltage = acu_data.total_voltage; // the total voltage in the pack
+    float total_pack_voltage = acu_data.pack_voltage; // the total voltage in the pack
     auto current_state = ChargerStateMachineInstance::instance().get_state();
 
     // Check safety conditions first

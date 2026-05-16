@@ -17,7 +17,7 @@ using pin = size_t;
 
 namespace display_default_parameters
 {
-    constexpr float DISPLAY_UPDATE_INTERVAL_MS = 100.0f;  // ms
+    constexpr unsigned long DISPLAY_UPDATE_INTERVAL_MS = 100UL;  // ms
 };
 struct DisplayPinout_s
 {
@@ -27,6 +27,8 @@ struct DisplayPinout_s
     pin teensy_lcd_mosi_pin;
     pin teensy_lcd_reset_pin;
     pin teensy_lcd_dc_pin;
+
+    pin cycle_display_view_pin;
 };
 
 struct DisplayInterfaceParams_s

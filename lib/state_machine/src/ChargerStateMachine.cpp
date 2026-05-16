@@ -217,6 +217,21 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
 
             break;
         }
+        case ChargerState_e::ERROR:
+        {
+            if (current_millis - _last_state_changed_time < state_transition_delay_ms)
+            {
+                break;
+            }
+                
+            if (_reset_error_requested())
+            {
+                _set_state(ChargerState_e::STARTUP, current_millis);
+                break;
+            }
+
+            break;
+        }
         default: // Should never occur
         {
             break;

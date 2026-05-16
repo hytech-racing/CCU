@@ -33,6 +33,7 @@ class ChargerStateMachine
             etl::delegate<bool()> is_240_conditions_ok,
             etl::delegate<bool()> is_state_B2_ready,
             etl::delegate<bool()> is_state_C2_ready,
+            etl::delegate<bool()> reset_error_requested,
             etl::delegate<void()> set_sw_shdn_high,
             etl::delegate<void()> set_sw_shdn_low,
             etl::delegate<void()> set_start_charge_high,
@@ -46,6 +47,7 @@ class ChargerStateMachine
             _is_240_conditions_ok(is_240_conditions_ok),
             _is_state_B2_ready(is_state_B2_ready),
             _is_state_C2_ready(is_state_C2_ready),
+            _reset_error_requested(reset_error_requested),
             _set_sw_shdn_high(set_sw_shdn_high),
             _set_sw_shdn_low(set_sw_shdn_low),
             _set_start_charge_high(set_start_charge_high),
@@ -90,6 +92,7 @@ class ChargerStateMachine
         etl::delegate<bool()> _is_240_conditions_ok;
         etl::delegate<bool()> _is_state_B2_ready;
         etl::delegate<bool()> _is_state_C2_ready;
+        etl::delegate<bool()> _reset_error_requested;
 
         /// @brief setters
         etl::delegate<void()> _set_sw_shdn_high;

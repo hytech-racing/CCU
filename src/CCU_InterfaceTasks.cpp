@@ -52,6 +52,7 @@ void initialize_all_interfaces()
             CCUInterfaces::LCD_MOSI_PIN,
             CCUInterfaces::LCD_RESET_PIN,
             CCUInterfaces::LCD_DC_PIN,
+            CCUInterfaces::BUTTON1_READ_PIN,
         }
     );
     DisplayInterfaceInstance::instance().init();
@@ -175,7 +176,7 @@ HT_TASK::TaskResponse debug_prints(const unsigned long& sysMicros, const HT_TASK
     Serial.print("Cell Voltage Min   : "); Serial.println(acu_data.low_voltage);
     Serial.print("Cell Voltage Avg   : "); Serial.println(acu_data.average_voltage);
     Serial.print("Cell Voltage Delta : "); Serial.println(acu_data.high_voltage - acu_data.low_voltage);
-    Serial.print("Pack Voltage       : "); Serial.println(acu_data.total_voltage);
+    Serial.print("Pack Voltage       : "); Serial.println(acu_data.pack_voltage);
     Serial.println();
 
     // /* Temperature Information */

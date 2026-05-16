@@ -19,7 +19,8 @@ void ChargerInterface::receive_charger_data_message(const CAN_message_t& msg, un
     acu_interface.set_is_charging_enabled(true); //if a charger message is received, we are ready to start charging
 
     /* Redundancy to avoid flipping between true and false for balancing (charging) enabled */
-    if (acu_interface.get_latest_data().total_voltage >= max_pack_voltage || ACUInterfaceInstance::instance().get_latest_data().high_voltage >= cell_cutoff_voltage) {
+    if (acu_interface.get_latest_data().pack_voltage >= max_pack_voltage || ACUInterfaceInstance::instance().get_latest_data().high_voltage >= cell_cutoff_voltage) 
+    {
         acu_interface.set_is_charging_enabled(false);
     }
 }
