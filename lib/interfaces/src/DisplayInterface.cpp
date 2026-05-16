@@ -70,7 +70,57 @@ void DisplayInterface::display_data(bool is_120_switched)
 
             Display.setTextSize(1);
 
-            
+            constexpr size_t cells_per_row = 3;
+            constexpr size_t rows_per_page = 14;
+            constexpr size_t cells_per_page =
+                cells_per_row * rows_per_page;
+
+            constexpr size_t total_cells = default_acu_params::NUM_CELLS;
+
+            constexpr size_t total_rows = (total_cells + cells_per_row - 1) / cells_per_row;
+
+            static size_t start_row = 0;
+
+            const size_t start_index = start_row * cells_per_row;
+
+            for (size_t i = 0; i < cells_per_page; i++)
+            {
+                const size_t idx = start_index + i;
+
+                if (idx >= total_cells)
+                {
+                    break;
+                }
+
+                Display.print("C");
+                Display.print(idx);
+                Display.print(":");
+
+                if (cell_voltages[idx].has_value())
+                {
+                    Display.print(cell_voltages[idx].value(), 3);
+                }
+                else
+                {
+                    Display.print("----");
+                }
+
+                if ((i + 1) % cells_per_row == 0)
+                {
+                    Display.println();
+                }
+                else
+                {
+                    Display.print(" ");
+                }
+            }
+
+            start_row++;
+
+            if (start_row >= total_rows)
+            {
+                start_row = 0;
+            }
 
             break;
         }
@@ -81,6 +131,7 @@ void DisplayInterface::display_data(bool is_120_switched)
 
             Display.setTextSize(1);
 
+            // TODO: print temps
 
 
             break;

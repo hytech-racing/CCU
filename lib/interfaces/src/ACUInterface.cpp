@@ -42,16 +42,12 @@ void ACUInterface::receive_detailed_voltages_message(const CAN_message_t& msg, u
     Unpack_BMS_DETAILED_VOLTAGES_hytech(&voltages_msg, &msg.buf[0], msg.len);
     uint8_t group_id = voltages_msg.group_id;
     uint8_t ic_id = voltages_msg.ic_id;
-    if (ic_id >= default_acu_params::NUM_CHIPS)
-    {
-        Serial.println("DETAILED VOTLAGES MESSAGE IC INDEX OUT OF BOUNDS");
-        return;
-    }
-    auto& chip_voltages = _curr_data.cell_voltages[ic_id];
-    size_t cell_base_index = group_id * default_acu_params::NUM_DATA_PER_GROUP;
-    chip_voltages[cell_base_index + 0] = HYTECH_voltage_0_ro_fromS(voltages_msg.voltage_0_ro);
-    chip_voltages[cell_base_index + 1] = HYTECH_voltage_1_ro_fromS(voltages_msg.voltage_1_ro);
-    chip_voltages[cell_base_index + 2] = HYTECH_voltage_2_ro_fromS(voltages_msg.voltage_2_ro);
+    size_t cell_base_index = (ic_id / 2) * 21 + 
+                             ((ic_id % 2 != 0) ? 12 : 0) +
+                             group_id * default_acu_params::NUM_DATA_PER_GROUP;
+    _curr_data.cell_voltages[cell_base_index + 0] = HYTECH_voltage_0_ro_fromS(voltages_msg.voltage_0_ro);
+    _curr_data.cell_voltages[cell_base_index + 1] = HYTECH_voltage_1_ro_fromS(voltages_msg.voltage_1_ro);
+    _curr_data.cell_voltages[cell_base_index + 2] = HYTECH_voltage_2_ro_fromS(voltages_msg.voltage_2_ro);
 }
 
 void ACUInterface::receive_onboard_temps_message(const CAN_message_t& msg, unsigned long curr_millis)
@@ -69,11 +65,19 @@ void ACUInterface::receive_detailed_temps_message(const CAN_message_t& msg, unsi
     Unpack_BMS_DETAILED_TEMPS_hytech(&detailed_temps, &msg.buf[0], msg.len);
     uint8_t group_id = detailed_temps.group_id;
     uint8_t ic_id = detailed_temps.ic_id;
-    auto cell_temps = _curr_data.cell_temps[ic_id];
-    size_t cell_base_index = group_id * default_acu_params::NUM_DATA_PER_GROUP;
-    cell_temps[cell_base_index + 0] = HYTECH_thermistor_id_0_ro_fromS(detailed_temps.thermistor_id_0_ro);
-    cell_temps[cell_base_index + 1] = HYTECH_thermistor_id_1_ro_fromS(detailed_temps.thermistor_id_1_ro);
-    cell_temps[cell_base_index + 2] = HYTECH_thermistor_id_2_ro_fromS(detailed_temps.thermistor_id_2_ro);
+    size_t cell_base_index = (ic_id % 2 != 0 ? default_acu_params::NUM_CELL_TEMPS_PER_CHIP : 0) + 
+                             group_id * default_acu_params::NUM_DATA_PER_GROUP;
+    
+    if (ic_id == 1)
+    {
+        _curr_data.cell_temps[cell_base_index] = HYTECH_thermistor_0_deg_C_ro_fromS(detailed_temps.thermistor_id_0_ro);
+    }
+    else
+    {
+        _curr_data.cell_temps[cell_base_index] = HYTECH_thermistor_0_deg_C_ro_fromS(detailed_temps.thermistor_id_0_ro);
+        _curr_data.cell_temps[cell_base_index + 1] = HYTECH_thermistor_0_deg_C_ro_fromS(detailed_temps.thermistor_id_1_ro);
+        _curr_data.cell_temps[cell_base_index + 2] = HYTECH_thermistor_0_deg_C_ro_fromS(detailed_temps.thermistor_id_2_ro);
+    }
 }
 
 void ACUInterface::receive_onboard_detailed_temps(const CAN_message_t& msg, unsigned long curr_millis)

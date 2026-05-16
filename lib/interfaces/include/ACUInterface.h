@@ -15,10 +15,14 @@
 
 namespace default_acu_params
 {
-    constexpr size_t NUM_CHIPS = 12;
     constexpr size_t NUM_CELL_VOLTAGES_PER_CHIP = 12;
     constexpr size_t NUM_CELL_TEMPS_PER_CHIP = 4;
     constexpr size_t NUM_BOARD_TEMPS_PER_CHIP = 1;
+
+    constexpr size_t NUM_CHIPS = 12;
+    constexpr size_t NUM_CELLS = 126;
+    constexpr size_t NUM_CELL_TEMPS = 48;
+    constexpr size_t NUM_BOARD_TEMPS = 12;
     constexpr size_t NUM_DATA_PER_GROUP = 3;
 }
 
@@ -42,9 +46,9 @@ struct ACUInterfaceData_s
     celsius max_board_temp;
 
     /* BMS Detailed Data */
-    std::array<std::array<etl::optional<volt>, default_acu_params::NUM_CELL_VOLTAGES_PER_CHIP>, default_acu_params::NUM_CHIPS> cell_voltages;
-    std::array<std::array<etl::optional<celsius>, default_acu_params::NUM_CELL_TEMPS_PER_CHIP>, default_acu_params::NUM_CHIPS> cell_temps;
-    std::array<etl::optional<celsius>, default_acu_params::NUM_CHIPS> board_temps;
+    std::array<etl::optional<volt>, default_acu_params::NUM_CELLS> cell_voltages;
+    std::array<etl::optional<celsius>, default_acu_params::NUM_CELL_TEMPS> cell_temps;
+    std::array<etl::optional<celsius>, default_acu_params::NUM_BOARD_TEMPS> board_temps;
 
     /* Elcon Charger Status */
     bool is_charging_enabled;
