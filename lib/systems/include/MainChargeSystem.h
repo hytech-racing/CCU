@@ -59,7 +59,7 @@ class MainChargeSystem {
         void calculate_charge_current(
             float max_pack_voltage,
             float cell_cutoff_voltage,
-            uint8_t dial_percent
+            float dial_percent
         );
 
         /**

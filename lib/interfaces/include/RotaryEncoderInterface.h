@@ -11,11 +11,21 @@ using pin = size_t;
 
 namespace default_encoder_params
 {
-    constexpr uint8_t ENCODER_VALUE = 100;
-    constexpr uint8_t MAX_VALUE = 100;
-    constexpr uint8_t MIN_VALUE = 100;
-    constexpr uint8_t STEP_SIZE = 1;
+    constexpr float INIT_ENCODER_VALUE = 100.F;
+    constexpr float MAX_VALUE = 100.F;
+    constexpr float MIN_VALUE = 100.F;
+    constexpr float STEP_SIZE = 1.F;
     constexpr uint8_t INIT_ENCODING = 0b00;
+
+    // Transition Keys
+    constexpr uint8_t CW_1 = 0b1101;
+    constexpr uint8_t CW_2 = 0b0100;
+    constexpr uint8_t CW_3 = 0b0010;
+    constexpr uint8_t CW_4 = 0b1011;
+    constexpr uint8_t CCW_1 = 0b1110;
+    constexpr uint8_t CCW_2 = 0b0111;
+    constexpr uint8_t CCW_3 = 0b0001;
+    constexpr uint8_t CCW_4 = 0b1000;
 }
 
 struct RotaryEncoderPinout_s
@@ -27,10 +37,10 @@ struct RotaryEncoderPinout_s
 
 struct RotaryEncoderState_s
 {
-    uint8_t encoder_value;
-    uint8_t max_value;
-    uint8_t min_value;
-    uint8_t step;
+    float encoder_value;
+    float max_value;
+    float min_value;
+    float step;
     uint8_t last_encoded;
 };
 
@@ -40,7 +50,7 @@ public:
     RotaryEncoderInterface(
         RotaryEncoderPinout_s pinout,
         RotaryEncoderState_s state = {
-            .encoder_value = default_encoder_params::ENCODER_VALUE,
+            .encoder_value = default_encoder_params::INIT_ENCODER_VALUE,
             .max_value = default_encoder_params::MAX_VALUE,
             .min_value = default_encoder_params::MIN_VALUE,
             .step = default_encoder_params::STEP_SIZE,

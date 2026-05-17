@@ -20,6 +20,7 @@ namespace default_acu_params
     constexpr size_t NUM_BOARD_TEMPS_PER_CHIP = 1;
 
     constexpr size_t NUM_CHIPS = 12;
+    constexpr size_t NUM_CELLS_PER_SEGMENT = 21;
     constexpr size_t NUM_CELLS = 126;
     constexpr size_t NUM_CELL_TEMPS = 48;
     constexpr size_t NUM_BOARD_TEMPS = 12;

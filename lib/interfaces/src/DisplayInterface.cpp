@@ -39,6 +39,8 @@ void DisplayInterface::display_data(bool is_120_switched)
             Display.println(ACUInterfaceInstance::instance().get_latest_data().min_cell_temp, 3);
             Display.print("Avg Cell Temp (C): ");
             Display.println((ACUInterfaceInstance::instance().get_latest_data().max_cell_temp + ACUInterfaceInstance::instance().get_latest_data().min_cell_temp)/2, 3);
+            Display.print("Current Manual Limit: "); 
+            Display.print(RotaryEncoderInterfaceInstance::instance().get_value(), 2); Display.println("%");
             Display.print("EM current (A): ");
             Display.println(EnergyMeterInterfaceInstance::instance().get_latest_em_data().current_amps, 3);
 
@@ -47,9 +49,9 @@ void DisplayInterface::display_data(bool is_120_switched)
         case DisplayView_e::VIEW_CHARGER:
         {
             auto charger_data = ChargerInterfaceInstance::instance().get_latest_charger_data();
-            auto dc_output_V = (charger_data.output_dc_voltage_high << 8 | charger_data.output_dc_voltage_low) / 10.0F;
-            auto ac_input_V = (charger_data.input_ac_voltage_high << 8 | charger_data.input_ac_voltage_low) / 10.0F;
-            auto current_output_A = (charger_data.output_current_high << 8 | charger_data.output_current_low) / 10.0F;
+            auto dc_output_V = ((charger_data.output_dc_voltage_high << default_display_params::BYTE_SHIFT) | charger_data.output_dc_voltage_low) / default_display_params::DATA_SCALAR;
+            auto ac_input_V = ((charger_data.input_ac_voltage_high << default_display_params::BYTE_SHIFT) | charger_data.input_ac_voltage_low) / default_display_params::DATA_SCALAR;
+            auto current_output_A = ((charger_data.output_current_high << default_display_params::BYTE_SHIFT) | charger_data.output_current_low) / default_display_params::DATA_SCALAR;
 
             Display.setTextSize(2);
 

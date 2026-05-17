@@ -167,22 +167,22 @@ HT_TASK::TaskResponse debug_prints(const unsigned long& sysMicros, const HT_TASK
 
     /* General Status */
     Serial.println(Level2SystemInstance::instance().is_120_switched(ADCInterfaceInstance::instance()) ? "Set to 120 V Charging" : "Set to 240 V Charging");
-    Serial.print("ACU STATE      : "); Serial.println(static_cast<int>(ACUInterfaceInstance::instance().get_latest_data().acu_state));
+    // Serial.print("ACU STATE      : "); Serial.println(static_cast<int>(ACUInterfaceInstance::instance().get_latest_data().acu_state));
     Serial.print("Charging State : "); Serial.println(static_cast<size_t>(ChargerStateMachineInstance::instance().get_state()));
 
-    Serial.print("READ JUMPER OUT: "); Serial.println(ADCInterfaceInstance::instance().read_jumper_out());
-    Serial.print("READ 240 OK: "); Serial.println(ADCInterfaceInstance::instance().read_240_ok());
-    Serial.print("READ 240 ENABLED: "); Serial.println(ADCInterfaceInstance::instance().read_240_enabled());
+    // Serial.print("READ JUMPER OUT: "); Serial.println(ADCInterfaceInstance::instance().read_jumper_out());
+    // Serial.print("READ 240 OK: "); Serial.println(ADCInterfaceInstance::instance().read_240_ok());
+    // Serial.print("READ 240 ENABLED: "); Serial.println(ADCInterfaceInstance::instance().read_240_enabled());
 
     Serial.println();
 
     /* Voltage Information */
-    Serial.print("Cell Voltage Max   : "); Serial.println(acu_data.high_voltage);
-    Serial.print("Cell Voltage Min   : "); Serial.println(acu_data.low_voltage);
-    Serial.print("Cell Voltage Avg   : "); Serial.println(acu_data.average_voltage);
-    Serial.print("Cell Voltage Delta : "); Serial.println(acu_data.high_voltage - acu_data.low_voltage);
-    Serial.print("Pack Voltage       : "); Serial.println(acu_data.pack_voltage);
-    Serial.println();
+    // Serial.print("Cell Voltage Max   : "); Serial.println(acu_data.high_voltage);
+    // Serial.print("Cell Voltage Min   : "); Serial.println(acu_data.low_voltage);
+    // Serial.print("Cell Voltage Avg   : "); Serial.println(acu_data.average_voltage);
+    // Serial.print("Cell Voltage Delta : "); Serial.println(acu_data.high_voltage - acu_data.low_voltage);
+    // Serial.print("Pack Voltage       : "); Serial.println(acu_data.pack_voltage);
+    // Serial.println();
 
     // /* Temperature Information */
     Serial.print("Max Cell Temp       : "); Serial.println(acu_data.max_cell_temp);
@@ -201,13 +201,18 @@ HT_TASK::TaskResponse debug_prints(const unsigned long& sysMicros, const HT_TASK
     Serial.print("PP Voltage Sense      "); Serial.println(ADCInterfaceInstance::instance().read_proximity_pilot());
 
     /* SHDN Information */
-    Serial.print("SHDN_A : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_A_voltage() ? "HIGH" : "LOW");
-    Serial.print("SHDN_B : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_B_voltage() ? "HIGH" : "LOW");
-    Serial.print("SHDN_C : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_C_voltage() ? "HIGH" : "LOW");
-    Serial.print("SHDN_D : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_D_voltage() ? "HIGH" : "LOW");
-    Serial.print("SHDN_E : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_E_voltage() ? "HIGH" : "LOW");
-    Serial.print("SHDN_F : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_F_voltage() ? "HIGH" : "LOW");
-    Serial.print("SHDN_G : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_G_voltage() ? "HIGH" : "LOW");
+    // Serial.print("SHDN_A : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_A_voltage() ? "HIGH" : "LOW");
+    // Serial.print("SHDN_B : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_B_voltage() ? "HIGH" : "LOW");
+    // Serial.print("SHDN_C : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_C_voltage() ? "HIGH" : "LOW");
+    // Serial.print("SHDN_D : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_D_voltage() ? "HIGH" : "LOW");
+    // Serial.print("SHDN_E : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_E_voltage() ? "HIGH" : "LOW");
+    // Serial.print("SHDN_F : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_F_voltage() ? "HIGH" : "LOW");
+    // Serial.print("SHDN_G : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_G_voltage() ? "HIGH" : "LOW");
+    // Serial.println();
+
+    Serial.print("Rotary Encoder Value: ");
+    Serial.println(RotaryEncoderInterfaceInstance::instance().get_value(), 2);
+
     Serial.println();
 
     // Test print detailed voltages and temps from ACU Interface

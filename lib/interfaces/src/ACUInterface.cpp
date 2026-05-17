@@ -42,8 +42,8 @@ void ACUInterface::receive_detailed_voltages_message(const CAN_message_t& msg, u
     Unpack_BMS_DETAILED_VOLTAGES_hytech(&voltages_msg, &msg.buf[0], msg.len);
     uint8_t group_id = voltages_msg.group_id;
     uint8_t ic_id = voltages_msg.ic_id;
-    size_t cell_base_index = (ic_id / 2) * 21 + 
-                             ((ic_id % 2 != 0) ? 12 : 0) +
+    size_t cell_base_index = (ic_id / 2) * default_acu_params::NUM_CELLS_PER_SEGMENT + 
+                             ((ic_id % 2 != 0) ? default_acu_params::NUM_CHIPS : 0) +
                              group_id * default_acu_params::NUM_DATA_PER_GROUP;
     _curr_data.cell_voltages[cell_base_index + 0] = HYTECH_voltage_0_ro_fromS(voltages_msg.voltage_0_ro);
     _curr_data.cell_voltages[cell_base_index + 1] = HYTECH_voltage_1_ro_fromS(voltages_msg.voltage_1_ro);

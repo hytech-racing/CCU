@@ -14,13 +14,16 @@
 #include "EMInterface.h"
 #include "ButtonInterface.h"
 #include "ChargerStateMachine.h"
+#include "RotaryEncoderInterface.h"
 
 using pin = size_t;
 
-namespace display_default_parameters
+namespace default_display_params
 {
     constexpr unsigned long DISPLAY_UPDATE_INTERVAL_MS = 100UL;  // ms
     constexpr unsigned long CYCLE_BUTTON_HOLD_TIME_RESET_MS = 2000UL; // ms
+    constexpr float DATA_SCALAR = 10.0F;
+    constexpr uint8_t BYTE_SHIFT = 8;
 };
 
 enum DisplayView_e 
@@ -62,8 +65,8 @@ public:
     DisplayInterface(
         DisplayPinout_s pinout,
         DisplayConfig_s config = {
-            .display_update_interval_ms = display_default_parameters::DISPLAY_UPDATE_INTERVAL_MS,
-            ._cycle_button_hold_time_reset_ms = display_default_parameters::CYCLE_BUTTON_HOLD_TIME_RESET_MS
+            .display_update_interval_ms = default_display_params::DISPLAY_UPDATE_INTERVAL_MS,
+            ._cycle_button_hold_time_reset_ms = default_display_params::CYCLE_BUTTON_HOLD_TIME_RESET_MS
         }
     ) :
         Display(

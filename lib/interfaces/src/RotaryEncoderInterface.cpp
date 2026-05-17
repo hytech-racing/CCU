@@ -74,24 +74,27 @@ void RotaryEncoderInterface::_update_encoder()
     switch (transition)
     {
         // Clockwise transitions
-        case 0b1101:
-        case 0b0100:
-        case 0b0010:
-        case 0b1011:
+        case default_encoder_params::CW_1:
+        case default_encoder_params::CW_2:
+        case default_encoder_params::CW_3:
+        case default_encoder_params::CW_4:
+        {        
             _increment();
             break;
-
+        }
         // Counter-clockwise transitions
-        case 0b1110:
-        case 0b0111:
-        case 0b0001:
-        case 0b1000:
+        case default_encoder_params::CCW_1:
+        case default_encoder_params::CCW_2:
+        case default_encoder_params::CCW_3:
+        case default_encoder_params::CCW_4:
+        {
             _decrement();
             break;
-
+        }
         default:
-            // Invalid transition, likely bounce/noise.
+        {
             break;
+        }
     }
 
     _state.last_encoded = encoded;
