@@ -26,6 +26,7 @@
 #include "ACUInterface.h"
 #include "CCUEthernetInterface.h"
 #include "ButtonInterface.h"
+#include "RotaryEncoderInterface.h"
 
 /**
  * @brief Creates an instance of all systems.

@@ -16,6 +16,7 @@ namespace CCUInterfaces
     const size_t ANALOG_READ_RESOLUTION = 12;
     const float BIT_RESOLUTION = 4096.0f;
     const size_t SERIAL_BAUDRATE = 115200;
+    const uint16_t DISPLAY_BAUDRATE = 10000000;
 
     /* ADC Interface Constants */
     constexpr const size_t SHDN_A_PIN = 9;
@@ -48,6 +49,9 @@ namespace CCUInterfaces
 
     constexpr const size_t BUTTON1_READ_PIN = 16;
     constexpr const size_t BUTTON2_READ_PIN = 17;
+    constexpr const size_t ENC_SWITCH_PIN = 19;
+    constexpr const size_t ENC_B_PIN = 20;
+    constexpr const size_t ENC_A_PIN = 21;
 
     /* Level2 Interface Constants */
     constexpr const size_t CONTROL_PWM_SENSE_PIN = 10;

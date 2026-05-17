@@ -24,6 +24,7 @@
 #include "SystemTimeInterface.h"
 #include "WatchdogInterface.h"
 #include "ButtonInterface.h"
+#include "RotaryEncoderInterface.h"
 
 /* For Debugging */
 #include "ChargerStateMachine.h"
@@ -39,13 +40,11 @@ void initialize_all_interfaces();
  */
 ::HT_TASK::TaskResponse run_kick_watchdog(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
-::HT_TASK::TaskResponse init_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
-
 ::HT_TASK::TaskResponse run_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
 ::HT_TASK::TaskResponse run_toggle_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
-::HT_TASK::TaskResponse run_read_dial_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+::HT_TASK::TaskResponse run_read_encoder_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
 ::HT_TASK::TaskResponse handle_enqueue_acu_can_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 

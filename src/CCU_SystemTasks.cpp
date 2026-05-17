@@ -81,7 +81,8 @@ HT_TASK::TaskResponse tick_state_machine(const unsigned long &sysMicros, const H
 HT_TASK::TaskResponse calculate_charge_current(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
     MainChargeSystemInstance::instance().calculate_charge_current(
         CCUConstants::MAX_PACK_VOLTAGE,
-        CCUConstants::CELL_CUTOFF_VOLTAGE
+        CCUConstants::CELL_CUTOFF_VOLTAGE,
+        RotaryEncoderInterfaceInstance::instance().get_value()
     );
 
     return HT_TASK::TaskResponse::YIELD;

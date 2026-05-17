@@ -33,7 +33,6 @@ void initialize_all_interfaces()
         },
         CCUInterfaces::BIT_RESOLUTION
     );
-
     ADCInterfaceInstance::instance().init(sys_time::hal_millis());
 
     /* CAN Interfaces Construct */
@@ -41,7 +40,6 @@ void initialize_all_interfaces()
 
     /* Charger Interface */
     ChargerInterface(ACUInterfaceInstance::instance());
-
 
     /* Display Interface */
     DisplayInterfaceInstance::create(
@@ -58,6 +56,15 @@ void initialize_all_interfaces()
     );
     DisplayInterfaceInstance::instance().init();
 
+    RotaryEncoderInterfaceInstance::create(
+        RotaryEncoderPinout_s
+        {
+            CCUInterfaces::ENC_SWITCH_PIN,
+            CCUInterfaces::ENC_A_PIN,
+            CCUInterfaces::ENC_B_PIN,
+        }
+    );
+    RotaryEncoderInterfaceInstance::instance().init();
 
     /* Level2 Interface */
     Level2InterfaceInstance::create(
@@ -88,8 +95,13 @@ HT_TASK::TaskResponse run_kick_watchdog(const unsigned long& sysMicros, const HT
     return HT_TASK::TaskResponse::YIELD;
 }
 
-HT_TASK::TaskResponse run_read_dial_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
+HT_TASK::TaskResponse run_read_encoder_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
 {
+    RotaryEncoderInterfaceInstance::instance().tick(sys_time::hal_millis());
+    if (RotaryEncoderInterfaceInstance::instance().switch_pressed())
+    {
+        RotaryEncoderInterfaceInstance::instance().set_value(0);
+    }
     return HT_TASK::TaskResponse::YIELD;
 }
 
@@ -138,14 +150,6 @@ HT_TASK::TaskResponse sample_can_data(const unsigned long& sysMicros, const HT_T
 
     return HT_TASK::TaskResponse::YIELD;
 }
-
-
-HT_TASK::TaskResponse init_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
-{
-    DisplayInterfaceInstance::instance().init();
-    return HT_TASK::TaskResponse::YIELD;
-}
-
 
 HT_TASK::TaskResponse run_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
 {
