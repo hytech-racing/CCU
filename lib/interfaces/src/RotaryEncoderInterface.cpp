@@ -171,24 +171,19 @@ void RotaryEncoderInterface::_update_encoder_from_isr()
     _state.last_encoded = encoded;
 }
 
-void RotaryEncoderInterface::_apply_transition_delta_from_isr(int8_t delta)
+void RotaryEncoderInterface::_apply_transition_delta_from_isr(int delta)
 {
-    const int accumulator =
-        static_cast<int>(_state.transition_accumulator) + static_cast<int>(delta);
+    _state.transition_accumulator += delta;
 
-    if (accumulator >= static_cast<int>(default_encoder_params::TRANSITIONS_PER_DETENT))
+    if (_state.transition_accumulator >= default_encoder_params::TRANSITIONS_PER_DETENT)
     {
         _increment_from_isr();
         _state.transition_accumulator = 0;
     }
-    else if (accumulator <= -static_cast<int>(default_encoder_params::TRANSITIONS_PER_DETENT))
+    else if (_state.transition_accumulator <= -default_encoder_params::TRANSITIONS_PER_DETENT)
     {
         _decrement_from_isr();
         _state.transition_accumulator = 0;
-    }
-    else
-    {
-        _state.transition_accumulator = static_cast<int8_t>(accumulator);
     }
 }
 

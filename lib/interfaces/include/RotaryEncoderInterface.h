@@ -112,7 +112,7 @@ private:
 
     void _update_encoder_from_isr();
 
-    void _apply_transition_delta_from_isr(int8_t delta);
+    void _apply_transition_delta_from_isr(int delta);
 
     void _increment_from_isr();
 
