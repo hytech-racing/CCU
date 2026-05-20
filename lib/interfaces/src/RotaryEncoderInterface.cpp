@@ -64,6 +64,8 @@ void RotaryEncoderInterface::_update_encoder()
 {
     uint8_t encoded = _read_encoded();
 
+    Serial.println(encoded, BIN);
+
     if (encoded == _state.last_encoded)
     {
         return;
@@ -78,7 +80,7 @@ void RotaryEncoderInterface::_update_encoder()
         case default_encoder_params::CW_2:
         case default_encoder_params::CW_3:
         case default_encoder_params::CW_4:
-        {        
+        {
             _increment();
             break;
         }

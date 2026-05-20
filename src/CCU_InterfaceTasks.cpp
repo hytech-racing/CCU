@@ -98,10 +98,14 @@ HT_TASK::TaskResponse run_kick_watchdog(const unsigned long& sysMicros, const HT
 HT_TASK::TaskResponse run_read_encoder_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
 {
     RotaryEncoderInterfaceInstance::instance().tick(sys_time::hal_millis());
+
     if (RotaryEncoderInterfaceInstance::instance().switch_pressed())
     {
         RotaryEncoderInterfaceInstance::instance().set_value(0);
     }
+
+    Serial.println(RotaryEncoderInterfaceInstance::instance().get_value());
+
     return HT_TASK::TaskResponse::YIELD;
 }
 
@@ -153,8 +157,10 @@ HT_TASK::TaskResponse sample_can_data(const unsigned long& sysMicros, const HT_T
 
 HT_TASK::TaskResponse run_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
 {
-    DisplayInterfaceInstance::instance().display_data(Level2SystemInstance::instance().is_120_switched(ADCInterfaceInstance::instance()));
-    DisplayInterfaceInstance::instance().refresh_display_data(sys_time::hal_millis());
+    auto curr_time_ms = sys_time::hal_millis();
+    DisplayInterfaceInstance::instance().update(curr_time_ms);
+    DisplayInterfaceInstance::instance().display_data(curr_time_ms, Level2SystemInstance::instance().is_120_switched(ADCInterfaceInstance::instance()));
+    DisplayInterfaceInstance::instance().refresh_display_data(curr_time_ms);
     return HT_TASK::TaskResponse::YIELD;
 }
 
@@ -171,8 +177,8 @@ HT_TASK::TaskResponse debug_prints(const unsigned long& sysMicros, const HT_TASK
     Serial.print("Charging State : "); Serial.println(static_cast<size_t>(ChargerStateMachineInstance::instance().get_state()));
 
     // Serial.print("READ JUMPER OUT: "); Serial.println(ADCInterfaceInstance::instance().read_jumper_out());
-    // Serial.print("READ 240 OK: "); Serial.println(ADCInterfaceInstance::instance().read_240_ok());
-    // Serial.print("READ 240 ENABLED: "); Serial.println(ADCInterfaceInstance::instance().read_240_enabled());
+    Serial.print("READ 240 OK: "); Serial.println(ADCInterfaceInstance::instance().read_240_ok());
+    Serial.print("READ 240 ENABLED: "); Serial.println(ADCInterfaceInstance::instance().read_240_enabled());
 
     Serial.println();
 

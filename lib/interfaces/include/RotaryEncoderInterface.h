@@ -56,10 +56,10 @@ public:
             .step = default_encoder_params::STEP_SIZE,
             .last_encoded = default_encoder_params::INIT_ENCODING,
         }
-    ) : 
+    ) :
         _pinout(pinout),
         _state(state),
-        _enc_switch_button(_pinout.enc_switch_pin)
+        _enc_switch_button(pinout.enc_switch_pin)
     {}
 
     void init();
@@ -79,7 +79,7 @@ public:
     bool switch_released();
 
     bool switch_held();
-    
+
 private:
     RotaryEncoderPinout_s _pinout;
     RotaryEncoderState_s _state;

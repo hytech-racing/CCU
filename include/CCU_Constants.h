@@ -89,7 +89,7 @@ namespace CCUConstants
     constexpr unsigned long ENQUEUE_CHARGER_CAN_DATA_PRIORITY = 5;
     constexpr unsigned long ENQUEUE_CHARGER_CAN_DATA_PERIOD = 4000; // 4 000 us = 250 Hz
 
-    constexpr unsigned long DIAL_PERIOD_US = 20000; // 20 000 us = 50 Hz
+    constexpr unsigned long DIAL_PERIOD_US = 10000; // 20 000 us = 50 Hz
     constexpr unsigned long ETHERNET_PERIOD_US = 20000; // 20 000 us = 50 Hz
 
     constexpr unsigned long UPDATE_DISPLAY_PRIORITY = 11;

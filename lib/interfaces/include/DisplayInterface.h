@@ -24,16 +24,17 @@ namespace default_display_params
     constexpr unsigned long CYCLE_BUTTON_HOLD_TIME_RESET_MS = 2000UL; // ms
     constexpr float DATA_SCALAR = 10.0F;
     constexpr uint8_t BYTE_SHIFT = 8;
+    constexpr unsigned long SLIDING_WINDOW_DISPLAY_INTERVAL_MS = 2500UL;
 };
 
-enum DisplayView_e 
+enum DisplayView_e
 {
     VIEW_CHARGE_STATUS = 0,
     VIEW_CHARGER,
     VIEW_VOLTAGE,
     VIEW_BOARD_TEMPERATURE,
     VIEW_CELL_TEMPERATURE,
-    NUM_VIEWS 
+    NUM_VIEWS
 };
 
 struct DisplayPinout_s
@@ -57,7 +58,9 @@ struct DisplayInterfaceParams_s
 
 struct DisplayConfig_s {
     unsigned long display_update_interval_ms;
-    unsigned long _cycle_button_hold_time_reset_ms;
+    unsigned long cycle_button_hold_time_reset_ms;
+    unsigned long last_display_timestamp;
+    unsigned long sliding_window_display_interval_ms;
 };
 
 class DisplayInterface {
@@ -66,7 +69,9 @@ public:
         DisplayPinout_s pinout,
         DisplayConfig_s config = {
             .display_update_interval_ms = default_display_params::DISPLAY_UPDATE_INTERVAL_MS,
-            ._cycle_button_hold_time_reset_ms = default_display_params::CYCLE_BUTTON_HOLD_TIME_RESET_MS
+            .cycle_button_hold_time_reset_ms = default_display_params::CYCLE_BUTTON_HOLD_TIME_RESET_MS,
+            .last_display_timestamp = 0,
+            .sliding_window_display_interval_ms = default_display_params::SLIDING_WINDOW_DISPLAY_INTERVAL_MS
         }
     ) :
         Display(
@@ -85,7 +90,7 @@ public:
     {}
 
     void init();
-    void display_data(bool is_120_switched);
+    void display_data(unsigned long current_millis, bool is_120_switched);
     void refresh_display_data(unsigned long curr_millis);
 
     void update(unsigned long current_millis);
