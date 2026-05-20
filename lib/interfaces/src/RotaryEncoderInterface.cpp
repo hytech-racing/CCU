@@ -1,5 +1,22 @@
 #include "RotaryEncoderInterface.h"
 
+RotaryEncoderInterface* RotaryEncoderInterface::_active_instance = nullptr;
+
+RotaryEncoderInterface::RotaryEncoderInterface(
+    RotaryEncoderPinout_s pinout,
+    RotaryEncoderState_s state
+) :
+    _pinout(pinout),
+    _state(),
+    _enc_switch_button(pinout.enc_switch_pin)
+{
+    _state.encoder_value = state.encoder_value;
+    _state.max_value = state.max_value;
+    _state.min_value = state.min_value;
+    _state.step = state.step;
+    _state.last_encoded = state.last_encoded;
+    _state.transition_accumulator = state.transition_accumulator;
+}
 
 void RotaryEncoderInterface::init()
 {
@@ -7,34 +24,76 @@ void RotaryEncoderInterface::init()
     pinMode(_pinout.enc_b_pin, INPUT_PULLUP);
 
     _state.last_encoded = _read_encoded();
+    _state.transition_accumulator = 0;
+
+    _active_instance = this;
+
+    attachInterrupt(
+        digitalPinToInterrupt(_pinout.enc_a_pin),
+        RotaryEncoderInterface::_isr_handler,
+        CHANGE
+    );
+
+    attachInterrupt(
+        digitalPinToInterrupt(_pinout.enc_b_pin),
+        RotaryEncoderInterface::_isr_handler,
+        CHANGE
+    );
 }
 
 void RotaryEncoderInterface::tick(unsigned long current_millis)
 {
-    _update_encoder();
+    // Do not update encoder here anymore.
+    // Encoder is updated by interrupt.
     _enc_switch_button.update(current_millis);
 }
 
 float RotaryEncoderInterface::get_value() const
 {
-    return _state.encoder_value;
+    noInterrupts();
+    float value = _state.encoder_value;
+    interrupts();
+
+    return value;
 }
 
 void RotaryEncoderInterface::set_value(float value)
 {
+    noInterrupts();
     _state.encoder_value = _clamp(value);
+    _state.transition_accumulator = 0;
+    interrupts();
 }
 
 void RotaryEncoderInterface::set_limits(float min_value, float max_value)
 {
+    if (min_value > max_value)
+    {
+        float temp = min_value;
+        min_value = max_value;
+        max_value = temp;
+    }
+
+    noInterrupts();
+
     _state.min_value = min_value;
     _state.max_value = max_value;
     _state.encoder_value = _clamp(_state.encoder_value);
+    _state.transition_accumulator = 0;
+
+    interrupts();
 }
 
 void RotaryEncoderInterface::set_step(float step)
 {
+    if (step < 0)
+    {
+        step = -step;
+    }
+
+    noInterrupts();
     _state.step = step;
+    interrupts();
 }
 
 bool RotaryEncoderInterface::switch_pressed()
@@ -52,49 +111,59 @@ bool RotaryEncoderInterface::switch_held()
     return _enc_switch_button.is_held();
 }
 
-uint8_t RotaryEncoderInterface::_read_encoded() const
+void RotaryEncoderInterface::_isr_handler()
 {
-    uint8_t a = digitalRead(_pinout.enc_a_pin);
-    uint8_t b = digitalRead(_pinout.enc_b_pin);
-
-    return (a << 1) | b;
+    if (_active_instance != nullptr)
+    {
+        _active_instance->_update_encoder_from_isr();
+    }
 }
 
-void RotaryEncoderInterface::_update_encoder()
+uint8_t RotaryEncoderInterface::_read_encoded() const
+{
+    uint8_t a = static_cast<uint8_t>(digitalRead(_pinout.enc_a_pin));
+    uint8_t b = static_cast<uint8_t>(digitalRead(_pinout.enc_b_pin));
+
+    return static_cast<uint8_t>((a << 1) | b);
+}
+
+void RotaryEncoderInterface::_update_encoder_from_isr()
 {
     uint8_t encoded = _read_encoded();
-
-    Serial.println(encoded, BIN);
 
     if (encoded == _state.last_encoded)
     {
         return;
     }
 
-    uint8_t transition = (_state.last_encoded << 2) | encoded;
+    uint8_t transition = static_cast<uint8_t>((_state.last_encoded << 2) | encoded);
 
     switch (transition)
     {
-        // Clockwise transitions
         case default_encoder_params::CW_1:
         case default_encoder_params::CW_2:
         case default_encoder_params::CW_3:
         case default_encoder_params::CW_4:
         {
-            _increment();
+            _apply_transition_delta_from_isr(+1);
             break;
         }
-        // Counter-clockwise transitions
+
         case default_encoder_params::CCW_1:
         case default_encoder_params::CCW_2:
         case default_encoder_params::CCW_3:
         case default_encoder_params::CCW_4:
         {
-            _decrement();
+            _apply_transition_delta_from_isr(-1);
             break;
         }
+
         default:
         {
+            // Invalid transition.
+            // This can happen from switch bounce or missed edges.
+            // Resetting the accumulator avoids applying a fake detent.
+            _state.transition_accumulator = 0;
             break;
         }
     }
@@ -102,14 +171,32 @@ void RotaryEncoderInterface::_update_encoder()
     _state.last_encoded = encoded;
 }
 
-void RotaryEncoderInterface::_increment()
+void RotaryEncoderInterface::_apply_transition_delta_from_isr(int8_t delta)
 {
-    _state.encoder_value = _clamp(_state.encoder_value + _state.step);
+    _state.transition_accumulator += delta;
+
+    if (_state.transition_accumulator >= default_encoder_params::TRANSITIONS_PER_DETENT)
+    {
+        _increment_from_isr();
+        _state.transition_accumulator = 0;
+    }
+    else if (_state.transition_accumulator <= -default_encoder_params::TRANSITIONS_PER_DETENT)
+    {
+        _decrement_from_isr();
+        _state.transition_accumulator = 0;
+    }
 }
 
-void RotaryEncoderInterface::_decrement()
+void RotaryEncoderInterface::_increment_from_isr()
 {
-    _state.encoder_value = _clamp(_state.encoder_value - _state.step);
+    float next_value = _state.encoder_value + _state.step;
+    _state.encoder_value = _clamp(next_value);
+}
+
+void RotaryEncoderInterface::_decrement_from_isr()
+{
+    float next_value = _state.encoder_value - _state.step;
+    _state.encoder_value = _clamp(next_value);
 }
 
 float RotaryEncoderInterface::_clamp(float value) const

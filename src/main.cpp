@@ -65,7 +65,7 @@ void setup()
     scheduler.schedule(receive_ethernet);
     scheduler.schedule(send_all_data);
 
-    //scheduler.schedule(debug_print_task);
+    scheduler.schedule(debug_print_task);
 
     scheduler.schedule(run_sample_can_data);
     scheduler.schedule(kick_watchdog_task);
