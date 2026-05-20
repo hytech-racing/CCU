@@ -2,12 +2,12 @@
 #include <algorithm>
 #include <cmath>
 
-void MainChargeSystem::calculate_charge_current(float max_pack_voltage, float cell_cutoff_voltage)
+void MainChargeSystem::calculate_charge_current(float max_pack_voltage, float cell_cutoff_voltage, float dial_percent)
 {
     // Get battery data from ACU
     const auto& acu_data = ACUInterfaceInstance::instance().get_latest_data();
     float max_cell_voltage = acu_data.high_voltage; // the highest voltage in any of the cells
-    float total_pack_voltage = acu_data.total_voltage; // the total voltage in the pack
+    float total_pack_voltage = acu_data.pack_voltage; // the total voltage in the pack
     auto current_state = ChargerStateMachineInstance::instance().get_state();
 
     // Check safety conditions first
@@ -27,7 +27,7 @@ void MainChargeSystem::calculate_charge_current(float max_pack_voltage, float ce
     }
 
     // Determine requested current based on state
-    float requested_current = _get_current_for_state(current_state);
+    float requested_current = _get_current_for_state(current_state) * (dial_percent / 100.0F);
 
     // Apply safety limits
     _charge_data.calculated_charge_current = _apply_current_limits(current_state, requested_current);

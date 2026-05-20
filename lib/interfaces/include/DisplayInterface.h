@@ -12,13 +12,31 @@
 /* Local Interface Includes */
 #include "ACUInterface.h"
 #include "EMInterface.h"
+#include "ButtonInterface.h"
+#include "ChargerStateMachine.h"
+#include "RotaryEncoderInterface.h"
 
 using pin = size_t;
 
-namespace display_default_parameters
+namespace default_display_params
 {
-    constexpr float DISPLAY_UPDATE_INTERVAL_MS = 100.0f;  // ms
+    constexpr unsigned long DISPLAY_UPDATE_INTERVAL_MS = 100UL;  // ms
+    constexpr unsigned long CYCLE_BUTTON_HOLD_TIME_RESET_MS = 2000UL; // ms
+    constexpr float DATA_SCALAR = 10.0F;
+    constexpr uint8_t BYTE_SHIFT = 8;
+    constexpr unsigned long SLIDING_WINDOW_DISPLAY_INTERVAL_MS = 2500UL;
 };
+
+enum DisplayView_e
+{
+    VIEW_CHARGE_STATUS = 0,
+    VIEW_CHARGER,
+    VIEW_VOLTAGE,
+    VIEW_BOARD_TEMPERATURE,
+    VIEW_CELL_TEMPERATURE,
+    NUM_VIEWS
+};
+
 struct DisplayPinout_s
 {
     pin teensy_lcd_cs_pin;
@@ -27,6 +45,8 @@ struct DisplayPinout_s
     pin teensy_lcd_mosi_pin;
     pin teensy_lcd_reset_pin;
     pin teensy_lcd_dc_pin;
+
+    pin cycle_display_view_pin;
 };
 
 struct DisplayInterfaceParams_s
@@ -38,6 +58,9 @@ struct DisplayInterfaceParams_s
 
 struct DisplayConfig_s {
     unsigned long display_update_interval_ms;
+    unsigned long cycle_button_hold_time_reset_ms;
+    unsigned long last_display_timestamp;
+    unsigned long sliding_window_display_interval_ms;
 };
 
 class DisplayInterface {
@@ -45,7 +68,10 @@ public:
     DisplayInterface(
         DisplayPinout_s pinout,
         DisplayConfig_s config = {
-            .display_update_interval_ms = display_default_parameters::DISPLAY_UPDATE_INTERVAL_MS
+            .display_update_interval_ms = default_display_params::DISPLAY_UPDATE_INTERVAL_MS,
+            .cycle_button_hold_time_reset_ms = default_display_params::CYCLE_BUTTON_HOLD_TIME_RESET_MS,
+            .last_display_timestamp = 0,
+            .sliding_window_display_interval_ms = default_display_params::SLIDING_WINDOW_DISPLAY_INTERVAL_MS
         }
     ) :
         Display(
@@ -58,24 +84,28 @@ public:
         ),
         _pinout(pinout),
         _config(config),
-        _display_time(0.0f)
+        _display_time(0),
+        _cycle_display_view_button(pinout.cycle_display_view_pin),
+        _display_view(DisplayView_e::VIEW_CHARGE_STATUS)
     {}
 
     void init();
-    void display_data(bool is_120_switched);
+    void display_data(unsigned long current_millis, bool is_120_switched);
     void refresh_display_data(unsigned long curr_millis);
+
+    void update(unsigned long current_millis);
+    void handle_button_events(unsigned long current_millis);
+
+    void cycle_view();
 
     Adafruit_ILI9341 Display;
 
-    private:
-        DisplayPinout_s _pinout;
-        DisplayConfig_s _config;
-        unsigned long _display_time;
-
-        // DMAChannel dma_spi;
-        // uint8_t txBuffer [256];
-        // uint8_t rxBuffer [256];
-        //= Adafruit_ILI9341(DISPLAY_PINS::LCD_CS, DISPLAY_PINS::LCD_DC, DISPLAY_PINS::LCD_MOSI, DISPLAY_PINS::LCD_SCK, DISPLAY_PINS::LCD_RESET, DISPLAY_PINS::LCD_MISO);
+private:
+    DisplayPinout_s _pinout;
+    DisplayConfig_s _config;
+    unsigned long _display_time;
+    DisplayView_e _display_view;
+    ButtonInterface _cycle_display_view_button;
 };
 
 using DisplayInterfaceInstance = etl::singleton<DisplayInterface>;

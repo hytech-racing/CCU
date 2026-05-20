@@ -25,6 +25,8 @@
 #include "CCUCANInterfaceImpl.h"
 #include "ACUInterface.h"
 #include "CCUEthernetInterface.h"
+#include "ButtonInterface.h"
+#include "RotaryEncoderInterface.h"
 
 /**
  * @brief Creates an instance of all systems.
@@ -37,6 +39,7 @@ extern etl::delegate<bool()> is_240_switched;
 extern etl::delegate<bool()> is_state_B2_ready;
 extern etl::delegate<bool()> is_state_C2_ready;
 extern etl::delegate<bool()> is_shdn_C_high;
+extern etl::delegate<bool()> reset_error_requested;
 extern etl::delegate<void()> set_sw_shdn_high; 
 extern etl::delegate<void()> set_sw_shdn_low;
 extern etl::delegate<void()> set_start_charge_high;

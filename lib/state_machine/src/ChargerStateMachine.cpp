@@ -217,6 +217,21 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
 
             break;
         }
+        case ChargerState_e::ERROR:
+        {
+            if (current_millis - _last_state_changed_time < state_transition_delay_ms)
+            {
+                break;
+            }
+                
+            if (_reset_error_requested())
+            {
+                _set_state(ChargerState_e::STARTUP, current_millis);
+                break;
+            }
+
+            break;
+        }
         default: // Should never occur
         {
             break;
@@ -291,3 +306,47 @@ void ChargerStateMachine::_handle_entry_logic(ChargerState_e new_state, unsigned
     }
 }
 
+const char* ChargerStateMachine::get_state_name()
+{
+    switch (_current_state) 
+    {
+        case ChargerState_e::STARTUP:
+        {
+            return "STARTUP"; 
+        }
+        case ChargerState_e::CHARGING_120:
+        {
+            return "CHARGING 120"; 
+        }
+        case ChargerState_e::CHARGING_240:
+        {
+            return "CHARGING 240"; 
+        }
+        case ChargerState_e::ERROR:
+        {
+            return "ERROR"; 
+        }
+        case ChargerState_e::CHECK_SWITCH:
+        {
+            return "CHECK SWITCH";
+        }
+        case ChargerState_e::CHARGE_120_UNLATCHED:
+        {
+            return "CHARGE 120 UNLATCHED";
+        }
+        case ChargerState_e::CHECK_240_B2_OK:
+        {
+            return "CHECK 240 B2 OK";
+        }
+        case ChargerState_e::CHECK_240_C2_OK:
+        {
+            return "CHECK 240 C2 OK";
+        }
+        case ChargerState_e::CHARGE_240_UNLATCHED:
+        {
+            return "CHARGE 240 UNLATCHED";
+        }
+        default:
+            return "UNKNOWN";
+    }
+}

@@ -11,7 +11,7 @@ using pin = size_t;
 
 namespace default_level2_interface_params
 {
-    constexpr uint16_t PWM_PULSE_IN_TIMEOUT_MS = 100000UL;
+    constexpr unsigned long PWM_PULSE_IN_TIMEOUT_MS = 100000UL;
     constexpr float MIN_VALID_PWM_DUTY_CYCLE_PERCENT = 9.5F;
     constexpr float MAX_VALID_PWM_DUTY_CYCLE_PERCENT = 96.5F;
 }
@@ -30,7 +30,7 @@ struct Level2_Data_s
 
 struct Level2_Config_s
 { 
-    uint16_t pwm_pulse_in_timeout_ms;
+    unsigned long pwm_pulse_in_timeout_ms;
     float min_valid_pwm_duty_cycle_percent;
     float max_valid_pwm_duty_cycle_percent;  
 };
@@ -47,7 +47,8 @@ public:
             .max_valid_pwm_duty_cycle_percent = default_level2_interface_params::MAX_VALID_PWM_DUTY_CYCLE_PERCENT,
         }
     ) :
-        _pinout(pinout)
+        _pinout(pinout),
+        _config(config)
     {}
 
     void init();

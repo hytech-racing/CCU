@@ -18,7 +18,6 @@ void ACUInterface::receive_status_message(const CAN_message_t &msg, unsigned lon
     _curr_data.acu_state = static_cast<ACUState_e>(bms_status_msg.state);
 
     // As long as we're using millis() function, loop overrun not a concern
-
     if(_curr_data.last_recv_status_millis == 0)
     {
         _first_received_message_heartbeat_init = true;
@@ -34,12 +33,26 @@ void ACUInterface::receive_voltages_message(const CAN_message_t& msg, unsigned l
     _curr_data.average_voltage = HYTECH_average_voltage_ro_fromS(static_cast<float>(voltages_msg.average_voltage_ro));
     _curr_data.low_voltage = HYTECH_low_voltage_ro_fromS(static_cast<float>(voltages_msg.low_voltage_ro));
     _curr_data.high_voltage = HYTECH_high_voltage_ro_fromS(static_cast<float>(voltages_msg.high_voltage_ro));
-    _curr_data.total_voltage = HYTECH_total_voltage_ro_fromS(static_cast<float>(voltages_msg.total_voltage_ro));
+    _curr_data.pack_voltage = HYTECH_total_voltage_ro_fromS(static_cast<float>(voltages_msg.total_voltage_ro));
+}
+
+void ACUInterface::receive_detailed_voltages_message(const CAN_message_t& msg, unsigned long curr_millis)
+{
+    BMS_DETAILED_VOLTAGES_t voltages_msg;
+    Unpack_BMS_DETAILED_VOLTAGES_hytech(&voltages_msg, &msg.buf[0], msg.len);
+    uint8_t group_id = voltages_msg.group_id;
+    uint8_t ic_id = voltages_msg.ic_id;
+    size_t cell_base_index = (ic_id / 2) * default_acu_params::NUM_CELLS_PER_SEGMENT + 
+                             ((ic_id % 2 != 0) ? default_acu_params::NUM_CHIPS : 0) +
+                             group_id * default_acu_params::NUM_DATA_PER_GROUP;
+    _curr_data.cell_voltages[cell_base_index + 0] = HYTECH_voltage_0_ro_fromS(voltages_msg.voltage_0_ro);
+    _curr_data.cell_voltages[cell_base_index + 1] = HYTECH_voltage_1_ro_fromS(voltages_msg.voltage_1_ro);
+    _curr_data.cell_voltages[cell_base_index + 2] = HYTECH_voltage_2_ro_fromS(voltages_msg.voltage_2_ro);
 }
 
 void ACUInterface::receive_onboard_temps_message(const CAN_message_t& msg, unsigned long curr_millis)
 {
-    BMS_ONBOARD_TEMPS_t board_temps = {};
+    BMS_ONBOARD_TEMPS_t board_temps;
     Unpack_BMS_ONBOARD_TEMPS_hytech(&board_temps, &msg.buf[0], msg.len);
     _curr_data.max_board_temp = HYTECH_max_board_temp_ro_fromS(board_temps.max_board_temp_ro);
     _curr_data.min_cell_temp = HYTECH_low_cell_temp_ro_fromS(board_temps.low_cell_temp_ro);
@@ -48,29 +61,37 @@ void ACUInterface::receive_onboard_temps_message(const CAN_message_t& msg, unsig
 
 void ACUInterface::receive_detailed_temps_message(const CAN_message_t& msg, unsigned long curr_millis)
 {
-    BMS_DETAILED_TEMPS_t detailed_temps{};
+    BMS_DETAILED_TEMPS_t detailed_temps;
     Unpack_BMS_DETAILED_TEMPS_hytech(&detailed_temps, &msg.buf[0], msg.len);
-    _curr_data.group_id = detailed_temps.group_id; //size of uint8_t
-    _curr_data.ic_detailed_id = detailed_temps.ic_id; //size of uint8_t
-    _curr_data.therm_id_0 = HYTECH_thermistor_id_0_ro_fromS(static_cast<float>(detailed_temps.thermistor_id_0_ro));
-    _curr_data.therm_id_1 = HYTECH_thermistor_id_1_ro_fromS(static_cast<float>(detailed_temps.thermistor_id_1_ro));
-    _curr_data.therm_id_2 = HYTECH_thermistor_id_2_ro_fromS(static_cast<float>(detailed_temps.thermistor_id_2_ro));
+    uint8_t group_id = detailed_temps.group_id;
+    uint8_t ic_id = detailed_temps.ic_id;
+    size_t cell_base_index = (ic_id % 2 != 0 ? default_acu_params::NUM_CELL_TEMPS_PER_CHIP : 0) + 
+                             group_id * default_acu_params::NUM_DATA_PER_GROUP;
+    
+    if (ic_id == 1)
+    {
+        _curr_data.cell_temps[cell_base_index] = HYTECH_thermistor_0_deg_C_ro_fromS(detailed_temps.thermistor_id_0_ro);
+    }
+    else
+    {
+        _curr_data.cell_temps[cell_base_index] = HYTECH_thermistor_0_deg_C_ro_fromS(detailed_temps.thermistor_id_0_ro);
+        _curr_data.cell_temps[cell_base_index + 1] = HYTECH_thermistor_0_deg_C_ro_fromS(detailed_temps.thermistor_id_1_ro);
+        _curr_data.cell_temps[cell_base_index + 2] = HYTECH_thermistor_0_deg_C_ro_fromS(detailed_temps.thermistor_id_2_ro);
+    }
 }
 
 void ACUInterface::receive_onboard_detailed_temps(const CAN_message_t& msg, unsigned long curr_millis)
 {
     BMS_ONBOARD_DETAILED_TEMPS_t onboard_detailed_temps{};
     Unpack_BMS_ONBOARD_DETAILED_TEMPS_hytech(&onboard_detailed_temps, &msg.buf[0], msg.len);
-    _curr_data.ic_id = onboard_detailed_temps.ic_id;
-    _curr_data.temp_0 = HYTECH_temp_0_ro_fromS(static_cast<float>(onboard_detailed_temps.temp_0_ro));
-    _curr_data.temp_1 = HYTECH_temp_1_ro_fromS(static_cast<float>(onboard_detailed_temps.temp_1_ro));
+    uint8_t ic_id = onboard_detailed_temps.ic_id;
+    _curr_data.board_temps[ic_id] = HYTECH_temp_0_ro_fromS(onboard_detailed_temps.temp_0_ro);
 }
 
-bool ACUInterface::set_is_charging_enabled(bool state)
+void ACUInterface::set_is_charging_enabled(bool state)
 {
     _curr_data.is_charging_enabled = state;
 }
-
 
 void ACUInterface::enqueue_ccu_status_data()
 {
