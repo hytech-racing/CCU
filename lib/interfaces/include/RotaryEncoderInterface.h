@@ -65,7 +65,7 @@ struct RotaryEncoderState_s
     // Accumulates valid quadrature transitions.
     // +4 means one clockwise detent.
     // -4 means one counter-clockwise detent.
-    volatile int8_t transition_accumulator = 0;
+    volatile int transition_accumulator = 0;
 };
 
 class RotaryEncoderInterface
