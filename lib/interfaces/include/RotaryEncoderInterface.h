@@ -42,7 +42,7 @@ namespace default_encoder_params
     constexpr uint8_t CCW_4 = 0b0111;
 
     // 4 valid transitions per full encoder detent/click.
-    constexpr int8_t TRANSITIONS_PER_DETENT = 4;
+    constexpr int TRANSITIONS_PER_DETENT = 4;
 }
 
 struct RotaryEncoderPinout_s
