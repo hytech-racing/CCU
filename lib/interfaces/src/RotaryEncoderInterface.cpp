@@ -173,7 +173,7 @@ void RotaryEncoderInterface::_update_encoder_from_isr()
 
 void RotaryEncoderInterface::_apply_transition_delta_from_isr(int8_t delta)
 {
-    _state.transition_accumulator += delta;
+    _state.transition_accumulator += static_cast<int8_t>(delta);
 
     if (_state.transition_accumulator >= default_encoder_params::TRANSITIONS_PER_DETENT)
     {
