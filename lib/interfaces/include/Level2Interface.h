@@ -47,7 +47,8 @@ public:
             .max_valid_pwm_duty_cycle_percent = default_level2_interface_params::MAX_VALID_PWM_DUTY_CYCLE_PERCENT,
         }
     ) :
-        _pinout(pinout)
+        _pinout(pinout),
+        _config(config)
     {}
 
     void init();
