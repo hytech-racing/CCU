@@ -68,7 +68,7 @@ void ACUInterface::receive_detailed_temps_message(const CAN_message_t& msg, unsi
     size_t cell_base_index = (ic_id % 2 != 0 ? default_acu_params::NUM_CELL_TEMPS_PER_CHIP : 0) + 
                              group_id * default_acu_params::NUM_DATA_PER_GROUP;
     
-    if (ic_id == 1)
+    if (group_id == 1)
     {
         _curr_data.cell_temps[cell_base_index] = HYTECH_thermistor_0_deg_C_ro_fromS(detailed_temps.thermistor_id_0_ro);
     }
