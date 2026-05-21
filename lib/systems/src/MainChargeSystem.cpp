@@ -2,7 +2,12 @@
 #include <algorithm>
 #include <cmath>
 
-void MainChargeSystem::calculate_charge_current(float max_pack_voltage, float cell_cutoff_voltage, float dial_percent)
+void MainChargeSystem::init(unsigned long init_millis)
+{
+    _init_millis = init_millis;
+}
+
+void MainChargeSystem::calculate_charge_current(float max_pack_voltage, float cell_cutoff_voltage, float dial_percent, unsigned long curr_millis)
 {
     // Get battery data from ACU
     const auto& acu_data = ACUInterfaceInstance::instance().get_latest_data();
@@ -10,7 +15,7 @@ void MainChargeSystem::calculate_charge_current(float max_pack_voltage, float ce
     float total_pack_voltage = acu_data.pack_voltage; // the total voltage in the pack
     auto current_state = ChargerStateMachineInstance::instance().get_state();
 
-    uint32_t elapsed_time_ms = curr_time_ms - _init_millis;
+    unsigned long elapsed_time_ms = curr_millis - _init_millis;
 
     // Check safety conditions first
     if (!_is_safety_conditions_valid())
@@ -63,7 +68,7 @@ bool MainChargeSystem::_is_safety_conditions_valid()
     return true;
 }
 
-float MainChargeSystem::_apply_current_limits(ChargerState_e state, float requested_current, uint32_t curr_time_ms)
+float MainChargeSystem::_apply_current_limits(ChargerState_e state, float requested_current, unsigned long curr_millis)
 {
     float limited_current = requested_current;
 
@@ -79,7 +84,7 @@ float MainChargeSystem::_apply_current_limits(ChargerState_e state, float reques
     float board_temp_factor = _calculate_board_temp_derate_factor(curr_max_board_temp);
 
     // Startup derate
-    float startup_delay_factor =  _startup_derate_factor(curr_time_ms);
+    float startup_delay_factor = _startup_derate_factor(curr_millis);
 
     // Apply all derating factors
     limited_current *= startup_delay_factor;
@@ -125,33 +130,15 @@ float MainChargeSystem::_calculate_board_temp_derate_factor(float curr_temp)
     return 1.0F - std::max(std::min(((curr_temp - _charge_system_parameters.thresholds.board_temp_derate_thresh) / (_charge_system_parameters.max_board_cutoff_temp_celcius - _charge_system_parameters.thresholds.board_temp_derate_thresh)), 1.0F), 0.0F);
 }
 
-float MainChargeSystem::_startup_derate_factor(uint16_t elapsed_time_ms)
+float MainChargeSystem::_startup_derate_factor(unsigned long elapsed_time_ms)
 {
-    if (elapsed_time_ms < _charge_system_parameters.configs.startup_delay_ms)
+    const unsigned long startup_delay = _charge_system_parameters.configs.startup_delay_ms;
+    
+    if (elapsed_time_ms >= startup_delay)
     {
-        return std::max(std::min((float)((float)(elapsed_time_ms - 0) / (_charge_system_parameters.configs.startup_delay_ms - 0)), 1.0F), 0.0F);
+        return 1.0F;
     }
-
-    return 1.0F;
+    
+    // Linear ramp from 0.0 to 1.0 over startup_delay period
+    return static_cast<float>(elapsed_time_ms) / static_cast<float>(startup_delay);
 }
-
-// float MainChargeSystem::_calculate_voltage_derate_factor(float curr_voltage)
-// {
-//     // Voltage derate (start peak of trapezoid at 470V (3.67), start derating at 500V (4V), stop completely 525V (4.17V))
-//     // Below 3.7V: min current, 3.7V-4.0V: ramp up, above 4.0V: ramp down
-
-//     // Below lower threshold we want to ramp
-//     // Cell Voltage Region: Starting -> 3.6V, thus span is 5 degrees calculate factor using percentage of span
-//     if (curr_voltage < _thresholds.cell_voltage_derate_lower_thresh)
-//     {
-//         return std::max(std::min(((curr_voltage - _thresholds.min_cell_voltage) / (_thresholds.cell_voltage_derate_lower_thresh - _thresholds.min_cell_voltage)), 1.0F), 0.0F);
-//     }
-//     // Think about doing time based delay because it doesn't make sense to start at 0 amps if we are under the threshold.
-
-//     if (curr_voltage > _thresholds.cell_voltage_derate_upper_thresh)
-//     {
-//         return 1.0F - std::max(std::min(((curr_voltage - _thresholds.cell_voltage_derate_upper_thresh) / (_thresholds.max_cell_voltage - _thresholds.cell_voltage_derate_upper_thresh)), 1.0F), 0.0F);
-//     }
-
-//     return 1.0F;
-// }

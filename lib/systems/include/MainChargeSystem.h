@@ -31,7 +31,7 @@ enum BalancingState_e
 
 namespace charge_system_default_parameters
 {
-    constexpr const uint32_t STARTUP_DELAY_MS = 600000; // 1 minute
+    constexpr const unsigned long STARTUP_DELAY_MS = 600000; // 1 minute
 
     constexpr const float CELL_TEMP_DERATE_THRESH = 40.0F; // celsius
     constexpr const float BOARD_TEMP_DERATE_THRESH = 50.0F; // celsius
@@ -110,7 +110,8 @@ class MainChargeSystem {
         void calculate_charge_current(
             float max_pack_voltage,
             float cell_cutoff_voltage,
-            float dial_percent
+            float dial_percent,
+            unsigned long curr_millis
         );
 
         /**
@@ -139,7 +140,7 @@ class MainChargeSystem {
         /**
          * @brief timestamp captured in init()
          */
-        uint32_t _init_millis = 0;
+        unsigned long _init_millis = 0;
 
         const ChargeSystemParams_s _charge_system_parameters = {};
         ChargeSystemData_s _charge_data;
@@ -152,7 +153,7 @@ class MainChargeSystem {
         /**
          * @brief Apply current limiting, includes temperature and inital startup ramp-up
          */
-        float _apply_current_limits(ChargerState_e state, float requested_current, uint32_t curr_time_ms);
+        float _apply_current_limits(ChargerState_e state, float requested_current, unsigned long curr_millis);
 
         /**
          * @brief Get appropriate current based on charger state
@@ -172,7 +173,7 @@ class MainChargeSystem {
         /**
          *
          */
-        float _startup_derate_factor(uint16_t curr_time_ms);
+        float _startup_derate_factor(unsigned long elapsed_time_ms);
 };
 
 using MainChargeSystemInstance = etl::singleton<MainChargeSystem>;
