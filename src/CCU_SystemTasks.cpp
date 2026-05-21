@@ -43,6 +43,9 @@ bool initialize_all_systems()
     etl::delegate<bool()> is_state_C2_ready = etl::delegate<bool()>::create([]() -> bool
                                                                                 { return Level2SystemInstance::instance().check_state_C2_conditions(ADCInterfaceInstance::instance(), Level2InterfaceInstance::instance()); });
 
+    etl::delegate<bool()> reset_error_requested = etl::delegate<bool()>::create([]() -> bool
+                                                                                { return ADCInterfaceInstance::instance().is_reset_errors_button_pressed(sys_time::hal_millis()); });
+
     etl::delegate<void()> set_sw_shdn_high = etl::delegate<void()>::create([]() -> void
                                                                                 { WatchdogInterfaceInstance::instance().set_sw_shdn_pin_high(); });
 
@@ -63,6 +66,7 @@ bool initialize_all_systems()
         is_240_conditions_ok,
         is_state_B2_ready,
         is_state_C2_ready,
+        reset_error_requested,
         set_sw_shdn_high,
         set_sw_shdn_low,
         set_start_charge_high,
@@ -84,6 +88,7 @@ HT_TASK::TaskResponse calculate_charge_current(const unsigned long& sysMicros, c
     MainChargeSystemInstance::instance().calculate_charge_current(
         CCUConstants::MAX_PACK_VOLTAGE,
         CCUConstants::MAX_CELL_CUTOFF_VOLTAGE,
+        RotaryEncoderInterfaceInstance::instance().get_value(),
         sys_time::hal_millis()
     );
 

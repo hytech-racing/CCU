@@ -4,7 +4,9 @@
 /* External Dependencies */
 #include <Arduino.h>
 #include "SharedFirmwareTypes.h"
-#include "etl/singleton.h"
+#include "ButtonInterface.h"
+
+#include <etl/singleton.h>
 
 using pin = size_t;
 
@@ -40,6 +42,7 @@ struct ADCPinout_s
     pin teensy_240_enabled_pin;
     pin teensy_240_ok_pin;
     pin teensy_jumper_out_pin;
+    pin reset_error_button_pin;
 };
 
 struct ADCConversions_s
@@ -85,7 +88,7 @@ public:
                 ADCConfigs_s configs = {
                     .teensy41_max_input_voltage = adc_default_parameters::TEENSY41_REF_VOLTAGE
                 }
-        ): _adc_parameters {
+        ):  _adc_parameters {
                 pinout,
                 [=]() mutable {
                     conversions.glv_conv_factor                 = (configs.teensy41_max_input_voltage / bit_resolution) / conversions.glv_conv_factor;
@@ -96,8 +99,10 @@ public:
                 }(),
                 thresholds,
                 configs,
-                bit_resolution}
-            {}
+                bit_resolution
+            },
+            _reset_error_button(pinout.reset_error_button_pin)
+        {}
 
     /**
      * @pre constructor called and instance created
@@ -190,6 +195,8 @@ public:
      */
     bool is_jumper_out_low();
 
+    bool is_reset_errors_button_pressed(unsigned long current_millis);
+
     /**
      * @return ADC parameters
      */
@@ -204,6 +211,7 @@ private:
 
     const ADCInterfaceParams_s _adc_parameters = {};
 
+    ButtonInterface _reset_error_button;
 };
 
 using ADCInterfaceInstance = etl::singleton<ADCInterface>;

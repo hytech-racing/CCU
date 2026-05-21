@@ -21,7 +21,8 @@ void initialize_all_interfaces()
             CCUInterfaces::PROXIMITY_PILOT_PIN,
             CCUInterfaces::TEENSY_240_ENABLED_PIN,
             CCUInterfaces::TEENSY_240_OK_PIN,
-            CCUInterfaces::JUMPER_OUT_PIN
+            CCUInterfaces::JUMPER_OUT_PIN,
+            CCUInterfaces::BUTTON2_READ_PIN,
         },
         ADCConversions_s
         {
@@ -32,7 +33,6 @@ void initialize_all_interfaces()
         },
         CCUInterfaces::BIT_RESOLUTION
     );
-
     ADCInterfaceInstance::instance().init(sys_time::hal_millis());
 
     /* CAN Interfaces Construct */
@@ -40,7 +40,6 @@ void initialize_all_interfaces()
 
     /* Charger Interface */
     ChargerInterface(ACUInterfaceInstance::instance());
-
 
     /* Display Interface */
     DisplayInterfaceInstance::create(
@@ -52,10 +51,20 @@ void initialize_all_interfaces()
             CCUInterfaces::LCD_MOSI_PIN,
             CCUInterfaces::LCD_RESET_PIN,
             CCUInterfaces::LCD_DC_PIN,
+            CCUInterfaces::BUTTON1_READ_PIN,
         }
     );
     DisplayInterfaceInstance::instance().init();
 
+    RotaryEncoderInterfaceInstance::create(
+        RotaryEncoderPinout_s
+        {
+            CCUInterfaces::ENC_SWITCH_PIN,
+            CCUInterfaces::ENC_A_PIN,
+            CCUInterfaces::ENC_B_PIN,
+        }
+    );
+    RotaryEncoderInterfaceInstance::instance().init();
 
     /* Level2 Interface */
     Level2InterfaceInstance::create(
@@ -86,8 +95,17 @@ HT_TASK::TaskResponse run_kick_watchdog(const unsigned long& sysMicros, const HT
     return HT_TASK::TaskResponse::YIELD;
 }
 
-HT_TASK::TaskResponse run_read_dial_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
+HT_TASK::TaskResponse run_read_encoder_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
 {
+    RotaryEncoderInterfaceInstance::instance().tick(sys_time::hal_millis());
+
+    if (RotaryEncoderInterfaceInstance::instance().switch_pressed())
+    {
+        RotaryEncoderInterfaceInstance::instance().set_value(0);
+    }
+
+    Serial.println(RotaryEncoderInterfaceInstance::instance().get_value());
+
     return HT_TASK::TaskResponse::YIELD;
 }
 
@@ -137,18 +155,12 @@ HT_TASK::TaskResponse sample_can_data(const unsigned long& sysMicros, const HT_T
     return HT_TASK::TaskResponse::YIELD;
 }
 
-
-HT_TASK::TaskResponse init_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
-{
-    DisplayInterfaceInstance::instance().init();
-    return HT_TASK::TaskResponse::YIELD;
-}
-
-
 HT_TASK::TaskResponse run_update_display_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
 {
-    DisplayInterfaceInstance::instance().display_data(Level2SystemInstance::instance().is_120_switched(ADCInterfaceInstance::instance()));
-    DisplayInterfaceInstance::instance().refresh_display_data(sys_time::hal_millis());
+    auto curr_time_ms = sys_time::hal_millis();
+    DisplayInterfaceInstance::instance().update(curr_time_ms);
+    DisplayInterfaceInstance::instance().display_data(curr_time_ms, Level2SystemInstance::instance().is_120_switched(ADCInterfaceInstance::instance()));
+    DisplayInterfaceInstance::instance().refresh_display_data(curr_time_ms);
     return HT_TASK::TaskResponse::YIELD;
 }
 
@@ -161,22 +173,22 @@ HT_TASK::TaskResponse debug_prints(const unsigned long& sysMicros, const HT_TASK
 
     /* General Status */
     Serial.println(Level2SystemInstance::instance().is_120_switched(ADCInterfaceInstance::instance()) ? "Set to 120 V Charging" : "Set to 240 V Charging");
-    Serial.print("ACU STATE      : "); Serial.println(static_cast<int>(ACUInterfaceInstance::instance().get_latest_data().acu_state));
+    // Serial.print("ACU STATE      : "); Serial.println(static_cast<int>(ACUInterfaceInstance::instance().get_latest_data().acu_state));
     Serial.print("Charging State : "); Serial.println(static_cast<size_t>(ChargerStateMachineInstance::instance().get_state()));
 
-    Serial.print("READ JUMPER OUT: "); Serial.println(ADCInterfaceInstance::instance().read_jumper_out());
+    // Serial.print("READ JUMPER OUT: "); Serial.println(ADCInterfaceInstance::instance().read_jumper_out());
     Serial.print("READ 240 OK: "); Serial.println(ADCInterfaceInstance::instance().read_240_ok());
     Serial.print("READ 240 ENABLED: "); Serial.println(ADCInterfaceInstance::instance().read_240_enabled());
 
     Serial.println();
 
     /* Voltage Information */
-    Serial.print("Cell Voltage Max   : "); Serial.println(acu_data.high_voltage);
-    Serial.print("Cell Voltage Min   : "); Serial.println(acu_data.low_voltage);
-    Serial.print("Cell Voltage Avg   : "); Serial.println(acu_data.average_voltage);
-    Serial.print("Cell Voltage Delta : "); Serial.println(acu_data.high_voltage - acu_data.low_voltage);
-    Serial.print("Pack Voltage       : "); Serial.println(acu_data.total_voltage);
-    Serial.println();
+    // Serial.print("Cell Voltage Max   : "); Serial.println(acu_data.high_voltage);
+    // Serial.print("Cell Voltage Min   : "); Serial.println(acu_data.low_voltage);
+    // Serial.print("Cell Voltage Avg   : "); Serial.println(acu_data.average_voltage);
+    // Serial.print("Cell Voltage Delta : "); Serial.println(acu_data.high_voltage - acu_data.low_voltage);
+    // Serial.print("Pack Voltage       : "); Serial.println(acu_data.pack_voltage);
+    // Serial.println();
 
     // /* Temperature Information */
     Serial.print("Max Cell Temp       : "); Serial.println(acu_data.max_cell_temp);
@@ -195,14 +207,62 @@ HT_TASK::TaskResponse debug_prints(const unsigned long& sysMicros, const HT_TASK
     Serial.print("PP Voltage Sense      "); Serial.println(ADCInterfaceInstance::instance().read_proximity_pilot());
 
     /* SHDN Information */
-    Serial.print("SHDN_A : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_A_voltage() ? "HIGH" : "LOW");
-    Serial.print("SHDN_B : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_B_voltage() ? "HIGH" : "LOW");
-    Serial.print("SHDN_C : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_C_voltage() ? "HIGH" : "LOW");
-    Serial.print("SHDN_D : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_D_voltage() ? "HIGH" : "LOW");
-    Serial.print("SHDN_E : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_E_voltage() ? "HIGH" : "LOW");
-    Serial.print("SHDN_F : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_F_voltage() ? "HIGH" : "LOW");
-    Serial.print("SHDN_G : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_G_voltage() ? "HIGH" : "LOW");
+    // Serial.print("SHDN_A : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_A_voltage() ? "HIGH" : "LOW");
+    // Serial.print("SHDN_B : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_B_voltage() ? "HIGH" : "LOW");
+    // Serial.print("SHDN_C : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_C_voltage() ? "HIGH" : "LOW");
+    // Serial.print("SHDN_D : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_D_voltage() ? "HIGH" : "LOW");
+    // Serial.print("SHDN_E : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_E_voltage() ? "HIGH" : "LOW");
+    // Serial.print("SHDN_F : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_F_voltage() ? "HIGH" : "LOW");
+    // Serial.print("SHDN_G : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_G_voltage() ? "HIGH" : "LOW");
+    // Serial.println();
+
+    Serial.print("Rotary Encoder Value: ");
+    Serial.println(RotaryEncoderInterfaceInstance::instance().get_value(), 2);
+
     Serial.println();
+
+    // Test print detailed voltages and temps from ACU Interface
+    for (int c = 0; c < default_acu_params::NUM_CELLS; c++)
+    {
+        Serial.print("C"); Serial.print(c); Serial.print(": ");
+        if (*acu_data.cell_voltages[c])
+        {
+            Serial.print(*acu_data.cell_voltages[c], 3);
+        }
+        else
+        {
+            Serial.print("--.-");
+        }
+        Serial.print("\t");
+    }
+
+    for (int c = 0; c < default_acu_params::NUM_CELL_TEMPS; c++)
+    {
+        Serial.print("CT"); Serial.print(c); Serial.print(": ");
+        if (*acu_data.cell_temps[c])
+        {
+            Serial.print(*acu_data.cell_temps[c], 3);
+        }
+        else
+        {
+            Serial.print("--.-");
+        }
+        Serial.print("\t");
+    }
+
+    for (int c = 0; c < default_acu_params::NUM_BOARD_TEMPS; c++)
+    {
+        Serial.print("BT"); Serial.print(c); Serial.print(": ");
+        if (*acu_data.board_temps[c])
+        {
+            Serial.print(*acu_data.board_temps[c], 3);
+        }
+        else
+        {
+            Serial.print("--.-");
+        }
+        Serial.print("\t");
+    }
 
    return HT_TASK::TaskResponse::YIELD;
 }
