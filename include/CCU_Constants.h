@@ -7,7 +7,8 @@
 
 namespace CCUSystems
 {
-
+    constexpr const float MAX_120V_CURRENT_AMP = 3.5;  // 3.5 amps is 35 in the charger CAN format
+    constexpr const float MAX_240V_CURRENT_AMP = 5.0; // 11 amps is 110 in the charger CAN format
 }
 
 namespace CCUInterfaces
@@ -67,8 +68,10 @@ namespace CCUConstants
     /* General Information */
     constexpr const float MIN_PACK_VOLTAGE = 403;
     constexpr const float MAX_PACK_VOLTAGE = 530;
-    constexpr const float MAX_ALLOWABLE_CELL_TEMP = 40; // celsius
-    constexpr const float CELL_CUTOFF_VOLTAGE = 4.2; // max voltage that individual cell can be at
+    constexpr const float MIN_CELL_CUTOFF_VOLTAGE = 3.2F;
+    constexpr const float MAX_CELL_CUTOFF_VOLTAGE = 4.25F;
+    constexpr const float MAX_CELL_CUTOFF_TEMP_CELSIUS = 45.0F;
+    constexpr const float MAX_BOARD_CUTOFF_TEMP_CELSIUS = 60.0F;
 
     /* Task Times */
     constexpr unsigned long KICK_WATCHDOG_PERIOD = 1000; // 1 000 us = 1kHz

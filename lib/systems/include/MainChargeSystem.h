@@ -31,8 +31,12 @@ enum BalancingState_e
 
 namespace charge_system_default_parameters
 {
-    const float _MAX_120V_CURRENT_AMP = 3.5;  // 3.5 amps is 35 in the charger CAN format
-    const float _MAX_240V_CURRENT_AMP = 5.0; // 11 amps is 110 in the charger CAN format
+    constexpr const unsigned long STARTUP_DELAY_MS = 600000; // 1 minute
+
+    constexpr const float CELL_TEMP_DERATE_THRESH = 40.0F; // celsius
+    constexpr const float BOARD_TEMP_DERATE_THRESH = 50.0F; // celsius
+    constexpr const float CELL_VOLTAGE_DERATE_LOWER_THRESH = 3.67F; // volts. This is where the peak of the trapezoidal voltage derate starts.
+    constexpr const float CELL_VOLTAGE_DERATE_UPPER_THRESH = 4.0F; // volts. This is the threshold where we actually drop.
 };
 
 struct ChargeSystemData_s
@@ -41,25 +45,73 @@ struct ChargeSystemData_s
     ChargerState_e current_charger_state;
 };
 
+struct ChargeSystemThresholds_s
+{
+    float cell_temp_derate_thresh;
+    float board_temp_derate_thresh;
+    float cell_voltage_derate_lower_thresh;
+    float cell_voltage_derate_upper_thresh;
+};
+
+struct ChargeSystemConfigs_s
+{
+    uint32_t startup_delay_ms;
+};
+
+struct ChargeSystemParams_s
+{
+    ChargeSystemThresholds_s thresholds;
+    ChargeSystemConfigs_s configs;
+    float max_120V_current_amp;
+    float max_240V_current_amp;
+    float max_cell_cutoff_temp_celcius;
+    float max_board_cutoff_temp_celcius;
+};
+
 class MainChargeSystem {
     public:
-        MainChargeSystem(float max_120V_current_amp = charge_system_default_parameters::_MAX_120V_CURRENT_AMP, float max_240V_current_amp = charge_system_default_parameters::_MAX_240V_CURRENT_AMP) :
-            _max_120V_current_amp(max_120V_current_amp),
-            _max_240V_current_amp(max_240V_current_amp)
-        {
-            _charge_data.calculated_charge_current = 0.0F;
-        }
+        MainChargeSystem(float max_120V_current_amp,
+                        float max_240V_current_amp,
+                        float max_cell_cutoff_temp_celcius,
+                        float max_board_cutoff_temp_celcius,
+                        ChargeSystemThresholds_s thresholds =
+                        {
+                            .cell_temp_derate_thresh = charge_system_default_parameters::CELL_TEMP_DERATE_THRESH,
+                            .board_temp_derate_thresh = charge_system_default_parameters::BOARD_TEMP_DERATE_THRESH,
+                            .cell_voltage_derate_lower_thresh = charge_system_default_parameters::CELL_VOLTAGE_DERATE_LOWER_THRESH,
+                            .cell_voltage_derate_upper_thresh = charge_system_default_parameters::CELL_VOLTAGE_DERATE_UPPER_THRESH,
+                        },
+                        ChargeSystemConfigs_s configs =
+                        {
+                            .startup_delay_ms = charge_system_default_parameters::STARTUP_DELAY_MS
+                        }
+            ): _charge_system_parameters {
+                thresholds,
+                configs,
+                max_120V_current_amp,
+                max_240V_current_amp
+            }
+            {
+                _charge_data.calculated_charge_current = 0.0F;
+            }
+
+        /**
+         *
+         */
+        void init(unsigned long init_millis);
 
         /**
          * @brief Calculate and set the charge current based on cell state and charger state
          * @param max_pack_voltage Maximum allowable pack voltage
          * @param cell_cutoff_voltage Voltage to stop charging at
          * @param charger_current_max Maximum current (will be scaled based on 120V vs 240V state)
+         * @param curr_time Current time in millis
          */
         void calculate_charge_current(
             float max_pack_voltage,
             float cell_cutoff_voltage,
-            float dial_percent
+            float dial_percent,
+            unsigned long curr_millis
         );
 
         /**
@@ -85,9 +137,12 @@ class MainChargeSystem {
         const ChargeSystemData_s& get_charge_data() const { return _charge_data; }
 
     private:
-        const float _max_120V_current_amp;
-        const float _max_240V_current_amp;
+        /**
+         * @brief timestamp captured in init()
+         */
+        unsigned long _init_millis = 0;
 
+        const ChargeSystemParams_s _charge_system_parameters = {};
         ChargeSystemData_s _charge_data;
 
         /**
@@ -95,15 +150,30 @@ class MainChargeSystem {
          */
         bool _is_safety_conditions_valid();
 
-        // /**
-        //  * @brief Apply current limiting based on temperature and other factors
-        //  */
-        float _apply_current_limits(ChargerState_e state, float requested_current);
+        /**
+         * @brief Apply current limiting, includes temperature and inital startup ramp-up
+         */
+        float _apply_current_limits(ChargerState_e state, float requested_current, unsigned long curr_millis);
 
         /**
          * @brief Get appropriate current based on charger state
          */
         float _get_current_for_state(ChargerState_e state);
+
+        /**
+         * @brief
+         */
+        float _calculate_cell_temp_derate_factor(float curr_temp);
+
+        /**
+         * @brief
+         */
+        float _calculate_board_temp_derate_factor(float curr_temp);
+
+        /**
+         *
+         */
+        float _startup_derate_factor(unsigned long elapsed_time_ms);
 };
 
 using MainChargeSystemInstance = etl::singleton<MainChargeSystem>;

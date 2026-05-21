@@ -12,7 +12,13 @@ bool initialize_all_systems()
     );
 
     // Create MainChargeSystem instance
-    MainChargeSystemInstance::create();
+    MainChargeSystemInstance::create(
+        CCUSystems::MAX_120V_CURRENT_AMP,
+        CCUSystems::MAX_240V_CURRENT_AMP,
+        CCUConstants::MAX_CELL_CUTOFF_TEMP_CELSIUS,
+        CCUConstants::MAX_BOARD_CUTOFF_TEMP_CELSIUS
+    );
+    MainChargeSystemInstance::instance().init(sys_time::hal_millis());
 
     /* State Machine Initialization */
     /* Delegate Function Definitions */
@@ -81,8 +87,9 @@ HT_TASK::TaskResponse tick_state_machine(const unsigned long &sysMicros, const H
 HT_TASK::TaskResponse calculate_charge_current(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
     MainChargeSystemInstance::instance().calculate_charge_current(
         CCUConstants::MAX_PACK_VOLTAGE,
-        CCUConstants::CELL_CUTOFF_VOLTAGE,
-        RotaryEncoderInterfaceInstance::instance().get_value()
+        CCUConstants::MAX_CELL_CUTOFF_VOLTAGE,
+        RotaryEncoderInterfaceInstance::instance().get_value(),
+        sys_time::hal_millis()
     );
 
     return HT_TASK::TaskResponse::YIELD;
