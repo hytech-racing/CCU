@@ -9,7 +9,7 @@ using pin = size_t;
 
 namespace watchdog_default_parameters
 {
-    const unsigned long WATCHDOG_KICK_INTERVAL_MS = 10UL;
+    const unsigned long WATCHDOG_KICK_INTERVAL_MS = 12UL;
 }
 
 struct WatchdogPinout_s

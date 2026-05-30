@@ -31,7 +31,7 @@ enum BalancingState_e
 
 namespace charge_system_default_parameters
 {
-    constexpr const unsigned long STARTUP_DELAY_MS = 600000; // 1 minute
+    constexpr const unsigned long STARTUP_DELAY_MS = 60000; // 1 minute
 
     constexpr const float CELL_TEMP_DERATE_THRESH = 40.0F; // celsius
     constexpr const float BOARD_TEMP_DERATE_THRESH = 50.0F; // celsius

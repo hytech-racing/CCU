@@ -58,7 +58,7 @@ void initialize_all_interfaces();
 
 ::HT_TASK::TaskResponse handle_send_all_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
-::HT_TASK::TaskResponse debug_prints(const unsigned long &sysMicros, const HT_TASK::TaskInfo &taskInfo);
+::HT_TASK::TaskResponse debug_prints(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
 
 #endif

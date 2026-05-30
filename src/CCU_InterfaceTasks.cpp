@@ -104,8 +104,6 @@ HT_TASK::TaskResponse run_read_encoder_task(const unsigned long& sysMicros, cons
         RotaryEncoderInterfaceInstance::instance().set_value(0);
     }
 
-    Serial.println(RotaryEncoderInterfaceInstance::instance().get_value());
-
     return HT_TASK::TaskResponse::YIELD;
 }
 
@@ -171,18 +169,19 @@ HT_TASK::TaskResponse debug_prints(const unsigned long& sysMicros, const HT_TASK
     const auto& charger_data = ChargerInterfaceInstance::instance().get_latest_charger_data();
     const auto& level2_data = Level2InterfaceInstance::instance().get_level_2_data();
 
-    /* General Status */
-    Serial.println(Level2SystemInstance::instance().is_120_switched(ADCInterfaceInstance::instance()) ? "Set to 120 V Charging" : "Set to 240 V Charging");
-    // Serial.print("ACU STATE      : "); Serial.println(static_cast<int>(ACUInterfaceInstance::instance().get_latest_data().acu_state));
+    /* ----- General Status ----- */
+    //Serial.println(Level2SystemInstance::instance().is_120_switched(ADCInterfaceInstance::instance()) ? "Set to 120 V Charging" : "Set to 240 V Charging");
+    Serial.print("ACU STATE      : "); Serial.println(static_cast<int>(ACUInterfaceInstance::instance().get_latest_data().acu_state));
     Serial.print("Charging State : "); Serial.println(static_cast<size_t>(ChargerStateMachineInstance::instance().get_state()));
-
-    // Serial.print("READ JUMPER OUT: "); Serial.println(ADCInterfaceInstance::instance().read_jumper_out());
-    Serial.print("READ 240 OK: "); Serial.println(ADCInterfaceInstance::instance().read_240_ok());
-    Serial.print("READ 240 ENABLED: "); Serial.println(ADCInterfaceInstance::instance().read_240_enabled());
-
     Serial.println();
 
-    /* Voltage Information */
+    //Serial.print("READ JUMPER OUT: "); Serial.println(ADCInterfaceInstance::instance().read_jumper_out());
+    //Serial.print("READ 240 OK: "); Serial.println(ADCInterfaceInstance::instance().read_240_ok());
+    //Serial.print("READ 240 ENABLED: "); Serial.println(ADCInterfaceInstance::instance().read_240_enabled());
+    //Serial.println();
+
+
+    /* ----- Voltage Information ----- */
     // Serial.print("Cell Voltage Max   : "); Serial.println(acu_data.high_voltage);
     // Serial.print("Cell Voltage Min   : "); Serial.println(acu_data.low_voltage);
     // Serial.print("Cell Voltage Avg   : "); Serial.println(acu_data.average_voltage);
@@ -190,23 +189,28 @@ HT_TASK::TaskResponse debug_prints(const unsigned long& sysMicros, const HT_TASK
     // Serial.print("Pack Voltage       : "); Serial.println(acu_data.pack_voltage);
     // Serial.println();
 
-    // /* Temperature Information */
-    Serial.print("Max Cell Temp       : "); Serial.println(acu_data.max_cell_temp);
-    Serial.print("Min Cell Temp      : "); Serial.println(acu_data.min_cell_temp);
-    Serial.print("Max Board Temp     : "); Serial.println(acu_data.max_board_temp);
-    Serial.println();
 
-    /* Charge Current Information */
-    Serial.print("Charger Current Actual   : "); Serial.println(charger_data.output_current_low);
-    Serial.print("Calc Charge Curr   : "); Serial.println(MainChargeSystemInstance::instance().get_charge_current());
-    Serial.println();
+    /* ----- Temperature Information ----- */
+    // Serial.print("Max Cell Temp      : "); Serial.println(acu_data.max_cell_temp);
+    // Serial.print("Min Cell Temp      : "); Serial.println(acu_data.min_cell_temp);
+    // Serial.print("Max Board Temp     : "); Serial.println(acu_data.max_board_temp);
+    // Serial.println();
 
-    /* Charge Information */
-    Serial.print("CP PWM  "); Serial.print(level2_data.control_pwm); Serial.print(" V "); Serial.print(level2_data.control_pwm_duty_cycle); Serial.println("%");
-    Serial.print("CP Voltage Sense      "); Serial.println(ADCInterfaceInstance::instance().read_control_pilot());
-    Serial.print("PP Voltage Sense      "); Serial.println(ADCInterfaceInstance::instance().read_proximity_pilot());
 
-    /* SHDN Information */
+    /* ----- Charge Current Information ----- */
+    // Serial.print("Charger Current Actual   : "); Serial.println(charger_data.output_current_low);
+    // Serial.print("Calc Charge Current      : "); Serial.println(MainChargeSystemInstance::instance().get_charge_current());
+    // Serial.println();
+
+
+    /* ----- Charge Information ----- */
+    // Serial.print("CP PWM  "); Serial.print(level2_data.control_pwm); Serial.print(" V "); Serial.print(level2_data.control_pwm_duty_cycle); Serial.println("%");
+    // Serial.print("CP Voltage Sense      "); Serial.println(ADCInterfaceInstance::instance().read_control_pilot());
+    // Serial.print("PP Voltage Sense      "); Serial.println(ADCInterfaceInstance::instance().read_proximity_pilot());
+     // Serial.println();
+
+
+    /* ----- SHDN Information ----- */
     // Serial.print("SHDN_A : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_A_voltage() ? "HIGH" : "LOW");
     // Serial.print("SHDN_B : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_B_voltage() ? "HIGH" : "LOW");
     // Serial.print("SHDN_C : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_C_voltage() ? "HIGH" : "LOW");
@@ -216,53 +220,59 @@ HT_TASK::TaskResponse debug_prints(const unsigned long& sysMicros, const HT_TASK
     // Serial.print("SHDN_G : "); Serial.println(ADCInterfaceInstance::instance().read_shdn_G_voltage() ? "HIGH" : "LOW");
     // Serial.println();
 
-    Serial.print("Rotary Encoder Value: ");
-    Serial.println(RotaryEncoderInterfaceInstance::instance().get_value(), 2);
 
-    Serial.println();
+    /* ----- Rotary Encoder ----- */
+    // Serial.print("Rotary Encoder Value: ");
+    // Serial.println(RotaryEncoderInterfaceInstance::instance().get_value(), 2);
+    // Serial.println();
 
-    // Test print detailed voltages and temps from ACU Interface
-    for (int c = 0; c < default_acu_params::NUM_CELLS; c++)
-    {
-        Serial.print("C"); Serial.print(c); Serial.print(": ");
-        if (*acu_data.cell_voltages[c])
-        {
-            Serial.print(*acu_data.cell_voltages[c], 3);
-        }
-        else
-        {
-            Serial.print("--.-");
-        }
-        Serial.print("\t");
-    }
 
-    for (int c = 0; c < default_acu_params::NUM_CELL_TEMPS; c++)
-    {
-        Serial.print("CT"); Serial.print(c); Serial.print(": ");
-        if (*acu_data.cell_temps[c])
-        {
-            Serial.print(*acu_data.cell_temps[c], 3);
-        }
-        else
-        {
-            Serial.print("--.-");
-        }
-        Serial.print("\t");
-    }
+    /* ----- ACU Detailed Cell Voltages ----- */
+    // for (int c = 0; c < default_acu_params::NUM_CELLS; c++)
+    // {
+    //     Serial.print("C"); Serial.print(c); Serial.print(": ");
+    //     if (*acu_data.cell_voltages[c])
+    //     {
+    //         Serial.print(*acu_data.cell_voltages[c], 3);
+    //     }
+    //     else
+    //     {
+    //         Serial.print("--.-");
+    //     }
+    //     Serial.print("\t");
+    // }
 
-    for (int c = 0; c < default_acu_params::NUM_BOARD_TEMPS; c++)
-    {
-        Serial.print("BT"); Serial.print(c); Serial.print(": ");
-        if (*acu_data.board_temps[c])
-        {
-            Serial.print(*acu_data.board_temps[c], 3);
-        }
-        else
-        {
-            Serial.print("--.-");
-        }
-        Serial.print("\t");
-    }
+    
+    /* ----- ACU Detailed Cell Temps ----- */
+    // for (int c = 0; c < default_acu_params::NUM_CELL_TEMPS; c++)
+    // {
+    //     Serial.print("CT"); Serial.print(c); Serial.print(": ");
+    //     if (*acu_data.cell_temps[c])
+    //     {
+    //         Serial.print(*acu_data.cell_temps[c], 3);
+    //     }
+    //     else
+    //     {
+    //         Serial.print("--.-");
+    //     }
+    //     Serial.print("\t");
+    // }
+
+
+    /* ----- ACU Detailed Board Temps ----- */
+    // for (int c = 0; c < default_acu_params::NUM_BOARD_TEMPS; c++)
+    // {
+    //     Serial.print("BT"); Serial.print(c); Serial.print(": ");
+    //     if (*acu_data.board_temps[c])
+    //     {
+    //         Serial.print(*acu_data.board_temps[c], 3);
+    //     }
+    //     else
+    //     {
+    //         Serial.print("--.-");
+    //     }
+    //     Serial.print("\t");
+    // }
 
    return HT_TASK::TaskResponse::YIELD;
 }
