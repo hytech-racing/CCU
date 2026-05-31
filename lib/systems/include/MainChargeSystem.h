@@ -35,8 +35,6 @@ namespace charge_system_default_parameters
 
     constexpr const float CELL_TEMP_DERATE_THRESH = 40.0F; // celsius
     constexpr const float BOARD_TEMP_DERATE_THRESH = 50.0F; // celsius
-    constexpr const float CELL_VOLTAGE_DERATE_LOWER_THRESH = 3.67F; // volts. This is where the peak of the trapezoidal voltage derate starts.
-    constexpr const float CELL_VOLTAGE_DERATE_UPPER_THRESH = 4.0F; // volts. This is the threshold where we actually drop.
 };
 
 struct ChargeSystemData_s
@@ -78,8 +76,6 @@ class MainChargeSystem {
                         {
                             .cell_temp_derate_thresh = charge_system_default_parameters::CELL_TEMP_DERATE_THRESH,
                             .board_temp_derate_thresh = charge_system_default_parameters::BOARD_TEMP_DERATE_THRESH,
-                            .cell_voltage_derate_lower_thresh = charge_system_default_parameters::CELL_VOLTAGE_DERATE_LOWER_THRESH,
-                            .cell_voltage_derate_upper_thresh = charge_system_default_parameters::CELL_VOLTAGE_DERATE_UPPER_THRESH,
                         },
                         ChargeSystemConfigs_s configs =
                         {
@@ -89,7 +85,9 @@ class MainChargeSystem {
                 thresholds,
                 configs,
                 max_120V_current_amp,
-                max_240V_current_amp
+                max_240V_current_amp,
+                max_cell_cutoff_temp_celcius,
+                max_board_cutoff_temp_celcius
             }
             {
                 _charge_data.calculated_charge_current = 0.0F;
