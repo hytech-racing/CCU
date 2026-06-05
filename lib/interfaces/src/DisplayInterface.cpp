@@ -80,11 +80,9 @@ void DisplayInterface::display_data(unsigned long current_millis, bool is_120_sw
             constexpr size_t cells_per_page = cells_per_row * rows_per_page;
 
             constexpr size_t total_cells = default_acu_params::NUM_CELLS;
-
             constexpr size_t total_rows = (total_cells + cells_per_row - 1) / cells_per_row;
 
             static size_t start_voltage_row = 0;
-
             const size_t start_index = start_voltage_row * cells_per_row;
 
             for (size_t i = 0; i < cells_per_page; i++)
@@ -139,16 +137,18 @@ void DisplayInterface::display_data(unsigned long current_millis, bool is_120_sw
             auto board_temps = ACUInterfaceInstance::instance().get_latest_data().board_temps;
             Display.setTextSize(1);
 
-            constexpr size_t temps_per_row = 3;
+            constexpr size_t board_temps_per_row = 3;
 
-            for (size_t row = 0; row < default_acu_params::NUM_BOARD_TEMPS / temps_per_row; row++)
+            for (size_t row = 0; row < default_acu_params::NUM_BOARD_TEMPS / board_temps_per_row; row++)
             {
-                for (size_t col = 0; col < temps_per_row; col++)
+                for (size_t i = 0; i < board_temps_per_row; i++)
                 {
-                    size_t bt_index = (row * temps_per_row) + col;
+                    size_t bt_index = (row * board_temps_per_row) + i;
+
                     Display.print("BT");
                     Display.print(bt_index);
-                    Display.print(": ");
+                    Display.print(":");
+
                     if (*board_temps[bt_index])
                     {
                         Display.print(*board_temps[bt_index], 3);
@@ -157,10 +157,17 @@ void DisplayInterface::display_data(unsigned long current_millis, bool is_120_sw
                     {
                         Display.print("--.-");
                     }
-                    Serial.print("  ");
+
+                    if ((i + 1) % board_temps_per_row == 0)
+                    {
+                        Display.println();
+                        Display.println();
+                    }
+                    else
+                    {
+                        Display.print("  ");
+                    }
                 }
-                Display.println();
-                Display.println();
             }
 
             break;
@@ -176,27 +183,53 @@ void DisplayInterface::display_data(unsigned long current_millis, bool is_120_sw
             Display.setTextSize(1);
 
             constexpr size_t temps_per_row = 3;
+            constexpr size_t rows_per_page = 14;
+            constexpr size_t temps_per_page = temps_per_row * rows_per_page;
+            
+            constexpr size_t total_cell_temps = default_acu_params::NUM_CELL_TEMPS;
+            constexpr size_t total_rows = (total_cell_temps + temps_per_row - 1) / temps_per_row;
 
-            for (size_t row = 0; row < default_acu_params::NUM_CELL_TEMPS / temps_per_row; row++)
+            static size_t start_temps_row = 0;
+            const size_t start_index = start_temps_row * temps_per_row;
+
+            for (size_t i = 0; i < temps_per_page; i++)
             {
-                for (size_t col = 0; col < temps_per_row; col++)
+                size_t ct_idx = start_index + i;
+
+                if (ct_idx >= total_cell_temps)
                 {
-                    size_t ct_index = (row * temps_per_row) + col;
-                    Display.print("CT");
-                    Display.print(ct_index);
-                    Display.print(": ");
-                    if (*cell_temps[ct_index])
-                    {
-                        Display.print(*cell_temps[ct_index], 3);
-                    }
-                    else
-                    {
-                        Display.print("--.-");
-                    }
+                    ct_idx -= total_cell_temps;
+                }
+
+                Display.print("CT");
+                Display.print(ct_idx);
+                Display.print(":");
+
+                if (cell_temps[ct_idx].has_value())
+                {
+                    Display.print(cell_temps[ct_idx].value(), 3);
+                }
+                else
+                {
+                    Display.print("-.--");
+                }
+
+                if ((i + 1) % temps_per_row == 0)
+                {
+                    Display.println();
+                    Display.println();
+                }
+                else
+                {
                     Display.print("  ");
                 }
-                Display.println();
-                Display.println();
+            }
+
+            start_temps_row++;
+
+            if (start_temps_row >= total_rows)
+            {
+                start_temps_row = 0;
             }
 
             break;

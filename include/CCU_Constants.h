@@ -8,7 +8,7 @@
 namespace CCUSystems
 {
     constexpr const float MAX_120V_CURRENT_AMP = 3.5;  // 3.5 amps is 35 in the charger CAN format
-    constexpr const float MAX_240V_CURRENT_AMP = 5.0; // 11 amps is 110 in the charger CAN format
+    constexpr const float MAX_240V_CURRENT_AMP = 11.0; // 11 amps is 110 in the charger CAN format
 }
 
 namespace CCUInterfaces

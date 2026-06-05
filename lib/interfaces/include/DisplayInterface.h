@@ -22,9 +22,9 @@ namespace default_display_params
 {
     constexpr unsigned long DISPLAY_UPDATE_INTERVAL_MS = 100UL;  // ms
     constexpr unsigned long CYCLE_BUTTON_HOLD_TIME_RESET_MS = 2000UL; // ms
+    constexpr unsigned long SLIDING_WINDOW_DISPLAY_INTERVAL_MS = 2500UL;
     constexpr float DATA_SCALAR = 10.0F;
     constexpr uint8_t BYTE_SHIFT = 8;
-    constexpr unsigned long SLIDING_WINDOW_DISPLAY_INTERVAL_MS = 2500UL;
 };
 
 enum DisplayView_e
@@ -56,7 +56,8 @@ struct DisplayInterfaceParams_s
     float display_update_interval;
 };
 
-struct DisplayConfig_s {
+struct DisplayConfig_s
+{
     unsigned long display_update_interval_ms;
     unsigned long cycle_button_hold_time_reset_ms;
     unsigned long last_display_timestamp;
@@ -104,8 +105,8 @@ private:
     DisplayPinout_s _pinout;
     DisplayConfig_s _config;
     unsigned long _display_time;
-    DisplayView_e _display_view;
     ButtonInterface _cycle_display_view_button;
+    DisplayView_e _display_view;
 };
 
 using DisplayInterfaceInstance = etl::singleton<DisplayInterface>;
