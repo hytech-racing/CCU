@@ -140,6 +140,11 @@ class MainChargeSystem {
          */
         unsigned long _init_millis = 0;
 
+        /**
+         * @brief used to latch after startup current ramp is complete
+         */
+        bool _startup_complete = false;
+
         const ChargeSystemParams_s _charge_system_parameters = {};
         ChargeSystemData_s _charge_data;
 
@@ -171,7 +176,7 @@ class MainChargeSystem {
         /**
          *
          */
-        float _startup_derate_factor(unsigned long elapsed_time_ms);
+        float _startup_derate_factor(unsigned long current_millis);
 };
 
 using MainChargeSystemInstance = etl::singleton<MainChargeSystem>;

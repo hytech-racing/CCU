@@ -130,15 +130,16 @@ float MainChargeSystem::_calculate_board_temp_derate_factor(float curr_temp)
     return 1.0F - std::max(std::min(((curr_temp - _charge_system_parameters.thresholds.board_temp_derate_thresh) / (_charge_system_parameters.max_board_cutoff_temp_celcius - _charge_system_parameters.thresholds.board_temp_derate_thresh)), 1.0F), 0.0F);
 }
 
-float MainChargeSystem::_startup_derate_factor(unsigned long elapsed_time_ms)
+float MainChargeSystem::_startup_derate_factor(unsigned long current_millis)
 {
     const unsigned long startup_delay = _charge_system_parameters.configs.startup_delay_ms;
-    
-    if (elapsed_time_ms >= startup_delay)
+    const unsigned long elapsed_ms = current_millis - _init_millis;
+    if (_startup_complete || (elapsed_ms >= startup_delay))
     {
+        _startup_complete = true;
         return 1.0F;
     }
-    
+
     // Linear ramp from 0.0 to 1.0 over startup_delay period
-    return static_cast<float>(elapsed_time_ms) / static_cast<float>(startup_delay);
+    return static_cast<float>(elapsed_ms) / static_cast<float>(startup_delay);
 }
