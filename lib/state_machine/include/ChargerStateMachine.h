@@ -38,6 +38,7 @@ class ChargerStateMachine
             etl::delegate<void()> set_sw_shdn_low,
             etl::delegate<void()> set_start_charge_high,
             etl::delegate<void()> set_start_charge_low,
+            etl::delegate<void()> reset_startup_time_ms,
             uint32_t current_millis
         ) :
             _is_120_conditions_ok(is_120_conditions_ok),
@@ -53,7 +54,8 @@ class ChargerStateMachine
             _set_start_charge_high(set_start_charge_high),
             _set_start_charge_low(set_start_charge_low),
             _current_state(ChargerState_e::STARTUP),
-            _last_state_changed_time(current_millis)
+            _last_state_changed_time(current_millis),
+            _reset_startup_time_ms(reset_startup_time_ms)
             {
 
             };
@@ -89,7 +91,7 @@ class ChargerStateMachine
         ChargerState_e _current_state;
         unsigned long _last_state_changed_time; // time of last state change
 
-         // Lamdas for state machine abstraction, functions defined in main
+        // Lamdas for state machine abstraction, functions defined in main
         etl::delegate<bool()> _is_120_conditions_ok;
         etl::delegate<bool()> _is_120_switched;
         etl::delegate<bool()> _is_240_switched;
@@ -104,6 +106,7 @@ class ChargerStateMachine
         etl::delegate<void()> _set_sw_shdn_low;
         etl::delegate<void()> _set_start_charge_high;
         etl::delegate<void()> _set_start_charge_low;
+        etl::delegate<void()> _reset_startup_time_ms;
 
         const unsigned long state_transition_delay_ms = 2500UL; // ms
 };

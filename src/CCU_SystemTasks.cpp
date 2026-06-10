@@ -58,6 +58,9 @@ bool initialize_all_systems()
     etl::delegate<void()> set_start_charge_low = etl::delegate<void()>::create([]() -> void
                                                                                 { Level2InterfaceInstance::instance().set_start_charge(LOW); });
 
+    etl::delegate<void()> reset_startup_time_ms = etl::delegate<void()>::create([]() -> void
+                                                                                { MainChargeSystemInstance::instance().init(sys_time::hal_millis()); });
+
     ChargerStateMachineInstance::create(
         is_120_conditions_ok,
         is_120_switched,
@@ -71,6 +74,7 @@ bool initialize_all_systems()
         set_sw_shdn_low,
         set_start_charge_high,
         set_start_charge_low,
+        reset_startup_time_ms,
         sys_time::hal_millis()
     );
 

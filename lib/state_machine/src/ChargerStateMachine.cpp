@@ -223,7 +223,7 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
             {
                 break;
             }
-                
+
             if (_reset_error_requested())
             {
                 _set_state(ChargerState_e::STARTUP, current_millis);
@@ -289,6 +289,7 @@ void ChargerStateMachine::_handle_entry_logic(ChargerState_e new_state, unsigned
         case ChargerState_e::CHARGING_240:
         {
             _set_sw_shdn_high();
+            _reset_startup_time_ms();
             break;
         }
         case ChargerState_e::ERROR:
@@ -308,23 +309,23 @@ void ChargerStateMachine::_handle_entry_logic(ChargerState_e new_state, unsigned
 
 const char* ChargerStateMachine::get_state_name()
 {
-    switch (_current_state) 
+    switch (_current_state)
     {
         case ChargerState_e::STARTUP:
         {
-            return "STARTUP"; 
+            return "STARTUP";
         }
         case ChargerState_e::CHARGING_120:
         {
-            return "CHARGING 120"; 
+            return "CHARGING 120";
         }
         case ChargerState_e::CHARGING_240:
         {
-            return "CHARGING 240"; 
+            return "CHARGING 240";
         }
         case ChargerState_e::ERROR:
         {
-            return "ERROR"; 
+            return "ERROR";
         }
         case ChargerState_e::CHECK_SWITCH:
         {

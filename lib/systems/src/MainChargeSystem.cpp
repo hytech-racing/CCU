@@ -5,6 +5,7 @@
 void MainChargeSystem::init(unsigned long init_millis)
 {
     _init_millis = init_millis;
+    _startup_complete = false;
 }
 
 void MainChargeSystem::calculate_charge_current(float max_pack_voltage, float cell_cutoff_voltage, float dial_percent, unsigned long curr_millis)
@@ -14,8 +15,6 @@ void MainChargeSystem::calculate_charge_current(float max_pack_voltage, float ce
     float max_cell_voltage = acu_data.high_voltage; // the highest voltage in any of the cells
     float total_pack_voltage = acu_data.pack_voltage; // the total voltage in the pack
     auto current_state = ChargerStateMachineInstance::instance().get_state();
-
-    unsigned long elapsed_time_ms = curr_millis - _init_millis;
 
     // Check safety conditions first
     if (!_is_safety_conditions_valid())
@@ -37,7 +36,7 @@ void MainChargeSystem::calculate_charge_current(float max_pack_voltage, float ce
     float requested_current = _get_current_for_state(current_state) * (dial_percent / 100.0F);
 
     // Apply safety limits
-    _charge_data.calculated_charge_current = _apply_current_limits(current_state, requested_current, elapsed_time_ms);
+    _charge_data.calculated_charge_current = _apply_current_limits(current_state, requested_current, curr_millis);
 }
 
 bool MainChargeSystem::_is_safety_conditions_valid()
