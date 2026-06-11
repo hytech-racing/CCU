@@ -31,8 +31,8 @@ bool initialize_all_systems()
     etl::delegate<bool()> is_240_switched = etl::delegate<bool()>::create([]() -> bool
                                                                                 { return Level2SystemInstance::instance().is_240_switched(ADCInterfaceInstance::instance()); });
 
-    etl::delegate<bool()> is_shdn_C_high = etl::delegate<bool()>::create([]() -> bool
-                                                                                { return (ADCInterfaceInstance::instance().read_shdn_C_voltage()); });
+    etl::delegate<bool()> is_shdn_D_high = etl::delegate<bool()>::create([]() -> bool
+                                                                                { return (ADCInterfaceInstance::instance().read_shdn_D_voltage()); });
 
     etl::delegate<bool()> is_240_conditions_ok = etl::delegate<bool()>::create([]() -> bool
                                                                                 { return Level2SystemInstance::instance().check_240_conditions(ADCInterfaceInstance::instance()); });
@@ -58,11 +58,14 @@ bool initialize_all_systems()
     etl::delegate<void()> set_start_charge_low = etl::delegate<void()>::create([]() -> void
                                                                                 { Level2InterfaceInstance::instance().set_start_charge(LOW); });
 
+    etl::delegate<void()> reset_startup_time_ms = etl::delegate<void()>::create([]() -> void
+                                                                                { MainChargeSystemInstance::instance().init(sys_time::hal_millis()); });
+
     ChargerStateMachineInstance::create(
         is_120_conditions_ok,
         is_120_switched,
         is_240_switched,
-        is_shdn_C_high,
+        is_shdn_D_high,
         is_240_conditions_ok,
         is_state_B2_ready,
         is_state_C2_ready,
@@ -71,6 +74,7 @@ bool initialize_all_systems()
         set_sw_shdn_low,
         set_start_charge_high,
         set_start_charge_low,
+        reset_startup_time_ms,
         sys_time::hal_millis()
     );
 

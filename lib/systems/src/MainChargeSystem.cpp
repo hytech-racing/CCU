@@ -5,6 +5,7 @@
 void MainChargeSystem::init(unsigned long init_millis)
 {
     _init_millis = init_millis;
+    _startup_complete = false;
 }
 
 void MainChargeSystem::calculate_charge_current(float max_pack_voltage, float cell_cutoff_voltage, float dial_percent, unsigned long curr_millis)
@@ -14,8 +15,6 @@ void MainChargeSystem::calculate_charge_current(float max_pack_voltage, float ce
     float max_cell_voltage = acu_data.high_voltage; // the highest voltage in any of the cells
     float total_pack_voltage = acu_data.pack_voltage; // the total voltage in the pack
     auto current_state = ChargerStateMachineInstance::instance().get_state();
-
-    unsigned long elapsed_time_ms = curr_millis - _init_millis;
 
     // Check safety conditions first
     if (!_is_safety_conditions_valid())
@@ -37,7 +36,7 @@ void MainChargeSystem::calculate_charge_current(float max_pack_voltage, float ce
     float requested_current = _get_current_for_state(current_state) * (dial_percent / 100.0F);
 
     // Apply safety limits
-    _charge_data.calculated_charge_current = _apply_current_limits(current_state, requested_current, elapsed_time_ms);
+    _charge_data.calculated_charge_current = _apply_current_limits(current_state, requested_current, curr_millis);
 }
 
 bool MainChargeSystem::_is_safety_conditions_valid()
@@ -130,15 +129,16 @@ float MainChargeSystem::_calculate_board_temp_derate_factor(float curr_temp)
     return 1.0F - std::max(std::min(((curr_temp - _charge_system_parameters.thresholds.board_temp_derate_thresh) / (_charge_system_parameters.max_board_cutoff_temp_celcius - _charge_system_parameters.thresholds.board_temp_derate_thresh)), 1.0F), 0.0F);
 }
 
-float MainChargeSystem::_startup_derate_factor(unsigned long elapsed_time_ms)
+float MainChargeSystem::_startup_derate_factor(unsigned long current_millis)
 {
     const unsigned long startup_delay = _charge_system_parameters.configs.startup_delay_ms;
-    
-    if (elapsed_time_ms >= startup_delay)
+    const unsigned long elapsed_ms = current_millis - _init_millis;
+    if (_startup_complete || (elapsed_ms >= startup_delay))
     {
+        _startup_complete = true;
         return 1.0F;
     }
-    
+
     // Linear ramp from 0.0 to 1.0 over startup_delay period
-    return static_cast<float>(elapsed_time_ms) / static_cast<float>(startup_delay);
+    return static_cast<float>(elapsed_ms) / static_cast<float>(startup_delay);
 }

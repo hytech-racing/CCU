@@ -20,7 +20,7 @@ void DisplayInterface::display_data(unsigned long current_millis, bool is_120_sw
         {
             Display.setTextSize(2);
             Display.print("Set to "); Display.print(is_120_switched ? "120" : "240"); Display.println("V Charging");
-            Display.print("CCU in state -> "); Display.println(ChargerStateMachineInstance::instance().get_state_name());
+            Display.print("CCU state: "); Display.println(ChargerStateMachineInstance::instance().get_state_name());
             Display.print("Cell Voltage max: ");
             Display.println(ACUInterfaceInstance::instance().get_latest_data().high_voltage, 3);
             Display.print("Cell Voltage min: ");
@@ -39,8 +39,8 @@ void DisplayInterface::display_data(unsigned long current_millis, bool is_120_sw
             Display.println(ACUInterfaceInstance::instance().get_latest_data().min_cell_temp, 3);
             Display.print("Avg Cell Temp (C): ");
             Display.println((ACUInterfaceInstance::instance().get_latest_data().max_cell_temp + ACUInterfaceInstance::instance().get_latest_data().min_cell_temp)/2, 3);
-            Display.print("Current Manual Limit: ");
-            Display.print(RotaryEncoderInterfaceInstance::instance().get_value(), 2); Display.println("%");
+            Display.print("Current Scalar: ");
+            Display.print(RotaryEncoderInterfaceInstance::instance().get_value()); Display.println("%");
             Display.print("EM current (A): ");
             Display.println(EnergyMeterInterfaceInstance::instance().get_latest_em_data().current_amps, 3);
 
@@ -185,7 +185,7 @@ void DisplayInterface::display_data(unsigned long current_millis, bool is_120_sw
             constexpr size_t temps_per_row = 3;
             constexpr size_t rows_per_page = 14;
             constexpr size_t temps_per_page = temps_per_row * rows_per_page;
-            
+
             constexpr size_t total_cell_temps = default_acu_params::NUM_CELL_TEMPS;
             constexpr size_t total_rows = (total_cell_temps + temps_per_row - 1) / temps_per_row;
 

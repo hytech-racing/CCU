@@ -31,7 +31,7 @@ enum BalancingState_e
 
 namespace charge_system_default_parameters
 {
-    constexpr const unsigned long STARTUP_DELAY_MS = 60000; // 1 minute
+    constexpr const unsigned long STARTUP_DELAY_MS = 20000; // 20 seconds
 
     constexpr const float CELL_TEMP_DERATE_THRESH = 40.0F; // celsius
     constexpr const float BOARD_TEMP_DERATE_THRESH = 50.0F; // celsius
@@ -140,6 +140,11 @@ class MainChargeSystem {
          */
         unsigned long _init_millis = 0;
 
+        /**
+         * @brief used to latch after startup current ramp is complete
+         */
+        bool _startup_complete = false;
+
         const ChargeSystemParams_s _charge_system_parameters = {};
         ChargeSystemData_s _charge_data;
 
@@ -171,7 +176,7 @@ class MainChargeSystem {
         /**
          *
          */
-        float _startup_derate_factor(unsigned long elapsed_time_ms);
+        float _startup_derate_factor(unsigned long current_millis);
 };
 
 using MainChargeSystemInstance = etl::singleton<MainChargeSystem>;

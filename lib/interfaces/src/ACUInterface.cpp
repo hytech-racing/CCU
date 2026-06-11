@@ -73,12 +73,12 @@ void ACUInterface::receive_detailed_temps_message(const CAN_message_t& msg, unsi
         return;
     }
 
-    _curr_data.cell_temps[cell_base_index] = HYTECH_thermistor_0_deg_C_ro_fromS(detailed_temps.thermistor_id_0_ro);
+    _curr_data.cell_temps[cell_base_index] = HYTECH_thermistor_id_0_ro_fromS(detailed_temps.thermistor_id_0_ro);
 
     if (group_id != 1) // last group of each chip only has 1 thermistor
     {
-        _curr_data.cell_temps[cell_base_index + 1] = HYTECH_thermistor_0_deg_C_ro_fromS(detailed_temps.thermistor_id_1_ro);
-        _curr_data.cell_temps[cell_base_index + 2] = HYTECH_thermistor_0_deg_C_ro_fromS(detailed_temps.thermistor_id_2_ro);
+        _curr_data.cell_temps[cell_base_index + 1] = HYTECH_thermistor_id_1_ro_fromS(detailed_temps.thermistor_id_1_ro);
+        _curr_data.cell_temps[cell_base_index + 2] = HYTECH_thermistor_id_2_ro_fromS(detailed_temps.thermistor_id_2_ro);
     }
 }
 

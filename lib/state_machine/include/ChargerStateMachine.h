@@ -29,7 +29,7 @@ class ChargerStateMachine
             etl::delegate<bool()> is_120_conditions_ok,
             etl::delegate<bool()> is_120_switched,
             etl::delegate<bool()> is_240_switched,
-            etl::delegate<bool()> is_shdn_C_high,
+            etl::delegate<bool()> is_shdn_D_high,
             etl::delegate<bool()> is_240_conditions_ok,
             etl::delegate<bool()> is_state_B2_ready,
             etl::delegate<bool()> is_state_C2_ready,
@@ -38,12 +38,13 @@ class ChargerStateMachine
             etl::delegate<void()> set_sw_shdn_low,
             etl::delegate<void()> set_start_charge_high,
             etl::delegate<void()> set_start_charge_low,
+            etl::delegate<void()> reset_startup_time_ms,
             uint32_t current_millis
         ) :
             _is_120_conditions_ok(is_120_conditions_ok),
             _is_120_switched(is_120_switched),
             _is_240_switched(is_240_switched),
-            _is_shdn_C_high(is_shdn_C_high),
+            _is_shdn_D_high(is_shdn_D_high),
             _is_240_conditions_ok(is_240_conditions_ok),
             _is_state_B2_ready(is_state_B2_ready),
             _is_state_C2_ready(is_state_C2_ready),
@@ -53,7 +54,8 @@ class ChargerStateMachine
             _set_start_charge_high(set_start_charge_high),
             _set_start_charge_low(set_start_charge_low),
             _current_state(ChargerState_e::STARTUP),
-            _last_state_changed_time(current_millis)
+            _last_state_changed_time(current_millis),
+            _reset_startup_time_ms(reset_startup_time_ms)
             {
 
             };
@@ -89,11 +91,11 @@ class ChargerStateMachine
         ChargerState_e _current_state;
         unsigned long _last_state_changed_time; // time of last state change
 
-         // Lamdas for state machine abstraction, functions defined in main
+        // Lamdas for state machine abstraction, functions defined in main
         etl::delegate<bool()> _is_120_conditions_ok;
         etl::delegate<bool()> _is_120_switched;
         etl::delegate<bool()> _is_240_switched;
-        etl::delegate<bool()> _is_shdn_C_high;
+        etl::delegate<bool()> _is_shdn_D_high;
         etl::delegate<bool()> _is_240_conditions_ok;
         etl::delegate<bool()> _is_state_B2_ready;
         etl::delegate<bool()> _is_state_C2_ready;
@@ -104,6 +106,7 @@ class ChargerStateMachine
         etl::delegate<void()> _set_sw_shdn_low;
         etl::delegate<void()> _set_start_charge_high;
         etl::delegate<void()> _set_start_charge_low;
+        etl::delegate<void()> _reset_startup_time_ms;
 
         const unsigned long state_transition_delay_ms = 2500UL; // ms
 };
