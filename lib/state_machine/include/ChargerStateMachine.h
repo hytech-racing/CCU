@@ -29,7 +29,7 @@ class ChargerStateMachine
             etl::delegate<bool()> is_120_conditions_ok,
             etl::delegate<bool()> is_120_switched,
             etl::delegate<bool()> is_240_switched,
-            etl::delegate<bool()> is_shdn_C_high,
+            etl::delegate<bool()> is_shdn_D_high,
             etl::delegate<bool()> is_240_conditions_ok,
             etl::delegate<bool()> is_state_B2_ready,
             etl::delegate<bool()> is_state_C2_ready,
@@ -44,7 +44,7 @@ class ChargerStateMachine
             _is_120_conditions_ok(is_120_conditions_ok),
             _is_120_switched(is_120_switched),
             _is_240_switched(is_240_switched),
-            _is_shdn_C_high(is_shdn_C_high),
+            _is_shdn_D_high(is_shdn_D_high),
             _is_240_conditions_ok(is_240_conditions_ok),
             _is_state_B2_ready(is_state_B2_ready),
             _is_state_C2_ready(is_state_C2_ready),
@@ -95,7 +95,7 @@ class ChargerStateMachine
         etl::delegate<bool()> _is_120_conditions_ok;
         etl::delegate<bool()> _is_120_switched;
         etl::delegate<bool()> _is_240_switched;
-        etl::delegate<bool()> _is_shdn_C_high;
+        etl::delegate<bool()> _is_shdn_D_high;
         etl::delegate<bool()> _is_240_conditions_ok;
         etl::delegate<bool()> _is_state_B2_ready;
         etl::delegate<bool()> _is_state_C2_ready;

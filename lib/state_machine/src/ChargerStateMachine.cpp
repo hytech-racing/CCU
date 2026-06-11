@@ -84,7 +84,7 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
                 break;
             }
 
-            if (_is_shdn_C_high())
+            if (_is_shdn_D_high())
             {
                 _set_state(ChargerState_e::CHARGING_120, current_millis);
                 break;
@@ -187,7 +187,7 @@ ChargerState_e ChargerStateMachine::tick_state_machine(unsigned long current_mil
                 break;
             }
 
-            if (_is_shdn_C_high())
+            if (_is_shdn_D_high())
             {
                 _set_state(ChargerState_e::CHARGING_240, current_millis);
                 break;
@@ -281,14 +281,18 @@ void ChargerStateMachine::_handle_entry_logic(ChargerState_e new_state, unsigned
         {
             break;
         }
-        case ChargerState_e::CHARGING_120:
+        case ChargerState_e::CHARGE_120_UNLATCHED:
+        {
+            _set_sw_shdn_high();
+            break;
+        }
+        case ChargerState_e::CHARGE_240_UNLATCHED:
         {
             _set_sw_shdn_high();
             break;
         }
         case ChargerState_e::CHARGING_240:
         {
-            _set_sw_shdn_high();
             _reset_startup_time_ms();
             break;
         }
@@ -299,10 +303,9 @@ void ChargerStateMachine::_handle_entry_logic(ChargerState_e new_state, unsigned
             break;
         }
         case ChargerState_e::CHECK_SWITCH: break;
-        case ChargerState_e::CHARGE_120_UNLATCHED: break;
+        case ChargerState_e::CHARGING_120: break;
         case ChargerState_e::CHECK_240_B2_OK: break;
         case ChargerState_e::CHECK_240_C2_OK: break;
-        case ChargerState_e::CHARGE_240_UNLATCHED: break;
         default: break;
     }
 }
