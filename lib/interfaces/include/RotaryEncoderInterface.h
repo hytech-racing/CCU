@@ -12,7 +12,7 @@ using pin = size_t;
 
 namespace default_encoder_params
 {
-    constexpr float INIT_ENCODER_VALUE = 100.F;
+    constexpr float INIT_ENCODER_VALUE = 30.F;
     constexpr float MAX_VALUE = 100.F;
     constexpr float MIN_VALUE = 0.F;
 
