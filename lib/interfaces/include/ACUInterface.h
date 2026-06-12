@@ -52,7 +52,8 @@ struct ACUInterfaceData_s
     std::array<etl::optional<celsius>, default_acu_params::NUM_BOARD_TEMPS> board_temps;
 
     /* Elcon Charger Status */
-    bool is_charging_enabled;
+    bool is_charging_enabled;   
+    float SoC;
 };
 
 class ACUInterface
@@ -113,6 +114,11 @@ public:
      *
      */
     void receive_onboard_detailed_temps(const CAN_message_t& msg, unsigned long curr_millis);
+
+    /**
+     * 
+     */
+    void receive_state_of_charge(const CAN_message_t& msg, unsigned long curr_millis);
 
     /**
      *
