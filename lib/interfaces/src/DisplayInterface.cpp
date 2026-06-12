@@ -20,7 +20,7 @@ void DisplayInterface::display_data(unsigned long current_millis, bool is_120_sw
         {
             Display.setTextSize(2);
             Display.print("Set to "); Display.print(is_120_switched ? "120" : "240"); Display.println("V Charging");
-            Display.print("CCU state: "); Display.println(ChargerStateMachineInstance::instance().get_state_name());
+            Display.print("CCU SM: "); Display.println(ChargerStateMachineInstance::instance().get_state_name());
             Display.print("Cell Voltage max: ");
             Display.println(ACUInterfaceInstance::instance().get_latest_data().high_voltage, 3);
             Display.print("Cell Voltage min: ");
@@ -43,6 +43,8 @@ void DisplayInterface::display_data(unsigned long current_millis, bool is_120_sw
             Display.print(RotaryEncoderInterfaceInstance::instance().get_value()); Display.println("%");
             Display.print("EM current (A): ");
             Display.println(EnergyMeterInterfaceInstance::instance().get_latest_em_data().current_amps, 3);
+            Display.print("State of Charge (%): ");
+            Display.println(ACUInterfaceInstance::instance().get_latest_data().SoC, 2);
 
             break;
         }

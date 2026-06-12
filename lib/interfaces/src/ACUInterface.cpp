@@ -90,6 +90,13 @@ void ACUInterface::receive_onboard_detailed_temps(const CAN_message_t& msg, unsi
     _curr_data.board_temps[ic_id] = HYTECH_temp_0_ro_fromS(onboard_detailed_temps.temp_0_ro);
 }
 
+void ACUInterface::receive_state_of_charge(const CAN_message_t& msg, unsigned long curr_millis)
+{
+    STATE_OF_CHARGE_t soc_msg{};
+    Unpack_STATE_OF_CHARGE_hytech(&soc_msg, &msg.buf[0], msg.len);
+    _curr_data.SoC = HYTECH_SoC_ro_fromS(soc_msg.SoC_ro);
+}
+
 void ACUInterface::set_is_charging_enabled(bool state)
 {
     _curr_data.is_charging_enabled = state;

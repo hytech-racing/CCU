@@ -69,6 +69,11 @@ void ccu_CAN_recv(CANInterfaces &interfaces, const CAN_message_t &msg, unsigned 
             interfaces.em_interface.receive_energy_meter_message(msg, millis);
             break;
         }
+        case STATE_OF_CHARGE_CANID:
+        {
+            interfaces.acu_interface.receive_state_of_charge(msg, millis);
+            break;
+        }
         default:
         {
             break;
