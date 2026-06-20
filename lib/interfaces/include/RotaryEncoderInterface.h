@@ -8,8 +8,6 @@
 #include "ButtonInterface.h"
 #include <etl/singleton.h>
 
-using pin = size_t;
-
 namespace default_encoder_params
 {
     constexpr float INIT_ENCODER_VALUE = 30.F;

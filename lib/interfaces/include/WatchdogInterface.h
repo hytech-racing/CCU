@@ -5,7 +5,6 @@
 #include <etl/singleton.h>
 #include <Arduino.h>
 
-using pin = size_t;
 
 namespace watchdog_default_parameters
 {

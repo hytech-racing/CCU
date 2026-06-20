@@ -4,6 +4,7 @@
 /* External Dependencies */
 #include <ht_task.hpp>
 #include "SharedFirmwareTypes.h"
+#include "CANInterface.h"
 
 /* Local Dependencies */
 #include "CCU_Constants.h"
@@ -13,21 +14,17 @@
 #include "MainChargeSystem.h"
 #include "ChargerStateMachine.h"
 
-/* Local Interface Include */
+/* Local Interface Includes */
 #include "ACUInterface.h"
-#include "CANInterface.h"
+#include "ButtonInterface.h"
 #include "CCUCANInterfaceImpl.h"
 #include "CCUEthernetInterface.h"
 #include "ChargerInterface.h"
 #include "DisplayInterface.h"
 #include "Level2Interface.h"
+#include "RotaryEncoderInterface.h"
 #include "SystemTimeInterface.h"
 #include "WatchdogInterface.h"
-#include "ButtonInterface.h"
-#include "RotaryEncoderInterface.h"
-
-/* For Debugging */
-#include "ChargerStateMachine.h"
 
 
 /**

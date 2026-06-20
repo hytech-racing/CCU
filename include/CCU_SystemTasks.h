@@ -4,6 +4,7 @@
 /* External Dependencies */
 #include <ht_task.hpp>
 #include "SharedFirmwareTypes.h"
+#include "CANInterface.h"
 
 /* Local Dependencies */
 #include "CCU_Constants.h"
@@ -14,19 +15,16 @@
 #include "ChargerStateMachine.h"
 
 /* Local Interface Includes */
+#include "ACUInterface.h"
+#include "ButtonInterface.h"
+#include "CCUCANInterfaceImpl.h"
+#include "CCUEthernetInterface.h"
 #include "ChargerInterface.h"
-#include "SystemTimeInterface.h"
-#include "WatchdogInterface.h"
-#include "ChargerStateMachine.h"
-#include "SystemTimeInterface.h"
 #include "DisplayInterface.h"
 #include "Level2Interface.h"
-#include "CANInterface.h"
-#include "CCUCANInterfaceImpl.h"
-#include "ACUInterface.h"
-#include "CCUEthernetInterface.h"
-#include "ButtonInterface.h"
 #include "RotaryEncoderInterface.h"
+#include "SystemTimeInterface.h"
+#include "WatchdogInterface.h"
 
 /**
  * @brief Creates an instance of all systems.
@@ -46,9 +44,9 @@ extern etl::delegate<void()> set_start_charge_high;
 extern etl::delegate<void()> set_start_charge_low;
 extern etl::delegate<void()> reset_startup_time_ms;
 
-HT_TASK::TaskResponse tick_state_machine(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+::HT_TASK::TaskResponse tick_state_machine(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
-HT_TASK::TaskResponse calculate_charge_current(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+::HT_TASK::TaskResponse calculate_charge_current(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
 
 #endif

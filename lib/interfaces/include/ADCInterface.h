@@ -8,8 +8,8 @@
 
 #include <etl/singleton.h>
 
-using pin = size_t;
 
+using pin = uint8_t;
 
 namespace adc_default_parameters
 {

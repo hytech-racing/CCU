@@ -7,7 +7,6 @@
 #include <stdint.h>
 #include <Arduino.h>
 
-using pin = size_t;
 
 namespace default_button_params
 {
@@ -18,19 +17,19 @@ struct ButtonState_s
 {
     uint32_t last_debounce_time_ms = 0;
     uint32_t press_start_time_ms = 0;
-    
+
     bool last_read = false;
     bool current_state = false;
     bool last_stable_state = false; // post debounce
-    
+
     bool press_event = false;
     bool release_event = false;
 };
 
-class ButtonInterface 
+class ButtonInterface
 {
 public:
-    ButtonInterface( 
+    ButtonInterface(
         size_t pin,
         uint8_t debounce_ms = default_button_params::DEBOUNCE_MS,
         bool active_low = true
@@ -41,7 +40,7 @@ public:
     {
         pinMode(_pin, INPUT);
     }
-    
+
     void update(unsigned long current_millis);
     bool is_pressed();
     bool is_released();

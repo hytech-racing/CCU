@@ -7,7 +7,8 @@
 #include <cstddef>
 #include <cstdint>
 
-using pin = size_t;
+using pin = uint8_t;
+
 
 namespace default_level2_interface_params
 {
@@ -29,7 +30,7 @@ struct Level2_Data_s
 };
 
 struct Level2_Config_s
-{ 
+{
     unsigned long pwm_pulse_in_timeout_ms;
     float min_valid_pwm_duty_cycle_percent;
     float max_valid_pwm_duty_cycle_percent;

@@ -16,7 +16,8 @@
 #include "ChargerStateMachine.h"
 #include "RotaryEncoderInterface.h"
 
-using pin = size_t;
+
+
 
 namespace default_display_params
 {
