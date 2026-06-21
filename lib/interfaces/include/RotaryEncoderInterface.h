@@ -1,12 +1,17 @@
 #ifndef ROTARYENCODERINTERFACE_H
 #define ROTARYENCODERINTERFACE_H
 
+/* External Dependencies */
 #include <Arduino.h>
 #include <stdint.h>
 #include <stddef.h>
-
-#include "ButtonInterface.h"
 #include <etl/singleton.h>
+
+/* Local Interface Includes */
+#include "ButtonInterface.h"
+
+using pin = uint8_t;
+
 
 namespace default_encoder_params
 {

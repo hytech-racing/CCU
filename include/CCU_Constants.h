@@ -5,7 +5,7 @@
 #include <stddef.h>
 
 using pin = uint8_t;
-using time_us = uint16_t;
+using time_us = uint32_t;
 
 
 namespace CCUSystems
@@ -78,36 +78,36 @@ namespace CCUConstants
 
     /* Task Times */
     constexpr uint8_t KICK_WATCHDOG_PRIORITY = 1;
-    constexpr time_us KICK_WATCHDOG_PERIOD_US = 1000; // 1 000 us = 1 kHz
+    constexpr time_us KICK_WATCHDOG_PERIOD = 1000; // 1 000 us = 1 kHz
 
     constexpr uint8_t SAMPLE_CAN_DATA_PRIORITY = 2;
-    constexpr time_us SAMPLE_CAN_DATA_PERIOD_US = 2000; // 2 000 us = 500 Hz
+    constexpr time_us SAMPLE_CAN_DATA_PERIOD = 2000; // 2 000 us = 500 Hz
 
     constexpr uint8_t ENQUEUE_ACU_CAN_DATA_PRIORITY = 3;
-    constexpr time_us ENQUEUE_ACU_CAN_DATA_PERIOD_US = 4000; // 4 000 us = 250 Hz
+    constexpr time_us ENQUEUE_ACU_CAN_DATA_PERIOD = 4000; // 4 000 us = 250 Hz
 
     constexpr uint8_t ENQUEUE_CHARGER_CAN_DATA_PRIORITY = 4;
-    constexpr time_us ENQUEUE_CHARGER_CAN_DATA_PERIOD_US = 4000; // 4 000 us = 250 Hz
+    constexpr time_us ENQUEUE_CHARGER_CAN_DATA_PERIOD = 4000; // 4 000 us = 250 Hz
 
     constexpr uint8_t SEND_ALL_DATA_PRIORITY = 5;
-    constexpr time_us SEND_ALL_DATA_PERIOD_US = 4000; // 4 000 us = 250 Hz
+    constexpr time_us SEND_ALL_DATA_PERIOD = 4000; // 4 000 us = 250 Hz
 
     constexpr uint8_t RECIEVE_ETHERNET_PRIORITY = 6;
-    constexpr time_us ETHERNET_PERIOD_US = 20000; // 20 000 us = 50 Hz
+    constexpr time_us ETHERNET_PERIOD = 20000; // 20 000 us = 50 Hz
 
     constexpr uint8_t SEND_ETHERNET_PRIORITY = 7;
 
     constexpr uint8_t LEVEL2_ENABLED_PRIORITY = 8;
-    constexpr time_us LEVEL2_ENABLED_SAMPLE_PERIOD_US = 90000; // 90 000 us = 11.11 hz
+    constexpr time_us LEVEL2_ENABLED_SAMPLE_PERIOD = 90000; // 90 000 us = 11.11 hz
 
     constexpr uint8_t READ_DIAL_PRIORITY = 9;
-    constexpr time_us DIAL_PERIOD_US = 10000; // 20 000 us = 50 Hz
+    constexpr time_us DIAL_PERIOD = 10000; // 20 000 us = 50 Hz
 
     constexpr uint8_t TICK_STATE_MACHINE_PRIORITY = 10;
-    constexpr time_us TICK_STATE_MACHINE_PERIOD_US = 2000; // 2 000 us = 500 Hz
+    constexpr time_us TICK_STATE_MACHINE_PERIOD = 2000; // 2 000 us = 500 Hz
 
     constexpr uint8_t UPDATE_DISPLAY_PRIORITY = 11;
-    constexpr time_us UPDATE_DISPLAY_PERIOD_US = 200000; // 200 000 us = 5 hz
+    constexpr time_us UPDATE_DISPLAY_PERIOD = 200000; // 200 000 us = 5 hz
 
     constexpr uint8_t REFRESH_DISPLAY_PRIORITY = 12;
 

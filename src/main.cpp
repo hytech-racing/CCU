@@ -35,11 +35,11 @@ HT_SCHED::Scheduler& scheduler = HT_SCHED::Scheduler::getInstance();
 /* Task Declarations */
 /* read_dial, send_ethernet, and receieve_ethernet are not being used */
 HT_TASK::Task update_display_task(HT_TASK::DUMMY_FUNCTION, &run_update_display_task, CCUConstants::UPDATE_DISPLAY_PRIORITY, CCUConstants::UPDATE_DISPLAY_PERIOD);
-HT_TASK::Task read_encoder_task(HT_TASK::DUMMY_FUNCTION, &run_read_encoder_task, CCUConstants::READ_DIAL_PRIORITY, CCUConstants::DIAL_PERIOD_US);
+HT_TASK::Task read_encoder_task(HT_TASK::DUMMY_FUNCTION, &run_read_encoder_task, CCUConstants::READ_DIAL_PRIORITY, CCUConstants::DIAL_PERIOD);
 HT_TASK::Task queue_ACU_CAN(HT_TASK::DUMMY_FUNCTION, &handle_enqueue_acu_can_data, CCUConstants::ENQUEUE_ACU_CAN_DATA_PRIORITY, CCUConstants::ENQUEUE_ACU_CAN_DATA_PERIOD);
 HT_TASK::Task queue_Charger_CAN(HT_TASK::DUMMY_FUNCTION, &handle_enqueue_charger_can_data, CCUConstants::ENQUEUE_CHARGER_CAN_DATA_PRIORITY, CCUConstants::ENQUEUE_CHARGER_CAN_DATA_PERIOD);
-HT_TASK::Task send_ethernet(HT_TASK::DUMMY_FUNCTION, &run_send_ethernet, CCUConstants::SEND_ETHERNET_PRIORITY, CCUConstants::ETHERNET_PERIOD_US);
-HT_TASK::Task receive_ethernet(HT_TASK::DUMMY_FUNCTION, &run_receive_ethernet, CCUConstants::RECIEVE_ETHERNET_PRIORITY, CCUConstants::ETHERNET_PERIOD_US);
+HT_TASK::Task send_ethernet(HT_TASK::DUMMY_FUNCTION, &run_send_ethernet, CCUConstants::SEND_ETHERNET_PRIORITY, CCUConstants::ETHERNET_PERIOD);
+HT_TASK::Task receive_ethernet(HT_TASK::DUMMY_FUNCTION, &run_receive_ethernet, CCUConstants::RECIEVE_ETHERNET_PRIORITY, CCUConstants::ETHERNET_PERIOD);
 HT_TASK::Task send_all_data(HT_TASK::DUMMY_FUNCTION, &handle_send_all_data, CCUConstants::SEND_ALL_DATA_PRIORITY, CCUConstants::SEND_ALL_DATA_PERIOD);
 HT_TASK::Task run_sample_can_data(HT_TASK::DUMMY_FUNCTION, &sample_can_data, CCUConstants::SAMPLE_CAN_DATA_PRIORITY, CCUConstants::SAMPLE_CAN_DATA_PERIOD);
 HT_TASK::Task kick_watchdog_task(HT_TASK::DUMMY_FUNCTION, &run_kick_watchdog, CCUConstants::KICK_WATCHDOG_PRIORITY, CCUConstants::KICK_WATCHDOG_PERIOD);

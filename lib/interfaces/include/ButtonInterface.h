@@ -1,11 +1,11 @@
 #ifndef BUTTONINTERFACE_H
 #define BUTTONINTERFACE_H
 
+/* External Dependencies */
 #include "SharedFirmwareTypes.h"
-
+#include <Arduino.h>
 #include <etl/singleton.h>
 #include <stdint.h>
-#include <Arduino.h>
 
 
 namespace default_button_params

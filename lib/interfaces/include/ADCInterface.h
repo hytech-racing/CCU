@@ -2,32 +2,31 @@
 #define ADCINTERFACE_H
 
 /* External Dependencies */
-#include <Arduino.h>
 #include "SharedFirmwareTypes.h"
-#include "ButtonInterface.h"
-
+#include <Arduino.h>
 #include <etl/singleton.h>
 
+/* Local Interface Includes */
+#include "ButtonInterface.h"
 
 using pin = uint8_t;
 
+
 namespace adc_default_parameters
 {
-    constexpr const float TEENSY41_MIN_DIGITAL_READ_VOLTAGE_THRESH = 0.5F;
-    constexpr const float TEENSY41_MAX_DIGITAL_READ_VOLTAGE_THRESH = 2.8F;
-    constexpr const float SHUTDOWN_VOLTAGE_DIGITAL_THRESHOLD = 12.0F;
-
-    constexpr const float CONTROL_PILOT_VOLTAGE_LOW_THRESHOLD = 0.5f;
-    constexpr const float PROXIMITY_PILOT_VOLTAGE_HIGH_THRESHOLD = 4.0f;
-
     static constexpr float TEENSY41_REF_VOLTAGE = 3.3f;
+    constexpr float TEENSY41_MIN_DIGITAL_READ_VOLTAGE_THRESH = 0.5F;
+    constexpr float TEENSY41_MAX_DIGITAL_READ_VOLTAGE_THRESH = 2.8F;
+    constexpr float SHUTDOWN_VOLTAGE_DIGITAL_THRESHOLD = 12.0F;
+    constexpr float CONTROL_PILOT_VOLTAGE_LOW_THRESHOLD = 0.5f;
+    constexpr float PROXIMITY_PILOT_VOLTAGE_HIGH_THRESHOLD = 4.0f;
 };
 
 struct ADCPinout_s
 {
     /**
      * NOTE: All SHDN pins are currently digital pins. However, if there is an issue where shdn voltage is fluctuating,
-     *  make a transition to reading shdn C as an analog pin
+     *       make a transition to reading shdn C as an analog pin
      */
     pin teensy_shdn_A_pin;
     pin teensy_shdn_B_pin;
@@ -91,10 +90,10 @@ public:
         ):  _adc_parameters {
                 pinout,
                 [=]() mutable {
-                    conversions.glv_conv_factor                 = (configs.teensy41_max_input_voltage / bit_resolution) / conversions.glv_conv_factor;
-                    conversions.control_pilot_conv_factor       = (configs.teensy41_max_input_voltage / bit_resolution) / conversions.control_pilot_conv_factor;
-                    conversions.proximity_pilot_conv_factor     = (configs.teensy41_max_input_voltage / bit_resolution) / conversions.proximity_pilot_conv_factor;
-                    conversions.jumper_out_conv_factor          = (configs.teensy41_max_input_voltage / bit_resolution) / conversions.jumper_out_conv_factor;
+                    conversions.glv_conv_factor              = (configs.teensy41_max_input_voltage / bit_resolution) / conversions.glv_conv_factor;
+                    conversions.control_pilot_conv_factor    = (configs.teensy41_max_input_voltage / bit_resolution) / conversions.control_pilot_conv_factor;
+                    conversions.proximity_pilot_conv_factor  = (configs.teensy41_max_input_voltage / bit_resolution) / conversions.proximity_pilot_conv_factor;
+                    conversions.jumper_out_conv_factor       = (configs.teensy41_max_input_voltage / bit_resolution) / conversions.jumper_out_conv_factor;
                     return conversions;
                 }(),
                 thresholds,

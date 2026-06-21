@@ -2,11 +2,11 @@
 #define CCUCANINTERFACEIMPL
 
 /* External Dependencies */
+#include "hytech.h"
 #include "CANInterface.h"
+#include "FlexCAN_T4.h"
 #include "etl/singleton.h"
 #include <etl/delegate.h>
-#include "FlexCAN_T4.h"
-#include "hytech.h" // generated CAN library
 
 /* Local Interface Includes  */
 #include "ACUInterface.h"

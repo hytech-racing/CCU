@@ -2,21 +2,20 @@
 #define CCUETHERNETINTERFACE_H
 
 /* External Dependencies*/
+#include "SharedFirmwareTypes.h"
 #include "QNEthernet.h"
 #include "hytech_msgs.pb.h"
-#include "SharedFirmwareTypes.h"
-
-// #include "device_fw_version.h"
-#include "ProtobufMsgInterface.h"
-#include "EthernetAddressDefs.h"
-
 #include <algorithm>
 #include <cstddef>
 #include <iterator>
 #include <etl/singleton.h>
 
+// #include "device_fw_version.h"
+#include "ProtobufMsgInterface.h"
+#include "EthernetAddressDefs.h"
 
 using namespace qindesign::network;
+
 
 /**
  * @brief Output values from CCU to ACU.
@@ -42,7 +41,7 @@ public:
 
     void handle_recv_ethernet_acu_all_data(const hytech_msgs_ACUAllData &data);
 
-private: 
+private:
     /* Ethernet Sockets */
 /*
     EthernetUDP _acu_core_data_recv_socket;

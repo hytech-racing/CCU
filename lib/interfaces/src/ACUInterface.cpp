@@ -12,18 +12,23 @@ void ACUInterface::reset_acu_heartbeat()
     _curr_data.heartbeat_ok = true;
 }
 
+void ACUInterface::set_is_charging_enabled(bool state)
+{
+    _curr_data.is_charging_enabled = state;
+}
+
 void ACUInterface::receive_status_message(const CAN_message_t &msg, unsigned long curr_millis) {
     BMS_STATUS_t bms_status_msg;
     Unpack_BMS_STATUS_hytech(&bms_status_msg, &msg.buf[0], msg.len);
     _curr_data.acu_state = static_cast<ACUState_e>(bms_status_msg.acu_state);
 
     // As long as we're using millis() function, loop overrun not a concern
-    if(_curr_data.last_recv_status_millis == 0)
+    if(_curr_data.last_recv_status_ms == 0)
     {
         _first_received_message_heartbeat_init = true;
     }
 
-    _curr_data.last_recv_status_millis = curr_millis;
+    _curr_data.last_recv_status_ms = curr_millis;
 }
 
 void ACUInterface::receive_voltages_message(const CAN_message_t& msg, unsigned long curr_millis)
@@ -43,8 +48,9 @@ void ACUInterface::receive_detailed_voltages_message(const CAN_message_t& msg, u
     uint8_t group_id = voltages_msg.group_id;
     uint8_t ic_id = voltages_msg.ic_id;
     size_t cell_base_index = (ic_id / 2) * default_acu_params::NUM_CELLS_PER_SEGMENT +
-        ((ic_id % 2 != 0) ? default_acu_params::NUM_CHIPS : 0) +
-        group_id * default_acu_params::NUM_DATA_PER_GROUP;
+                            ((ic_id % 2 != 0) ? default_acu_params::NUM_CHIPS : 0) +
+                            group_id * default_acu_params::NUM_DATA_PER_GROUP;
+
     _curr_data.cell_voltages[cell_base_index + 0] = HYTECH_voltage_0_ro_fromS(voltages_msg.voltage_0_ro);
     _curr_data.cell_voltages[cell_base_index + 1] = HYTECH_voltage_1_ro_fromS(voltages_msg.voltage_1_ro);
     _curr_data.cell_voltages[cell_base_index + 2] = HYTECH_voltage_2_ro_fromS(voltages_msg.voltage_2_ro);
@@ -66,7 +72,7 @@ void ACUInterface::receive_detailed_temps_message(const CAN_message_t& msg, unsi
     uint8_t group_id = detailed_temps.group_id;
     uint8_t ic_id = detailed_temps.ic_id;
     size_t cell_base_index = ic_id * default_acu_params::NUM_CELL_TEMPS_PER_CHIP +
-                             group_id * default_acu_params::NUM_DATA_PER_GROUP;
+                            group_id * default_acu_params::NUM_DATA_PER_GROUP;
 
     if (cell_base_index >= default_acu_params::NUM_CELL_TEMPS)
     {
@@ -95,11 +101,6 @@ void ACUInterface::receive_state_of_charge(const CAN_message_t& msg, unsigned lo
     STATE_OF_CHARGE_t soc_msg{};
     Unpack_STATE_OF_CHARGE_hytech(&soc_msg, &msg.buf[0], msg.len);
     _curr_data.SoC = HYTECH_SoC_ro_fromS(soc_msg.SoC_ro);
-}
-
-void ACUInterface::set_is_charging_enabled(bool state)
-{
-    _curr_data.is_charging_enabled = state;
 }
 
 void ACUInterface::enqueue_ccu_status_data()

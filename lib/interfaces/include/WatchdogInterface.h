@@ -2,8 +2,10 @@
 #define WATCHDOG_INTERFACE_H
 
 /* External Dependencies */
-#include <etl/singleton.h>
 #include <Arduino.h>
+#include <etl/singleton.h>
+
+using pin = uint8_t;
 
 
 namespace watchdog_default_parameters

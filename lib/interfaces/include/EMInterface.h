@@ -1,16 +1,17 @@
 #ifndef EMINTERFACE
 #define EMINTERFACE
 
+/* External Dependencies */
 #include "FlexCAN_T4.h"
-
 #include "etl/singleton.h"
 #include <etl/delegate.h>
 
-struct EMData_s {
+
+struct EMData_s
+{
     float voltage;
     float current_amps;
 };
-
 
 class EnergyMeterInterface
 {

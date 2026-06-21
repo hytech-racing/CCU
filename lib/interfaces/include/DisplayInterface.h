@@ -2,12 +2,12 @@
 #define DisplayInterface_H
 
 /* External Dependencies */
+#include "SharedFirmwareTypes.h"
 #include <SPI.h>
 #include <DMAChannel.h>
 #include <Arduino.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
-#include "SharedFirmwareTypes.h"
 
 /* Local Interface Includes */
 #include "ACUInterface.h"
@@ -16,7 +16,7 @@
 #include "ChargerStateMachine.h"
 #include "RotaryEncoderInterface.h"
 
-
+using pin = uint8_t;
 
 
 namespace default_display_params

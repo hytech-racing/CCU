@@ -2,10 +2,10 @@
 #define CHARGERINTERFACE_H
 
 /* External Dependencies */
-#include "FlexCAN_T4.h"
 #include "hytech.h"
 #include "SharedFirmwareTypes.h"
 #include "CANInterface.h"
+#include "FlexCAN_T4.h"
 #include "etl/singleton.h"
 #include <etl/delegate.h>
 
