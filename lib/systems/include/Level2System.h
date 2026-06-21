@@ -1,11 +1,9 @@
 #ifndef LEVEL2SYSTEM_H
 #define LEVEL2SYSTEM_H
 /**
- * NOTE:
- * This is the system for 240V charging. Called level 2 because that is what SAE defines it as.
- * However you will see 240V naming convention used interchangably
+ * NOTE: This is the system file for 240V charging. It is called level 2 because that is what SAE defines it as.
+ *       However you will see 240V naming convention used interchangably
  */
-
 
 /* External Dependencies */
 #include <Arduino.h>
@@ -17,6 +15,7 @@
 #include <ADCInterface.h>
 #include <WatchdogInterface.h>
 #include <Level2Interface.h>
+
 
 struct Level2SystemThresholds_s
 {

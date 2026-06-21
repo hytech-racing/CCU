@@ -2,14 +2,15 @@
 #define CHARGERSTATEMACHINE_H
 
 /* External Dependencies */
-#include <etl/delegate.h>
 #include "etl/singleton.h"
+#include <etl/delegate.h>
 
 /* Interface Function Dependencies */
 #include "ACUInterface.h"
 #include "ChargerInterface.h"
 
-enum class ChargerState_e { //NOLINT
+enum class ChargerState_e
+{
     STARTUP = 0,            // Default state: LV turned on, not charging. Expected Values: CP = 0 ; PP = 5 ; 240_En = HIGH ; 240_OK = LOW
     CHECK_SWITCH,           // Check where the switch is using JMP_Read. Startup values should be present
     CHARGE_120_UNLATCHED,   // All 120V charging conditions are ready, just waiting for user to engage charging by setting CCU_OK high
@@ -41,6 +42,8 @@ class ChargerStateMachine
             etl::delegate<void()> reset_startup_time_ms,
             uint32_t current_millis
         ) :
+            _current_state(ChargerState_e::STARTUP),
+            _last_state_changed_time(current_millis),
             _is_120_conditions_ok(is_120_conditions_ok),
             _is_120_switched(is_120_switched),
             _is_240_switched(is_240_switched),
@@ -53,12 +56,8 @@ class ChargerStateMachine
             _set_sw_shdn_low(set_sw_shdn_low),
             _set_start_charge_high(set_start_charge_high),
             _set_start_charge_low(set_start_charge_low),
-            _current_state(ChargerState_e::STARTUP),
-            _last_state_changed_time(current_millis),
             _reset_startup_time_ms(reset_startup_time_ms)
-            {
-
-            };
+            {};
 
         ChargerState_e tick_state_machine(unsigned long current_millis);
 

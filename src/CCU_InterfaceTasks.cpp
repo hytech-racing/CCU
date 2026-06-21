@@ -182,32 +182,32 @@ HT_TASK::TaskResponse debug_prints(const unsigned long& sysMicros, const HT_TASK
 
 
     /* ----- Voltage Information ----- */
-    // Serial.print("Cell Voltage Max   : "); Serial.println(acu_data.high_voltage);
-    // Serial.print("Cell Voltage Min   : "); Serial.println(acu_data.low_voltage);
-    // Serial.print("Cell Voltage Avg   : "); Serial.println(acu_data.average_voltage);
-    // Serial.print("Cell Voltage Delta : "); Serial.println(acu_data.high_voltage - acu_data.low_voltage);
-    // Serial.print("Pack Voltage       : "); Serial.println(acu_data.pack_voltage);
-    // Serial.println();
+    Serial.print("Cell Voltage Max   : "); Serial.println(acu_data.high_voltage);
+    Serial.print("Cell Voltage Min   : "); Serial.println(acu_data.low_voltage);
+    Serial.print("Cell Voltage Avg   : "); Serial.println(acu_data.average_voltage);
+    Serial.print("Cell Voltage Delta : "); Serial.println(acu_data.high_voltage - acu_data.low_voltage);
+    Serial.print("Pack Voltage       : "); Serial.println(acu_data.pack_voltage);
+    Serial.println();
 
 
     /* ----- Temperature Information ----- */
-    // Serial.print("Max Cell Temp      : "); Serial.println(acu_data.max_cell_temp);
-    // Serial.print("Min Cell Temp      : "); Serial.println(acu_data.min_cell_temp);
-    // Serial.print("Max Board Temp     : "); Serial.println(acu_data.max_board_temp);
-    // Serial.println();
+    Serial.print("Max Cell Temp      : "); Serial.println(acu_data.max_cell_temp);
+    Serial.print("Min Cell Temp      : "); Serial.println(acu_data.min_cell_temp);
+    Serial.print("Max Board Temp     : "); Serial.println(acu_data.max_board_temp);
+    Serial.println();
 
 
     /* ----- Charge Current Information ----- */
-    // Serial.print("Charger Current Actual   : "); Serial.println(charger_data.output_current_low);
-    // Serial.print("Calc Charge Current      : "); Serial.println(MainChargeSystemInstance::instance().get_charge_current());
-    // Serial.println();
+    Serial.print("Charger Current Actual   : "); Serial.println(charger_data.output_current_low);
+    Serial.print("Calc Charge Current      : "); Serial.println(MainChargeSystemInstance::instance().get_charge_current());
+    Serial.println();
 
 
     /* ----- Charge Information ----- */
-    // Serial.print("CP PWM  "); Serial.print(level2_data.control_pwm); Serial.print(" V "); Serial.print(level2_data.control_pwm_duty_cycle); Serial.println("%");
-    // Serial.print("CP Voltage Sense      "); Serial.println(ADCInterfaceInstance::instance().read_control_pilot());
-    // Serial.print("PP Voltage Sense      "); Serial.println(ADCInterfaceInstance::instance().read_proximity_pilot());
-     // Serial.println();
+    Serial.print("CP PWM  "); Serial.print(level2_data.control_pwm); Serial.print(" V "); Serial.print(level2_data.control_pwm_duty_cycle); Serial.println("%");
+    Serial.print("CP Voltage Sense      "); Serial.println(ADCInterfaceInstance::instance().read_control_pilot());
+    Serial.print("PP Voltage Sense      "); Serial.println(ADCInterfaceInstance::instance().read_proximity_pilot());
+    Serial.println();
 
 
     /* ----- SHDN Information ----- */
@@ -228,51 +228,51 @@ HT_TASK::TaskResponse debug_prints(const unsigned long& sysMicros, const HT_TASK
 
 
     /* ----- ACU Detailed Cell Voltages ----- */
-    // for (int c = 0; c < default_acu_params::NUM_CELLS; c++)
-    // {
-    //     Serial.print("C"); Serial.print(c); Serial.print(": ");
-    //     if (*acu_data.cell_voltages[c])
-    //     {
-    //         Serial.print(*acu_data.cell_voltages[c], 3);
-    //     }
-    //     else
-    //     {
-    //         Serial.print("--.-");
-    //     }
-    //     Serial.print("\t");
-    // }
+    for (int c = 0; c < default_acu_params::NUM_CELLS; c++)
+    {
+        Serial.print("C"); Serial.print(c); Serial.print(": ");
+        if (*acu_data.cell_voltages[c])
+        {
+            Serial.print(*acu_data.cell_voltages[c], 3);
+        }
+        else
+        {
+            Serial.print("--.-");
+        }
+        Serial.print("\t");
+    }
 
-    
+
     /* ----- ACU Detailed Cell Temps ----- */
-    // for (int c = 0; c < default_acu_params::NUM_CELL_TEMPS; c++)
-    // {
-    //     Serial.print("CT"); Serial.print(c); Serial.print(": ");
-    //     if (*acu_data.cell_temps[c])
-    //     {
-    //         Serial.print(*acu_data.cell_temps[c], 3);
-    //     }
-    //     else
-    //     {
-    //         Serial.print("--.-");
-    //     }
-    //     Serial.print("\t");
-    // }
+    for (int c = 0; c < default_acu_params::NUM_CELL_TEMPS; c++)
+    {
+        Serial.print("CT"); Serial.print(c); Serial.print(": ");
+        if (*acu_data.cell_temps[c])
+        {
+            Serial.print(*acu_data.cell_temps[c], 3);
+        }
+        else
+        {
+            Serial.print("--.-");
+        }
+        Serial.print("\t");
+    }
 
 
     /* ----- ACU Detailed Board Temps ----- */
-    // for (int c = 0; c < default_acu_params::NUM_BOARD_TEMPS; c++)
-    // {
-    //     Serial.print("BT"); Serial.print(c); Serial.print(": ");
-    //     if (*acu_data.board_temps[c])
-    //     {
-    //         Serial.print(*acu_data.board_temps[c], 3);
-    //     }
-    //     else
-    //     {
-    //         Serial.print("--.-");
-    //     }
-    //     Serial.print("\t");
-    // }
+    for (int c = 0; c < default_acu_params::NUM_BOARD_TEMPS; c++)
+    {
+        Serial.print("BT"); Serial.print(c); Serial.print(": ");
+        if (*acu_data.board_temps[c])
+        {
+            Serial.print(*acu_data.board_temps[c], 3);
+        }
+        else
+        {
+            Serial.print("--.-");
+        }
+        Serial.print("\t");
+    }
 
    return HT_TASK::TaskResponse::YIELD;
 }
