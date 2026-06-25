@@ -138,18 +138,16 @@ HT_TASK::TaskResponse run_receive_ethernet(const unsigned long& sysMicros, const
 
 HT_TASK::TaskResponse handle_send_all_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
 {
-    CCUCANInterfaceImpl::send_all_CAN_msgs(CCUCANInterfaceImpl::acu_can_tx_buffer, &ACU_CAN);
-    CCUCANInterfaceImpl::send_all_CAN_msgs(CCUCANInterfaceImpl::charger_can_tx_buffer, &CHARGER_CAN);
+    CCUCANInterfaceImpl::send_all_CAN_msgs(CCUCANInterfaceInstance::instance().acu_can_tx_buffer, &CCUCANInterfaceInstance::instance().ACU_CAN);
+    CCUCANInterfaceImpl::send_all_CAN_msgs(CCUCANInterfaceInstance::instance().charger_can_tx_buffer, &CCUCANInterfaceInstance::instance().CHARGER_CAN);
     return HT_TASK::TaskResponse::YIELD;
 }
 
 
 HT_TASK::TaskResponse sample_can_data(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
 {
-    etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)> main_can_recv = etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)>::create<CCUCANInterfaceImpl::ccu_CAN_recv>();
-    process_ring_buffer(CCUCANInterfaceImpl::acu_can_rx_buffer, CANInterfacesInstance::instance(), sys_time::hal_millis(), main_can_recv);
-    process_ring_buffer(CCUCANInterfaceImpl::charger_can_rx_buffer, CANInterfacesInstance::instance(), sys_time::hal_millis(), main_can_recv);
-
+    process_ring_buffer(CCUCANInterfaceInstance::instance().acu_can_rx_buffer, CANInterfacesInstance::instance(), sys_time::hal_millis(), CCUCANInterfaceInstance::instance().can_recv_switch, CANInterfaceType_e::ACU);
+    process_ring_buffer(CCUCANInterfaceInstance::instance().charger_can_rx_buffer, CANInterfacesInstance::instance(), sys_time::hal_millis(), CCUCANInterfaceInstance::instance().can_recv_switch, CANInterfaceType_e::CHARGER);
     return HT_TASK::TaskResponse::YIELD;
 }
 

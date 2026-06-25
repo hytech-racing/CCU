@@ -22,9 +22,6 @@
 #include "ht_sched.hpp"
 #include "ht_task.hpp"
 
-FlexCAN_Type<CAN3> CHARGER_CAN; //placed here after debugging
-FlexCAN_Type<CAN1> ACU_CAN;
-
 /* Systems */
 namespace qn = qindesign::network; //setup of qn namespace
 qn::EthernetUDP udp; //setup of qn namespace
@@ -73,8 +70,8 @@ void setup()
     scheduler.schedule(calculate_charge_current_task);
     scheduler.schedule(update_display_task);
 
-    handle_CAN_setup(ACU_CAN, CCUConstants::CAN_BAUDRATE, &CCUCANInterfaceImpl::on_acu_can_receive);
-    handle_CAN_setup(CHARGER_CAN, CCUConstants::CHARGER_CAN_BAUDRATE, &CCUCANInterfaceImpl::on_charger_can_receive);
+    handle_CAN_setup(CCUCANInterfaceInstance::instance().ACU_CAN, CCUConstants::CAN_BAUDRATE, &CCUCANInterfaceImpl::on_acu_can_receive);
+    handle_CAN_setup(CCUCANInterfaceInstance::instance().CHARGER_CAN, CCUConstants::CHARGER_CAN_BAUDRATE, &CCUCANInterfaceImpl::on_charger_can_receive);
 }
 
 void loop()

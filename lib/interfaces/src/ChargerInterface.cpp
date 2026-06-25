@@ -4,7 +4,7 @@
 #include "CCUCANInterfaceImpl.h" // fix this lmao
 
 
-void ChargerInterface::receive_charger_data_message(const CAN_message_t& msg, unsigned long curr_millis, ACUInterface& acu_interface, float max_pack_voltage, float cell_cutoff_voltage) 
+void ChargerInterface::receive_charger_data_message(const CAN_message_t& msg, unsigned long curr_millis, ACUInterface& acu_interface, float max_pack_voltage, float cell_cutoff_voltage)
 {
     CHARGER_DATA_t charger_data_msg;
     //charger_data_s charger_data; //NOLINT - needed for initialization
@@ -19,7 +19,7 @@ void ChargerInterface::receive_charger_data_message(const CAN_message_t& msg, un
     acu_interface.set_is_charging_enabled(true); //if a charger message is received, we are ready to start charging
 
     /* Redundancy to avoid flipping between true and false for balancing (charging) enabled */
-    if (acu_interface.get_latest_data().pack_voltage >= max_pack_voltage || ACUInterfaceInstance::instance().get_latest_data().high_voltage >= cell_cutoff_voltage) 
+    if (acu_interface.get_latest_data().pack_voltage >= max_pack_voltage || ACUInterfaceInstance::instance().get_latest_data().high_voltage >= cell_cutoff_voltage)
     {
         acu_interface.set_is_charging_enabled(false);
     }
@@ -37,5 +37,5 @@ void ChargerInterface::enqueue_charging_data(ACUInterface& acu_interface, float 
     charger_control.max_charging_voltage_low = 0xB4; //NOLINT (see comment)
     charger_control.max_charging_current_high = 0; // only "low" is being used/harnessed in
     charger_control.max_charging_current_low = static_cast<uint8_t>(calculated_charge_current * 10); //NOLINT (this works)
-    CAN_util::enqueue_msg(&charger_control, &Pack_CHARGER_CONTROL_hytech, CCUCANInterfaceImpl::charger_can_tx_buffer);
+    CAN_util::enqueue_msg(&charger_control, &Pack_CHARGER_CONTROL_hytech, CCUCANInterfaceInstance::instance().charger_can_tx_buffer);
 }
