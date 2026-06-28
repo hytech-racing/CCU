@@ -5,7 +5,7 @@
  *       However you will see 240V naming convention used interchangably
  */
 
-/* ETL Library Includes */
+/* ETL Library */
 #include <etl/singleton.h>
 
 /* External Includes */
@@ -90,7 +90,7 @@ private:
     ADCInterface& _adc_interface;
     WatchdogInterface& _watchdog_interface;
     Level2SystemThresholds_s _thresholds;
-    
+
 };
 
 using Level2SystemInstance = etl::singleton<Level2System>;

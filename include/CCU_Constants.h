@@ -1,11 +1,10 @@
 #ifndef CCU_CONSTANTS
 #define CCU_CONSTANTS
 
-/* Standard Library Includes */
-#include <stddef.h>
+/* External Includes */
+#include "SharedFirmwareTypes.h"
 
 using pin = uint8_t;
-using celsius = float;
 using time_us = uint32_t;
 
 

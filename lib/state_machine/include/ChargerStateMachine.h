@@ -1,7 +1,7 @@
 #ifndef CHARGERSTATEMACHINE_H
 #define CHARGERSTATEMACHINE_H
 
-/* ETL Library Includes */
+/* ETL Library */
 #include "etl/singleton.h"
 #include <etl/delegate.h>
 

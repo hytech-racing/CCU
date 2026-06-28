@@ -1,10 +1,7 @@
 #ifndef BUTTONINTERFACE_H
 #define BUTTONINTERFACE_H
 
-/* Standard Library Includes */
-#include <stdint.h>
-
-/* ETL Library Includes  */
+/* ETL Library */
 #include <etl/singleton.h>
 
 /* External Dependencies */

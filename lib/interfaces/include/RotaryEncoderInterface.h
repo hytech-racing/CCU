@@ -1,15 +1,11 @@
 #ifndef ROTARYENCODERINTERFACE_H
 #define ROTARYENCODERINTERFACE_H
 
-/* Standard Library Includes */
-#include <stdint.h>
-#include <stddef.h>
-
-/* ETL Library Includes */
+/* ETL Library */
 #include <etl/singleton.h>
 
 /* External Includes */
-#include <Arduino.h>
+#include "SharedFirmwareTypes.h"
 
 /* Local Interface Includes */
 #include "ButtonInterface.h"

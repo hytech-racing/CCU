@@ -5,7 +5,6 @@
 #include <etl/singleton.h>
 
 /* External Includes */
-#include <Arduino.h>
 #include "SharedFirmwareTypes.h"
 
 /* Local Interface Includes */

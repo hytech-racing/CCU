@@ -1,30 +1,21 @@
 #ifndef CCU_SYSTEMTASKS_H
 #define CCU_SYSTEMTASKS_H
 
-/* External Dependencies */
-#include <ht_task.hpp>
-#include "SharedFirmwareTypes.h"
-#include "CANInterface.h"
-
-/* Local Dependencies */
 #include "CCU_Constants.h"
+
+/* External Includes */
+#include <ht_task.hpp>
+
+/* Local Interface Includes */
+#include "Level2Interface.h"
+#include "RotaryEncoderInterface.h"
+#include "SystemTimeInterface.h"
+#include "WatchdogInterface.h"
 
 /* Local System Includes */
 #include "Level2System.h"
 #include "MainChargeSystem.h"
 #include "ChargerStateMachine.h"
-
-/* Local Interface Includes */
-#include "ACUInterface.h"
-#include "ButtonInterface.h"
-#include "CCUCANInterfaceImpl.h"
-#include "CCUEthernetInterface.h"
-#include "ChargerInterface.h"
-#include "DisplayInterface.h"
-#include "Level2Interface.h"
-#include "RotaryEncoderInterface.h"
-#include "SystemTimeInterface.h"
-#include "WatchdogInterface.h"
 
 /**
  * @brief Creates an instance of all systems.

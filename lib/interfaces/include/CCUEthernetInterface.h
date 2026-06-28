@@ -1,9 +1,6 @@
 #ifndef CCUETHERNETINTERFACE_H
 #define CCUETHERNETINTERFACE_H
 
-/* ETL Library Includes */
-#include <etl/singleton.h>
-
 /* External Includes */
 #include "SharedFirmwareTypes.h"
 #include "hytech_msgs.pb.h"

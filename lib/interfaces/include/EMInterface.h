@@ -1,7 +1,7 @@
 #ifndef EMINTERFACE
 #define EMINTERFACE
 
-/* ETL Library Includes */
+/* ETL Library */
 #include <etl/singleton.h>
 #include <etl/delegate.h>
 

@@ -1,7 +1,5 @@
 #include "ChargerInterface.h"
-
-/* Local Interface Includes */
-#include "CCUCANInterfaceImpl.h" // fix this lmao
+#include "CCUCANInterfaceImpl.h" // this needs to fixed at some point
 
 
 void ChargerInterface::receive_charger_data_message(const CAN_message_t& msg, unsigned long curr_millis, ACUInterface& acu_interface, float max_pack_voltage, float cell_cutoff_voltage)

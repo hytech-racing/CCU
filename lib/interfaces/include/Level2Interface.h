@@ -1,7 +1,7 @@
 #ifndef LEVEL2INTERFACE_H
 #define LEVEL2INTERFACE_H
 
-/* ETL Library Includes */
+/* ETL Library */
 #include <etl/singleton.h>
 
 /* External Includes */
@@ -72,7 +72,7 @@ private:
     Level2_Pinout_s _pinout;
     Level2_Data_s _readings;
     Level2_Config_s _config;
-    
+
 };
 
 using Level2InterfaceInstance = etl::singleton<Level2Interface>;

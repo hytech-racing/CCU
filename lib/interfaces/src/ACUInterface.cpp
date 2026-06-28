@@ -1,10 +1,5 @@
 #include "ACUInterface.h"
-
-/* External Dependencies */
-#include "hytech.h"
-
-/* Local Interface Includes */
-#include "CCUCANInterfaceImpl.h"
+#include "CCUCANInterfaceImpl.h" // this needs to fixed at some point
 
 
 void ACUInterface::reset_acu_heartbeat()

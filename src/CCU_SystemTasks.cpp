@@ -3,20 +3,16 @@
 
 bool initialize_all_systems()
 {
-    // Create Level2System instance
-    Level2SystemInstance::create(
-        Level2InterfaceInstance::instance(),
-        ADCInterfaceInstance::instance(),
-        WatchdogInterfaceInstance::instance(),
-        Level2SystemThresholds_s {}
+    Level2SystemInstance::create(Level2InterfaceInstance::instance(),
+                                ADCInterfaceInstance::instance(),
+                                WatchdogInterfaceInstance::instance(),
+                                Level2SystemThresholds_s {}
     );
 
-    // Create MainChargeSystem instance
-    MainChargeSystemInstance::create(
-        CCUSystems::MAX_120V_CURRENT_AMP,
-        CCUSystems::MAX_240V_CURRENT_AMP,
-        CCUConstants::MAX_CELL_CUTOFF_TEMP_CELSIUS,
-        CCUConstants::MAX_BOARD_CUTOFF_TEMP_CELSIUS
+    MainChargeSystemInstance::create(CCUSystems::MAX_120V_CURRENT_AMP,
+                                    CCUSystems::MAX_240V_CURRENT_AMP,
+                                    CCUConstants::MAX_CELL_CUTOFF_TEMP_CELSIUS,
+                                    CCUConstants::MAX_BOARD_CUTOFF_TEMP_CELSIUS
     );
     MainChargeSystemInstance::instance().init(sys_time::hal_millis());
 
@@ -61,39 +57,38 @@ bool initialize_all_systems()
     etl::delegate<void()> reset_startup_time_ms = etl::delegate<void()>::create([]() -> void
                                                                                 { MainChargeSystemInstance::instance().init(sys_time::hal_millis()); });
 
-    ChargerStateMachineInstance::create(
-        is_120_conditions_ok,
-        is_120_switched,
-        is_240_switched,
-        is_shdn_D_high,
-        is_240_conditions_ok,
-        is_state_B2_ready,
-        is_state_C2_ready,
-        reset_error_requested,
-        set_sw_shdn_high,
-        set_sw_shdn_low,
-        set_start_charge_high,
-        set_start_charge_low,
-        reset_startup_time_ms,
-        sys_time::hal_millis()
+    ChargerStateMachineInstance::create(is_120_conditions_ok,
+                                        is_120_switched,
+                                        is_240_switched,
+                                        is_shdn_D_high,
+                                        is_240_conditions_ok,
+                                        is_state_B2_ready,
+                                        is_state_C2_ready,
+                                        reset_error_requested,
+                                        set_sw_shdn_high,
+                                        set_sw_shdn_low,
+                                        set_start_charge_high,
+                                        set_start_charge_low,
+                                        reset_startup_time_ms,
+                                        sys_time::hal_millis()
     );
 
     return true;
 }
 
 
-HT_TASK::TaskResponse tick_state_machine(const unsigned long &sysMicros, const HT_TASK::TaskInfo &taskInfo) {
-
+HT_TASK::TaskResponse tick_state_machine(const unsigned long &sysMicros, const HT_TASK::TaskInfo &taskInfo)
+{
     ChargerStateMachineInstance::instance().tick_state_machine(sys_time::hal_millis());
     return HT_TASK::TaskResponse::YIELD;
 }
 
-HT_TASK::TaskResponse calculate_charge_current(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo) {
-    MainChargeSystemInstance::instance().calculate_charge_current(
-        CCUConstants::MAX_PACK_VOLTAGE,
-        CCUConstants::MAX_CELL_CUTOFF_VOLTAGE,
-        RotaryEncoderInterfaceInstance::instance().get_value(),
-        sys_time::hal_millis()
+HT_TASK::TaskResponse calculate_charge_current(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
+{
+    MainChargeSystemInstance::instance().calculate_charge_current(CCUConstants::MAX_PACK_VOLTAGE,
+                                                                CCUConstants::MAX_CELL_CUTOFF_VOLTAGE,
+                                                                RotaryEncoderInterfaceInstance::instance().get_value(),
+                                                                sys_time::hal_millis()
     );
 
     return HT_TASK::TaskResponse::YIELD;

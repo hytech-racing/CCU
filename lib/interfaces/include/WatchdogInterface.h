@@ -1,11 +1,11 @@
 #ifndef WATCHDOG_INTERFACE_H
 #define WATCHDOG_INTERFACE_H
 
-/* ETL Library Includes */
+/* ETL Library */
 #include <etl/singleton.h>
 
 /* External Includes */
-#include <Arduino.h>
+#include "Arduino.h"
 
 using pin = uint8_t;
 
@@ -67,7 +67,7 @@ private:
 
     // @brief current output level driven on the watchdog kick pin, true = HIGH
     bool _watchdog_state = false;
-    
+
 };
 
 using WatchdogInterfaceInstance = etl::singleton<WatchdogInterface>;
