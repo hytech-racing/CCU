@@ -1,5 +1,6 @@
 #include "CCUCANInterfaceImpl.h"
 
+
 void CCUCANInterfaceImpl::on_acu_can_receive(const CAN_message_t &msg)
 {
     std::array<uint8_t, CAN_MSG_SIZE> buf;
@@ -14,7 +15,8 @@ void CCUCANInterfaceImpl::on_charger_can_receive(const CAN_message_t &msg)
     CCUCANInterfaceInstance::instance().charger_can_rx_buffer.push_back(buf.data(), CAN_MSG_SIZE);
 }
 
-void CCUCANInterfaceImpl::ccu_recv_switch(CANInterfaces_s &interfaces, const CAN_message_t &msg, uint32_t millis, CANInterfaceType_e interface_type) {
+void CCUCANInterfaceImpl::ccu_recv_switch(CANInterfaces_s &interfaces, const CAN_message_t &msg, uint32_t millis, CANInterfaceType_e interface_type)
+{
     switch (msg.id)
     {
         case BMS_VOLTAGES_CANID:

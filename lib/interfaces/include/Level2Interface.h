@@ -1,8 +1,10 @@
 #ifndef LEVEL2INTERFACE_H
 #define LEVEL2INTERFACE_H
 
-/* External Dependencies */
+/* ETL Library Includes */
 #include <etl/singleton.h>
+
+/* External Includes */
 #include <Arduino.h>
 #include <cstddef>
 #include <cstdint>
@@ -39,18 +41,16 @@ struct Level2_Config_s
 class Level2Interface
 {
 public:
-    Level2Interface(
-        Level2_Pinout_s pinout,
-        Level2_Config_s config =
-        {
-            .pwm_pulse_in_timeout_ms = default_level2_interface_params::PWM_PULSE_IN_TIMEOUT_MS,
-            .min_valid_pwm_duty_cycle_percent = default_level2_interface_params::MIN_VALID_PWM_DUTY_CYCLE_PERCENT,
-            .max_valid_pwm_duty_cycle_percent = default_level2_interface_params::MAX_VALID_PWM_DUTY_CYCLE_PERCENT,
-        }
-    ) :
-        _pinout(pinout),
+    Level2Interface(Level2_Pinout_s pinout,
+                    Level2_Config_s config =
+                    {
+                        .pwm_pulse_in_timeout_ms = default_level2_interface_params::PWM_PULSE_IN_TIMEOUT_MS,
+                        .min_valid_pwm_duty_cycle_percent = default_level2_interface_params::MIN_VALID_PWM_DUTY_CYCLE_PERCENT,
+                        .max_valid_pwm_duty_cycle_percent = default_level2_interface_params::MAX_VALID_PWM_DUTY_CYCLE_PERCENT,
+                    }
+    ) : _pinout(pinout),
         _config(config)
-    {}
+    {};
 
     void init();
 
@@ -68,9 +68,11 @@ public:
     Level2_Data_s get_level_2_data() const;
 
 private:
+
     Level2_Pinout_s _pinout;
     Level2_Data_s _readings;
     Level2_Config_s _config;
+    
 };
 
 using Level2InterfaceInstance = etl::singleton<Level2Interface>;

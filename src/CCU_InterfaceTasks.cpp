@@ -35,7 +35,9 @@ void initialize_all_interfaces()
     );
     ADCInterfaceInstance::instance().init(sys_time::hal_millis());
 
-    /* CAN Interfaces Construct */
+    /* Button Interface */
+
+    /* CAN Interfaces  */
     CANInterfacesInstance::create(ACUInterfaceInstance::instance(), ChargerInterfaceInstance::instance(), EnergyMeterInterfaceInstance::instance());
 
     /* Charger Interface */
@@ -56,6 +58,7 @@ void initialize_all_interfaces()
     );
     DisplayInterfaceInstance::instance().init();
 
+    /* Rotary Encoder Interface */
     RotaryEncoderInterfaceInstance::create(
         RotaryEncoderPinout_s
         {

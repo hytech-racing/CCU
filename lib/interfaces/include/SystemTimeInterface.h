@@ -1,5 +1,7 @@
-#ifndef SYSTEMTIMEINTERFACE_H 
+#ifndef SYSTEMTIMEINTERFACE_H
 #define SYSTEMTIMEINTERFACE_H
+
+#include <Arduino.h>
 
 namespace sys_time
 {

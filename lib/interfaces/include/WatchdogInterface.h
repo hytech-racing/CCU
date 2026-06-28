@@ -1,9 +1,11 @@
 #ifndef WATCHDOG_INTERFACE_H
 #define WATCHDOG_INTERFACE_H
 
-/* External Dependencies */
-#include <Arduino.h>
+/* ETL Library Includes */
 #include <etl/singleton.h>
+
+/* External Includes */
+#include <Arduino.h>
 
 using pin = uint8_t;
 
@@ -30,11 +32,12 @@ class WatchdogInterface
 public:
 
     WatchdogInterface(WatchdogPinout_s pinout,
-                        uint32_t watchdog_kick_interval_ms = watchdog_default_parameters::WATCHDOG_KICK_INTERVAL_MS
+                    uint32_t watchdog_kick_interval_ms = watchdog_default_parameters::WATCHDOG_KICK_INTERVAL_MS
     ): _watchdog_parameters {
             pinout,
-            watchdog_kick_interval_ms} {}
-
+            watchdog_kick_interval_ms
+        }
+    {};
 
     void init();
 

@@ -25,6 +25,9 @@ template <CAN_DEV_TABLE CAN_DEV>
 using FlexCAN_t = FlexCAN_T4<CAN_DEV, RX_SIZE_256, TX_SIZE_16>;
 
 
+/**
+ * @brief This struct holds references to the interface objects that use decoded CAN messages. References only!
+ */
 struct CANInterfaces_s
 {
     explicit CANInterfaces_s(

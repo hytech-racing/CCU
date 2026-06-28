@@ -1,10 +1,12 @@
 #ifndef EMINTERFACE
 #define EMINTERFACE
 
-/* External Dependencies */
-#include "FlexCAN_T4.h"
+/* ETL Library Includes */
 #include "etl/singleton.h"
 #include <etl/delegate.h>
+
+/* External Dependencies */
+#include "FlexCAN_T4.h"
 
 
 struct EMData_s
@@ -24,6 +26,7 @@ public:
     EMData_s get_latest_em_data() {return _em_data;};
 
 private:
+
     EMData_s _em_data;
 
 };

@@ -1,44 +1,45 @@
 #include "ButtonInterface.h"
 
+
 void ButtonInterface::update(unsigned long current_millis)
 {
     bool read = digitalRead(_pin);
-    if (_active_low) 
+    if (_active_low)
     {
         read = !read;
     }
-    
+
     // Reset debounce timer if reading changed
-    if (read != _button_state.last_read) 
+    if (read != _button_state.last_read)
     {
         _button_state.last_debounce_time_ms = current_millis;
     }
-    
+
     // Check if debounce period has elapsed
-    if ((current_millis - _button_state.last_debounce_time_ms) > _debounce_ms) 
+    if ((current_millis - _button_state.last_debounce_time_ms) > _debounce_ms)
     {
         // Update state if it changed
-        if (read != _button_state.current_state) 
+        if (read != _button_state.current_state)
         {
             _button_state.current_state = read;
-            
+
             // Detect edges
-            if (_button_state.current_state && !_button_state.last_stable_state) 
+            if (_button_state.current_state && !_button_state.last_stable_state)
             {
                 // Rising edge - button pressed
                 _button_state.press_event = true;
                 _button_state.press_start_time_ms = current_millis;
-            } 
-            else if (!_button_state.current_state && _button_state.last_stable_state) 
+            }
+            else if (!_button_state.current_state && _button_state.last_stable_state)
             {
                 // Falling edge - button released
                 _button_state.release_event = true;
             }
-            
+
             _button_state.last_stable_state = _button_state.current_state;
         }
     }
-    
+
     _button_state.last_read = read;
 }
 

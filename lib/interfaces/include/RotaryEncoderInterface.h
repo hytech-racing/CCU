@@ -1,11 +1,15 @@
 #ifndef ROTARYENCODERINTERFACE_H
 #define ROTARYENCODERINTERFACE_H
 
-/* External Dependencies */
-#include <Arduino.h>
+/* Standard Library Includes */
 #include <stdint.h>
 #include <stddef.h>
+
+/* ETL Library Includes */
 #include <etl/singleton.h>
+
+/* External Includes */
+#include <Arduino.h>
 
 /* Local Interface Includes */
 #include "ButtonInterface.h"
@@ -74,10 +78,12 @@ struct RotaryEncoderState_s
 class RotaryEncoderInterface
 {
 public:
-    RotaryEncoderInterface(
-        RotaryEncoderPinout_s pinout,
-        RotaryEncoderState_s state = RotaryEncoderState_s{}
-    );
+    RotaryEncoderInterface(RotaryEncoderPinout_s pinout,
+                        RotaryEncoderState_s state = RotaryEncoderState_s{}
+    ) : _pinout(pinout),
+        _state(state),
+        _enc_switch_button(pinout.enc_switch_pin)
+    {}
 
     void init();
 
@@ -101,6 +107,7 @@ public:
     bool switch_held();
 
 private:
+
     RotaryEncoderPinout_s _pinout;
     RotaryEncoderState_s _state;
     ButtonInterface _enc_switch_button;
@@ -122,6 +129,7 @@ private:
     void _decrement_from_isr();
 
     float _clamp(float value) const;
+
 };
 
 using RotaryEncoderInterfaceInstance = etl::singleton<RotaryEncoderInterface>;

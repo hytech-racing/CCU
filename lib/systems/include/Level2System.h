@@ -5,16 +5,18 @@
  *       However you will see 240V naming convention used interchangably
  */
 
-/* External Dependencies */
+/* ETL Library Includes */
+#include <etl/singleton.h>
+
+/* External Includes */
 #include <Arduino.h>
 #include <cstddef>
 #include <cstdint>
-#include <etl/singleton.h>
 
-/* Interface Function Dependencies */
-#include <ADCInterface.h>
-#include <WatchdogInterface.h>
-#include <Level2Interface.h>
+/* Local Interface Includes */
+#include "ADCInterface.h"
+#include "Level2Interface.h"
+#include "WatchdogInterface.h"
 
 
 struct Level2SystemThresholds_s
@@ -32,17 +34,17 @@ struct Level2SystemThresholds_s
 class Level2System
 {
 public:
-    Level2System(
-        Level2Interface& level2_interface,
-        ADCInterface& adc_interface,
-        WatchdogInterface& watchdog_interface,
-        Level2SystemThresholds_s thresholds = {}
+
+    Level2System(Level2Interface& level2_interface,
+                ADCInterface& adc_interface,
+                WatchdogInterface& watchdog_interface,
+                Level2SystemThresholds_s thresholds = {}
     ) :
         _level2_interface(level2_interface),
         _adc_interface(adc_interface),
         _watchdog_interface(watchdog_interface),
         _thresholds(thresholds)
-    {}
+    {};
 
     /**
      * Function check for the expected startup/120V Charging Conditions (4):
@@ -51,14 +53,12 @@ public:
      */
     bool check_120_conditions(ADCInterface& adc_interface);
 
-
     /**
      * Function check for the expected 240V Charging Conditions (2):
      * 240_OK = HIGH  +  JP_OUT_READ = HIGH
      * @return if the 2 conditions above are met
      */
     bool check_240_conditions(ADCInterface& adc_interface);
-
 
     /**
      * Function checks if the switch is engaged for 120V charging
@@ -67,7 +67,6 @@ public:
      */
     bool is_120_switched(ADCInterface& adc_interface);
 
-
     /**
      * Function checks if the switch is engaged for 120V charging
      * 240_OK = LOW  +  jumper_read = LOW
@@ -75,12 +74,10 @@ public:
      */
     bool is_240_switched(ADCInterface& adc_interface);
 
-
     /**
      * @return true if all state B2 conditions present, else false
      */
     bool check_state_B2_conditions(ADCInterface& adc_interface, Level2Interface& level2_interface);
-
 
     /**
      * @return true if all state C2 conditions present, else false
@@ -93,6 +90,7 @@ private:
     ADCInterface& _adc_interface;
     WatchdogInterface& _watchdog_interface;
     Level2SystemThresholds_s _thresholds;
+    
 };
 
 using Level2SystemInstance = etl::singleton<Level2System>;

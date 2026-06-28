@@ -1,10 +1,12 @@
 #ifndef ADCINTERFACE_H
 #define ADCINTERFACE_H
 
-/* External Dependencies */
-#include "SharedFirmwareTypes.h"
-#include <Arduino.h>
+/* ETL Library */
 #include <etl/singleton.h>
+
+/* External Includes */
+#include <Arduino.h>
+#include "SharedFirmwareTypes.h"
 
 /* Local Interface Includes */
 #include "ButtonInterface.h"
@@ -14,10 +16,11 @@ using pin = uint8_t;
 
 namespace adc_default_parameters
 {
-    static constexpr float TEENSY41_REF_VOLTAGE = 3.3f;
+    constexpr float TEENSY41_MAX_INPUT_VOLTAGE = 3.3f;
     constexpr float TEENSY41_MIN_DIGITAL_READ_VOLTAGE_THRESH = 0.5F;
     constexpr float TEENSY41_MAX_DIGITAL_READ_VOLTAGE_THRESH = 2.8F;
     constexpr float SHUTDOWN_VOLTAGE_DIGITAL_THRESHOLD = 12.0F;
+
     constexpr float CONTROL_PILOT_VOLTAGE_LOW_THRESHOLD = 0.5f;
     constexpr float PROXIMITY_PILOT_VOLTAGE_HIGH_THRESHOLD = 4.0f;
 };
@@ -35,13 +38,20 @@ struct ADCPinout_s
     pin teensy_shdn_E_pin;
     pin teensy_shdn_F_pin;
     pin teensy_shdn_G_pin;
+
     pin teensy_scaled_24V_pin;
     pin teensy_control_pilot_pin;
     pin teensy_proximity_pilot_pin;
     pin teensy_240_enabled_pin;
     pin teensy_240_ok_pin;
+
     pin teensy_jumper_out_pin;
     pin reset_error_button_pin;
+};
+
+struct ADCConfigs_s
+{
+    float teensy41_max_input_voltage;
 };
 
 struct ADCConversions_s
@@ -59,17 +69,12 @@ struct ADCThresholds_s
     float shutdown_voltage_digital_threshold;
 };
 
-struct ADCConfigs_s
-{
-    float teensy41_max_input_voltage;
-};
-
 struct ADCInterfaceParams_s
 {
     ADCPinout_s pinout;
+    ADCConfigs_s configs;
     ADCConversions_s conversions;
     ADCThresholds_s thresholds;
-    ADCConfigs_s configs;
     float bit_resolution;
 };
 
@@ -79,29 +84,29 @@ public:
     ADCInterface(ADCPinout_s pinout,
                 ADCConversions_s conversions,
                 float bit_resolution,
+                ADCConfigs_s configs = {
+                    .teensy41_max_input_voltage = adc_default_parameters::TEENSY41_MAX_INPUT_VOLTAGE
+                },
                 ADCThresholds_s thresholds = {
                     .teensy41_min_digital_read_voltage_thresh = adc_default_parameters::TEENSY41_MIN_DIGITAL_READ_VOLTAGE_THRESH,
                     .teensy41_max_digital_read_voltage_thresh = adc_default_parameters::TEENSY41_MAX_DIGITAL_READ_VOLTAGE_THRESH,
                     .shutdown_voltage_digital_threshold = adc_default_parameters::SHUTDOWN_VOLTAGE_DIGITAL_THRESHOLD
-                },
-                ADCConfigs_s configs = {
-                    .teensy41_max_input_voltage = adc_default_parameters::TEENSY41_REF_VOLTAGE
                 }
-        ):  _adc_parameters {
-                pinout,
-                [=]() mutable {
-                    conversions.glv_conv_factor              = (configs.teensy41_max_input_voltage / bit_resolution) / conversions.glv_conv_factor;
-                    conversions.control_pilot_conv_factor    = (configs.teensy41_max_input_voltage / bit_resolution) / conversions.control_pilot_conv_factor;
-                    conversions.proximity_pilot_conv_factor  = (configs.teensy41_max_input_voltage / bit_resolution) / conversions.proximity_pilot_conv_factor;
-                    conversions.jumper_out_conv_factor       = (configs.teensy41_max_input_voltage / bit_resolution) / conversions.jumper_out_conv_factor;
-                    return conversions;
-                }(),
-                thresholds,
-                configs,
-                bit_resolution
-            },
-            _reset_error_button(pinout.reset_error_button_pin)
-        {}
+    ): _adc_parameters {
+            pinout,
+            configs,
+            [=]() mutable {
+                conversions.glv_conv_factor              = (configs.teensy41_max_input_voltage / bit_resolution) / conversions.glv_conv_factor;
+                conversions.control_pilot_conv_factor    = (configs.teensy41_max_input_voltage / bit_resolution) / conversions.control_pilot_conv_factor;
+                conversions.proximity_pilot_conv_factor  = (configs.teensy41_max_input_voltage / bit_resolution) / conversions.proximity_pilot_conv_factor;
+                conversions.jumper_out_conv_factor       = (configs.teensy41_max_input_voltage / bit_resolution) / conversions.jumper_out_conv_factor;
+                return conversions;
+            }(),
+            thresholds,
+            bit_resolution
+        },
+        _reset_error_button(pinout.reset_error_button_pin)
+    {};
 
     /**
      * @pre constructor called and instance created
@@ -194,6 +199,9 @@ public:
      */
     bool is_jumper_out_low();
 
+    /**
+     * @return true if reset button pressed, else false
+     */
     bool is_reset_errors_button_pressed(unsigned long current_millis);
 
     /**
@@ -202,15 +210,13 @@ public:
     const ADCInterfaceParams_s& get_adc_params() const;
 
 private:
+    const ADCInterfaceParams_s _adc_parameters = {};
+    ButtonInterface _reset_error_button;
 
     /**
      * @brief timestamp captured in init()
      */
     uint32_t _init_millis = 0;
-
-    const ADCInterfaceParams_s _adc_parameters = {};
-
-    ButtonInterface _reset_error_button;
 };
 
 using ADCInterfaceInstance = etl::singleton<ADCInterface>;

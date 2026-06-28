@@ -1,18 +1,18 @@
 #ifndef CCUETHERNETINTERFACE_H
 #define CCUETHERNETINTERFACE_H
 
-/* External Dependencies*/
+/* ETL Library Includes */
+#include <etl/singleton.h>
+
+/* External Includes */
 #include "SharedFirmwareTypes.h"
-#include "QNEthernet.h"
 #include "hytech_msgs.pb.h"
+#include "ProtobufMsgInterface.h"
+#include "EthernetAddressDefs.h"
+#include "QNEthernet.h"
 #include <algorithm>
 #include <cstddef>
 #include <iterator>
-#include <etl/singleton.h>
-
-// #include "device_fw_version.h"
-#include "ProtobufMsgInterface.h"
-#include "EthernetAddressDefs.h"
 
 using namespace qindesign::network;
 

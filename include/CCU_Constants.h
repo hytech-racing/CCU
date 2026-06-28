@@ -1,18 +1,13 @@
 #ifndef CCU_CONSTANTS
 #define CCU_CONSTANTS
 
-/* External Dependencies */
+/* Standard Library Includes */
 #include <stddef.h>
 
 using pin = uint8_t;
+using celsius = float;
 using time_us = uint32_t;
 
-
-namespace CCUSystems
-{
-    constexpr float MAX_120V_CURRENT_AMP = 3.5;  // 3.5 A = 35 A in the charger CAN format
-    constexpr float MAX_240V_CURRENT_AMP = 11.0; // 11 A = 110 A in the charger CAN format
-}
 
 namespace CCUInterfaces
 {
@@ -65,6 +60,12 @@ namespace CCUInterfaces
     constexpr pin SW_SHDN_PIN = 34; // Watchdog's !RESET pin
     constexpr pin WATCHDOG_KICK_PIN = 35;
     constexpr time_ms WATCHDOG_KICK_INTERVAL_MS = 10; // 10 ms = 100 Hz
+}
+
+namespace CCUSystems
+{
+    constexpr float MAX_120V_CURRENT_AMP = 3.5;  // 3.5 A = 35 A in the charger CAN format
+    constexpr float MAX_240V_CURRENT_AMP = 11.0; // 11 A = 110 A in the charger CAN format
 }
 namespace CCUConstants
 {

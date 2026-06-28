@@ -1,22 +1,7 @@
 #include "RotaryEncoderInterface.h"
 
-RotaryEncoderInterface* RotaryEncoderInterface::_active_instance = nullptr;
 
-RotaryEncoderInterface::RotaryEncoderInterface(
-    RotaryEncoderPinout_s pinout,
-    RotaryEncoderState_s state
-) :
-    _pinout(pinout),
-    _state(),
-    _enc_switch_button(pinout.enc_switch_pin)
-{
-    _state.encoder_value = state.encoder_value;
-    _state.max_value = state.max_value;
-    _state.min_value = state.min_value;
-    _state.step = state.step;
-    _state.last_encoded = state.last_encoded;
-    _state.transition_accumulator = state.transition_accumulator;
-}
+RotaryEncoderInterface* RotaryEncoderInterface::_active_instance = nullptr;
 
 void RotaryEncoderInterface::init()
 {

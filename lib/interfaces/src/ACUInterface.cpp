@@ -17,7 +17,8 @@ void ACUInterface::set_is_charging_enabled(bool state)
     _curr_data.is_charging_enabled = state;
 }
 
-void ACUInterface::receive_status_message(const CAN_message_t &msg, unsigned long curr_millis) {
+void ACUInterface::receive_status_message(const CAN_message_t &msg, unsigned long curr_millis)
+{
     BMS_STATUS_t bms_status_msg;
     Unpack_BMS_STATUS_hytech(&bms_status_msg, &msg.buf[0], msg.len);
     _curr_data.acu_state = static_cast<ACUState_e>(bms_status_msg.acu_state);

@@ -1,14 +1,16 @@
 #ifndef ACUINTERFACE_H
 #define ACUINTERFACE_H
 
-/* External Dependencies */
-#include "hytech.h"
-#include "SharedFirmwareTypes.h"
-#include "CANInterface.h"
-#include "FlexCAN_T4.h"
+/* ETL Library */
+#include <etl/optional.h>
 #include "etl/singleton.h"
 #include <etl/delegate.h>
-#include <etl/optional.h>
+
+/* External Includes */
+#include "SharedFirmwareTypes.h"
+#include "hytech.h"
+#include "CANInterface.h"
+#include "FlexCAN_T4.h"
 #include <array>
 
 
@@ -58,7 +60,6 @@ struct ACUInterfaceData_s
 class ACUInterface
 {
 public:
-
     ACUInterface(unsigned long init_ms, unsigned long max_heartbeat_interval_ms) : _max_heartbeat_interval_ms(max_heartbeat_interval_ms)
     {
         _curr_data.last_recv_status_ms = 0;
@@ -73,7 +74,6 @@ public:
         _curr_data.avg_cell_temp = 0;
         _curr_data.max_board_temp = 0;
     };
-
 
     bool is_acu_heartbeat_not_ok() {return !_curr_data.heartbeat_ok; }
 
@@ -104,7 +104,7 @@ public:
     void receive_onboard_temps_message(const CAN_message_t& msg, unsigned long curr_millis);
 
     /**
-     * @brief 
+     * @brief
      */
     void receive_detailed_temps_message(const CAN_message_t& msg, unsigned long curr_millis);
 
@@ -128,10 +128,10 @@ public:
 
 private:
 
+    ACUInterfaceData_s _curr_data;
     unsigned long _max_heartbeat_interval_ms;
     bool _first_received_message_heartbeat_init = false;
 
-    ACUInterfaceData_s _curr_data;
 };
 
 using ACUInterfaceInstance = etl::singleton<ACUInterface>;
