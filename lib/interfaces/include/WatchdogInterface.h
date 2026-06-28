@@ -67,6 +67,7 @@ private:
 
     // @brief current output level driven on the watchdog kick pin, true = HIGH
     bool _watchdog_state = false;
+    
 };
 
 using WatchdogInterfaceInstance = etl::singleton<WatchdogInterface>;

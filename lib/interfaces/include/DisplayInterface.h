@@ -106,11 +106,11 @@ public:
 
 private:
 
-    unsigned long _display_time;
     DisplayPinout_s _pinout;
     DisplayConfig_s _config;
-    DisplayView_e _display_view;
+    unsigned long _display_time;
     ButtonInterface _cycle_display_view_button;
+    DisplayView_e _display_view;
 
 };
 

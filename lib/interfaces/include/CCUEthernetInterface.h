@@ -9,7 +9,7 @@
 #include "hytech_msgs.pb.h"
 #include "ProtobufMsgInterface.h"
 #include "EthernetAddressDefs.h"
-#include "QNEthernet.h"
+#include <QNEthernet.h>
 #include <algorithm>
 #include <cstddef>
 #include <iterator>

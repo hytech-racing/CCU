@@ -1,13 +1,15 @@
 #ifndef BUTTONINTERFACE_H
 #define BUTTONINTERFACE_H
 
-/* ETL Library */
+/* Standard Library Includes */
+#include <stdint.h>
+
+/* ETL Library Includes  */
 #include <etl/singleton.h>
 
 /* External Dependencies */
-#include "SharedFirmwareTypes.h"
 #include <Arduino.h>
-#include <stdint.h>
+#include "SharedFirmwareTypes.h"
 
 
 namespace default_button_params
@@ -31,6 +33,7 @@ struct ButtonState_s
 class ButtonInterface
 {
 public:
+
     ButtonInterface(size_t pin,
                     uint8_t debounce_ms = default_button_params::DEBOUNCE_MS,
                     bool active_low = true
@@ -39,7 +42,7 @@ public:
         _active_low(active_low)
     {
         pinMode(_pin, INPUT);
-    }
+    };
 
     void update(unsigned long current_millis);
 

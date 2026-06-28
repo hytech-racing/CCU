@@ -2,14 +2,14 @@
 #define CCUCANINTERFACEIMPL
 
 /* ETL Library */
-#include "etl/delegate.h"
-#include "etl/singleton.h"
+#include <etl/delegate.h>
+#include <etl/singleton.h>
 
 /* External Includes */
-#include "FlexCAN_T4.h"
-#include "CANInterface.h"
 #include "SharedFirmwareTypes.h"
 #include "hytech.h"
+#include "CANInterface.h"
+#include <FlexCAN_T4.h>
 
 /* Local Interface Includes  */
 #include "ACUInterface.h"
@@ -30,15 +30,13 @@ using FlexCAN_t = FlexCAN_T4<CAN_DEV, RX_SIZE_256, TX_SIZE_16>;
  */
 struct CANInterfaces_s
 {
-    explicit CANInterfaces_s(
-        ACUInterface &acu_int,
-        ChargerInterface &charger_int,
-        EnergyMeterInterface & em_int
-    ) :
-        acu_interface(acu_int),
+    explicit CANInterfaces_s(ACUInterface &acu_int,
+                            ChargerInterface &charger_int,
+                            EnergyMeterInterface & em_int
+    ) : acu_interface(acu_int),
         charger_interface(charger_int),
         em_interface(em_int)
-    {}
+    {};
 
     ACUInterface& acu_interface;
     ChargerInterface& charger_interface;

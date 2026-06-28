@@ -2,11 +2,11 @@
 #define EMINTERFACE
 
 /* ETL Library Includes */
-#include "etl/singleton.h"
+#include <etl/singleton.h>
 #include <etl/delegate.h>
 
-/* External Dependencies */
-#include "FlexCAN_T4.h"
+/* External Includes */
+#include <FlexCAN_T4.h>
 
 
 struct EMData_s

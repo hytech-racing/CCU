@@ -3,15 +3,15 @@
 
 /* ETL Library */
 #include <etl/optional.h>
-#include "etl/singleton.h"
+#include <etl/singleton.h>
 #include <etl/delegate.h>
 
 /* External Includes */
+#include <array>
 #include "SharedFirmwareTypes.h"
 #include "hytech.h"
 #include "CANInterface.h"
-#include "FlexCAN_T4.h"
-#include <array>
+#include <FlexCAN_T4.h>
 
 
 namespace default_acu_params
@@ -60,6 +60,7 @@ struct ACUInterfaceData_s
 class ACUInterface
 {
 public:
+
     ACUInterface(unsigned long init_ms, unsigned long max_heartbeat_interval_ms) : _max_heartbeat_interval_ms(max_heartbeat_interval_ms)
     {
         _curr_data.last_recv_status_ms = 0;
