@@ -1,6 +1,5 @@
 #include "MainChargeSystem.h"
 #include <algorithm>
-#include <cmath>
 
 void MainChargeSystem::init(unsigned long init_millis)
 {
