@@ -51,9 +51,6 @@ void setup()
     scheduler.schedule(read_encoder_task);
     // scheduler.schedule(debug_print_task);
     scheduler.schedule(update_display_task);
-
-    handle_CAN_setup(CCUCANInterfaceInstance::instance().ACU_CAN, CCUConstants::CAN_BAUDRATE, &CCUCANInterfaceImpl::on_acu_can_receive);
-    handle_CAN_setup(CCUCANInterfaceInstance::instance().CHARGER_CAN, CCUConstants::CHARGER_CAN_BAUDRATE, &CCUCANInterfaceImpl::on_charger_can_receive);
 }
 
 void loop()

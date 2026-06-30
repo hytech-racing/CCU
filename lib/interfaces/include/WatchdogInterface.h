@@ -5,14 +5,14 @@
 #include <etl/singleton.h>
 
 /* External Includes */
-#include "Arduino.h"
+#include <Arduino.h>
 
 using pin = uint8_t;
 
 
 namespace watchdog_default_parameters
 {
-    const unsigned long WATCHDOG_KICK_INTERVAL_MS = 12UL;
+    constexpr unsigned long WATCHDOG_KICK_INTERVAL_MS = 12UL;
 }
 
 struct WatchdogPinout_s
@@ -62,10 +62,14 @@ private:
 
     const WatchdogInterfaceParams_s _watchdog_parameters = {};
 
-    // @brief timestamp of the last watchdog kick
+    /**
+     * @brief timestamp of the last watchdog kick
+     */
     uint32_t _watchdog_time = 0;
 
-    // @brief current output level driven on the watchdog kick pin, true = HIGH
+    /**
+     * @brief current output level driven on the watchdog kick pin, true = HIGH
+     */
     bool _watchdog_state = false;
 
 };

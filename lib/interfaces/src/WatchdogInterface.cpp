@@ -1,17 +1,16 @@
 #include "WatchdogInterface.h"
 
 
-void WatchdogInterface::init() 
+void WatchdogInterface::init()
 {
     // Pin Congfiguration
     pinMode(_watchdog_parameters.pinout.teensy_watchdog_pin, OUTPUT);
     pinMode(_watchdog_parameters.pinout.teensy_sw_shdn_pin, OUTPUT);
 
     // Inital Pin States For OUTPUT Pins
-    digitalWrite(_watchdog_parameters.pinout.teensy_watchdog_pin, HIGH);
+    digitalWrite(_watchdog_parameters.pinout.teensy_watchdog_pin, LOW);
     digitalWrite(_watchdog_parameters.pinout.teensy_sw_shdn_pin, LOW);
 }
-
 
 bool WatchdogInterface::update_watchdog_state(uint32_t curr_millis)
 {
@@ -19,7 +18,7 @@ bool WatchdogInterface::update_watchdog_state(uint32_t curr_millis)
     {
         _watchdog_state = !_watchdog_state;
         _watchdog_time = curr_millis;
-        digitalWrite(_watchdog_parameters.pinout.teensy_watchdog_pin, _watchdog_state ? HIGH : LOW);
+        digitalWrite(_watchdog_parameters.pinout.teensy_watchdog_pin, _watchdog_state);
     }
 
     return _watchdog_state;

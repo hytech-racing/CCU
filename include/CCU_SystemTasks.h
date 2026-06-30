@@ -20,7 +20,7 @@
 /**
  * @brief Creates an instance of all systems.
  */
-bool initialize_all_systems();
+void initialize_all_systems();
 
 extern etl::delegate<bool()> is_120_conditions_ok;
 extern etl::delegate<bool()> is_120_switched;

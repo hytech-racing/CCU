@@ -1,7 +1,7 @@
 #include "CCU_SystemTasks.h"
 
 
-bool initialize_all_systems()
+void initialize_all_systems()
 {
     Level2SystemInstance::create(Level2InterfaceInstance::instance(),
                                 ADCInterfaceInstance::instance(),
@@ -72,8 +72,7 @@ bool initialize_all_systems()
                                         reset_startup_time_ms,
                                         sys_time::hal_millis()
     );
-
-    return true;
+    
 }
 
 

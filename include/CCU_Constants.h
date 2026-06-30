@@ -56,9 +56,8 @@ namespace CCUInterfaces
     constexpr pin START_CHARGE_PIN = 32;
 
     /* Watchdog Interface Constants */
-    constexpr pin SW_SHDN_PIN = 34; // Watchdog's !RESET pin
     constexpr pin WATCHDOG_KICK_PIN = 35;
-    constexpr time_ms WATCHDOG_KICK_INTERVAL_MS = 10; // 10 ms = 100 Hz
+    constexpr pin SOFTWARE_OK_PIN = 34; // Watchdog's !RESET pin
 }
 
 namespace CCUSystems
@@ -112,7 +111,7 @@ namespace CCUConstants
     constexpr uint8_t REFRESH_DISPLAY_PRIORITY = 12;
 
     /* CAN Constants */
-    const uint32_t CAN_BAUDRATE = 1000000; // CAN for ACU
+    const uint32_t ACU_CAN_BAUDRATE = 1000000; // CAN for ACU
     const uint32_t CHARGER_CAN_BAUDRATE = 500000; // CAN for charger
 };
 
