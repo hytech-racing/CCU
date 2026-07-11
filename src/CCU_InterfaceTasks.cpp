@@ -70,7 +70,7 @@ void initialize_all_interfaces()
     /* Watchdog Interface */
     WatchdogInterfaceInstance::create(WatchdogPinout_s {
                                         CCUInterfaces::WATCHDOG_KICK_PIN,
-                                        CCUInterfaces::SW_SHDN_PIN
+                                        CCUInterfaces::SOFTWARE_OK_PIN
                                     }
     );
     WatchdogInterfaceInstance::instance().init();
