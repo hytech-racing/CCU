@@ -26,6 +26,12 @@ void on_charger_can_receive(const CAN_message_t &msg) {
     charger_can_rx_buffer.push_back(buf, sizeof(CAN_message_t));
 }
 
+void on_charger_can_receive(const CANFD_message_t &msg) {
+    uint8_t buf[sizeof(CANFD_message_t)];
+    memmove(buf, &msg, sizeof(msg)); // NOLINT (decay of array to pointer)
+    charger_can_rx_buffer.push_back(buf, sizeof(CANFD_message_t));
+}
+
 void ccu_CAN_recv(CANInterfaces &interfaces, const CAN_message_t &msg, unsigned long millis) {
     switch (msg.id) 
     {
@@ -82,13 +88,22 @@ void ccu_CAN_recv(CANInterfaces &interfaces, const CAN_message_t &msg, unsigned 
 }
 
 void send_all_CAN_msgs(CANTXBufferType &buffer, FlexCAN_T4_Base *can_interface) {
-    CAN_message_t msg;
     while (buffer.available()) {
         CAN_message_t msg;
         uint8_t buf[sizeof(CAN_message_t)];
         buffer.pop_front(buf, sizeof(CAN_message_t));
         memmove(&msg, buf, sizeof(msg)); // NOLINT (decay of array to pointer)
         can_interface->write(msg);
+    }
+}
+
+void send_all_CAN_msgs(CANFDTXBufferType &buffer, FlexCANFD_Type<CAN3> &can_interface) {
+    while (buffer.available()) {
+        CANFD_message_t msg;
+        uint8_t buf[sizeof(CANFD_message_t)];
+        buffer.pop_front(buf, sizeof(CANFD_message_t));
+        memmove(&msg, buf, sizeof(msg)); // NOLINT (decay of array to pointer)
+        can_interface.write(msg);
     }
 }
 

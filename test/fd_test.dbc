@@ -1,0 +1,13 @@
+VERSION ""
+
+NS_ :
+
+BS_:
+
+BU_: ECU
+
+BO_ 2034 FD_TEST: 64 ECU
+ SG_ fd_test_counter : 0|32@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fd_test_byte8 : 64|32@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fd_test_byte32 : 256|32@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fd_test_byte60 : 480|32@1+ (1,0) [0|0] "" Vector__XXX

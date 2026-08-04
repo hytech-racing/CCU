@@ -16,8 +16,11 @@
 using CANRXBufferType = Circular_Buffer<uint8_t, (uint32_t)16, sizeof(CAN_message_t)>;
 using CANTXBufferType = Circular_Buffer<uint8_t, (uint32_t)128, sizeof(CAN_message_t)>;
 
+using CANFDRXBufferType = Circular_Buffer<uint8_t, (uint32_t)16, sizeof(CANFD_message_t)>;
+using CANFDTXBufferType = Circular_Buffer<uint8_t, (uint32_t)128, sizeof(CANFD_message_t)>;
 
 template <CAN_DEV_TABLE CAN_DEV> using FlexCAN_Type = FlexCAN_T4<CAN_DEV, RX_SIZE_256, TX_SIZE_16>;
+template <CAN_DEV_TABLE CAN_DEV> using FlexCANFD_Type = FlexCAN_T4FD<CAN_DEV, RX_SIZE_256, TX_SIZE_16>;
 
 struct CANInterfaces
 {
@@ -51,10 +54,12 @@ namespace CCUCANInterfaceImpl
 
     void on_acu_can_receive(const CAN_message_t &msg);
     void on_charger_can_receive(const CAN_message_t &msg);
+    void on_charger_can_receive(const CANFD_message_t &msg);
 
     void ccu_CAN_recv(CANInterfaces &interfaces, const CAN_message_t &msg, unsigned long millis);
 
     void send_all_CAN_msgs(CANTXBufferType &buffer, FlexCAN_T4_Base *can_interface);
+    void send_all_CAN_msgs(CANFDTXBufferType &buffer, FlexCANFD_Type<CAN3> &can_interface);
 
 }; // namespace CCUCANInterfaceImpl
 
