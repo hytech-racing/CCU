@@ -25,12 +25,12 @@ void on_recv(const CANFD_message_t &msg)
     }
     Serial.print("  TS: "); Serial.println(msg.timestamp);
 
-    struct fd_test_fd_test_t m;
-    if (fd_test_fd_test_unpack(&m, msg.buf, msg.len) == 0) {
-        Serial.printf("cnt=%lu b8=%08lX b32=%08lX b60=%08lX\n",
-            m.fd_test_counter, m.fd_test_byte32,
-            m.fd_test_byte32, m.fd_test_byte60);
-    }
+    // struct fd_test_fd_test_t m;
+    // if (fd_test_fd_test_unpack(&m, msg.buf, msg.len) == 0) {
+    //     Serial.printf("cnt=%lu b8=%08lX b32=%08lX b60=%08lX\n",
+    //         m.fd_test_counter, m.fd_test_byte32,
+    //         m.fd_test_byte32, m.fd_test_byte60);
+    // }
 }
 
 void setup()
@@ -65,19 +65,19 @@ void loop()
     }
     CAN.write(test_msg);
 
-    
-    struct fd_test_fd_test_t m;
-    uint32_t counter = 0;
-    m.fd_test_counter = counter++;
-    m.fd_test_byte8  = 0xDEADBEEF;
-    m.fd_test_byte32 = 0xCAFEBABE;
-    m.fd_test_byte60 = 0x12345678;
 
-    CANFD_message_t test_msg;
-    test_msg.id  = 0x7F2;
-    test_msg.len = 64;
-    test_msg.edl = 1;
-    test_msg.brs = 1;
-    fd_test_fd_test_pack(test_msg.buf, &m, sizeof(test_msg.buf));
-    CAN.write(test_msg);
+    // struct fd_test_fd_test_t m = {};
+    // static uint32_t counter = 0;
+    // m.fd_test_counter = counter++;
+    // m.fd_test_byte8  = 0xDEADBEEF;
+    // m.fd_test_byte32 = 0xCAFEBABE;
+    // m.fd_test_byte60 = 0x12345678;
+
+    // CANFD_message_t test_msg;
+    // test_msg.id  = 0x7F2;
+    // test_msg.len = 64;
+    // test_msg.edl = 1;
+    // test_msg.brs = 1;
+    // fd_test_fd_test_pack(test_msg.buf, &m, sizeof(test_msg.buf));
+    // CAN.write(test_msg);
 }
